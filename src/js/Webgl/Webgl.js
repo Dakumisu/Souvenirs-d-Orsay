@@ -1,5 +1,7 @@
 import { Scene } from 'three'
+/// #if DEBUG
 import GUI from 'lil-gui'
+/// #endif
 
 import Raf from '@js/Tools/Raf'
 import Sizes from '@js/Tools/Sizes'

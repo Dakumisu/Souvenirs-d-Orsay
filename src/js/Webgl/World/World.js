@@ -1,7 +1,6 @@
 import Webgl from '@js/Webgl/Webgl'
 
 import Blueprint from './Blueprint'
-import GeoMerge from './GeoMerge'
 import Model from './Model'
 import Particles from './Particles'
 
@@ -17,9 +16,9 @@ export default class World {
 
 	setComponent() {
 		this.blueprint = new Blueprint()
-		this.particles = new Particles()
-		this.model = new Model()
-		this.geoMerge = new GeoMerge()
+		// this.particles = new Particles()
+		// this.model = new Model()
+		// this.geoMerge = new GeoMerge()
 
 		this.initialized = true
 	}
