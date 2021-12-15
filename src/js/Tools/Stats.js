@@ -3,7 +3,7 @@ import StatsJs from 'stats-js'
 export default class Stats {
 	constructor() {
 		this.stats = new StatsJs()
-		this.stats.showPanel(3)
+		this.stats.showPanel(0)
 
 		this.active = false
 		this.max = 40
