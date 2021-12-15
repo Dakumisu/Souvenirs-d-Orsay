@@ -1,5 +1,7 @@
 import { OrthographicCamera, PerspectiveCamera } from 'three'
+/// #if DEBUG
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls'
+/// #endif
 
 import Webgl from './Webgl'
 
