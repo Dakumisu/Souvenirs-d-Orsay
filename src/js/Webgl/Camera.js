@@ -16,7 +16,7 @@ export default class Camera {
 		this.type = opt.type
 
 		this.setPerspectiveCamera()
-		// this.setOrthographicCamera()
+		this.setOrthographicCamera()
 
 		/// #if DEBUG
 			this.setDebugCamera()
@@ -84,6 +84,8 @@ export default class Camera {
 			this.pCamera.quaternion.copy(this.debug.camera.quaternion)
 			this.pCamera.updateMatrixWorld()
 		/// #endif
+
+		// this.pCamera.position.z = 3+ Math.sin(this.webgl.raf.elapsed * .001)
 	}
 
 	destroy() {

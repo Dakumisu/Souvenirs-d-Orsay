@@ -1,6 +1,7 @@
 import { BufferAttribute, BufferGeometry, DoubleSide, Group, Mesh, MeshNormalMaterial } from 'three'
 
-export default function loadModel(model) {
+export default function loadModel(model = null) {
+	if (!model) return
 	return new Promise(resolve => {
 		loadGLTF(model).then(response => {
 			const geometries = [...response]

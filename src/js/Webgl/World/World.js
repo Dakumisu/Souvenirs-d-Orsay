@@ -1,9 +1,6 @@
 import Webgl from '@js/Webgl/Webgl'
 
-import Blueprint from './Blueprint'
-import Model from './Model'
-import Particles from './Particles'
-
+import Crystals from './Crystals'
 export default class World {
 	constructor(opt = {}) {
 		this.webgl = new Webgl()
@@ -15,10 +12,7 @@ export default class World {
 	}
 
 	setComponent() {
-		this.blueprint = new Blueprint()
-		// this.particles = new Particles()
-		// this.model = new Model()
-		// this.geoMerge = new GeoMerge()
+		this.crystal = new Crystals()
 
 		this.initialized = true
 	}
@@ -30,15 +24,13 @@ export default class World {
 	resize() {
 		if (!this.initialized) return
 
-		if (this.blueprint) this.blueprint.resize()
-		if (this.particles) this.particles.resize()
+		if (this.crystal) this.crystal.resize()
 	}
 
 	update(et) {
 		if (!this.initialized) return
 
-		if (this.blueprint) this.blueprint.update(et)
-		if (this.particles) this.particles.update(et)
+		if (this.crystal) this.crystal.update(et)
 	}
 
 	destroy() {
