@@ -11,10 +11,14 @@ export default class Renderer {
 		this.webgl = new Webgl()
 		this.scene = this.webgl.scene
 		this.camera = this.webgl.camera.pCamera
+		setTimeout(() => {
+			this.artwork = this.webgl.world.card.artwork
+		}, 100)
 
 		/// #if DEBUG
 			this.stats = this.webgl.stats
 			this.debugFolder = this.webgl.debug.addFolder('renderer')
+			this.renderArtwork = false
 		/// #endif
 
 		this.usePostprocess = false
@@ -61,6 +65,16 @@ export default class Renderer {
 				.onChange(() => {
 					this.renderer.setClearColor(this.clearColor)
 				})
+
+			this.debugFolder
+				.add(
+					this,
+					'renderArtwork',
+					{
+						'scene': false,
+						'artwork': true,
+					}
+				)
 		/// #endif
 	}
 
@@ -103,7 +117,24 @@ export default class Renderer {
 			}
 		/// #endif
 
+		/// #if DEBUG
+		if (this.renderArtwork) {
+			if (this.artwork) this.artwork.render()
+		} else {
+			if (this.artwork) this.artwork.preRender()
+			if (this.artwork) this.artwork.render()
+			if (this.artwork) this.artwork.postRender()
+
+			this.usePostprocess ? this.postProcess.composer.render() : this.renderer.render(this.scene, this.camera)
+		}
+		/// #else
+		if (this.artwork) this.artwork.preRender()
+		if (this.artwork) this.artwork.render()
+		if (this.artwork) this.artwork.postRender()
+
 		this.usePostprocess ? this.postProcess.composer.render() : this.renderer.render(this.scene, this.camera)
+		/// #endif
+
 
 		/// #if DEBUG
 			if (this.stats) {

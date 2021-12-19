@@ -46,7 +46,6 @@ export default class Webgl {
 		this.scene = new Scene()
 		this.camera = new Camera()
 		this.renderer = new Renderer()
-		this.world = new World()
 
 		// Tools
 		this.device = new Device()
@@ -54,6 +53,8 @@ export default class Webgl {
 		this.views = new Views()
 		this.mouse = new Mouse()
 		// this.raycaster = new Raycasters()
+
+		this.world = new World()
 
 		this.sizes.on('resize', () => {
 			this.resize()
