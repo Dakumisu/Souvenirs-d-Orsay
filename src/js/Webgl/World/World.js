@@ -1,6 +1,6 @@
 import Webgl from '@js/Webgl/Webgl'
 
-import Card from './Card'
+import Card from './Cards/Card'
 
 export default class World {
 	constructor(opt = {}) {
