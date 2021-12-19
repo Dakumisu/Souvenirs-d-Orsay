@@ -24,8 +24,11 @@ export default class Camera {
 	}
 
 	setPerspectiveCamera() {
-		this.pCamera = new PerspectiveCamera(75, Store.resolution.width / Store.resolution.height, 0.01, 1000)
-		this.pCamera.position.set(0, 0, 3)
+		const perspective = 720
+		const fov = (180 * (2 * Math.atan((Store.resolution.height / 2) / perspective))) / Math.PI;
+
+		this.pCamera = new PerspectiveCamera(fov, Store.resolution.width / Store.resolution.height, 0.01, 1000)
+		this.pCamera.position.set(0, 0, perspective)
 		this.pCamera.rotation.reorder('YXZ')
 
 		this.scene.add(this.pCamera)

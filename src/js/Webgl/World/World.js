@@ -1,8 +1,6 @@
 import Webgl from '@js/Webgl/Webgl'
 
-import Blueprint from './Blueprint'
-import Model from './Model'
-import Particles from './Particles'
+import Card from './Card'
 
 export default class World {
 	constructor(opt = {}) {
@@ -15,30 +13,21 @@ export default class World {
 	}
 
 	setComponent() {
-		this.blueprint = new Blueprint()
-		// this.particles = new Particles()
-		// this.model = new Model()
-		// this.geoMerge = new GeoMerge()
+		this.card = new Card()
 
 		this.initialized = true
-	}
-
-	add(object) {
-		this.scene.add(object)
 	}
 
 	resize() {
 		if (!this.initialized) return
 
-		if (this.blueprint) this.blueprint.resize()
-		if (this.particles) this.particles.resize()
+		if (this.card) this.card.resize()
 	}
 
 	update(et) {
 		if (!this.initialized) return
 
-		if (this.blueprint) this.blueprint.update(et)
-		if (this.particles) this.particles.update(et)
+		if (this.card) this.card.update(et)
 	}
 
 	destroy() {

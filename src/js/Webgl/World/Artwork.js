@@ -4,18 +4,18 @@ import Webgl from '@js/Webgl/Webgl'
 
 import { Store } from '@js/Tools/Store'
 
-import vertex from '@glsl/blueprint/vertex.vert'
-import fragment from '@glsl/blueprint/fragment.frag'
+import vertex from '@glsl/artwork/vertex.vert'
+import fragment from '@glsl/artwork/fragment.frag'
 
 const twoPI = Math.PI * 2
 const tVec3 = new Vector3()
 
-export default class Blueprint {
+export default class Artwork {
 	constructor(opt = {}) {
 		this.webgl = new Webgl()
 		this.scene = this.webgl.scene
 
-		this.blueprint = {}
+		this.artwork = {}
 
 		this.initialized = false
 
@@ -32,11 +32,11 @@ export default class Blueprint {
 	}
 
 	setGeometry() {
-		this.blueprint.geometry = new PlaneBufferGeometry(1, 1, 1, 1)
+		this.artwork.geometry = new PlaneBufferGeometry(Store.resolution.width / 12, Store.resolution.height / 12, 1, 1)
 	}
 
 	setMaterial() {
-		this.blueprint.material = new ShaderMaterial({
+		this.artwork.material = new ShaderMaterial({
 			vertexShader: vertex,
 			fragmentShader: fragment,
 			uniforms: {
@@ -46,28 +46,31 @@ export default class Blueprint {
 				uResolution: { value: tVec3.set(Store.resolution.width, Store.resolution.height, Store.resolution.dpr) },
 			},
 			side: DoubleSide,
-			transparent: true
+			transparent: true,
+			depthTest: false,
+			depthWrite: false
 		})
 	}
 
 	setMesh() {
-		this.blueprint.mesh = new Mesh(this.blueprint.geometry, this.blueprint.material)
-		this.blueprint.mesh.frustumCulled = false
+		this.artwork.mesh = new Mesh(this.artwork.geometry, this.artwork.material)
+		this.artwork.mesh.frustumCulled = false
 
-		this.addObject(this.blueprint.mesh)
+		this.artwork.mesh.position.z = 1
 	}
 
 	addObject(object) {
+		console.log(object);
 		this.scene.add(object)
 	}
 
 	resize() {
-		this.blueprint.material.uniforms.uResolution.value = tVec3.set(Store.resolution.width, Store.resolution.height, Store.resolution.dpr)
+		this.artwork.material.uniforms.uResolution.value = tVec3.set(Store.resolution.width, Store.resolution.height, Store.resolution.dpr)
 	}
 
 	update(et) {
 		if (!this.initialized) return
 
-		this.blueprint.material.uniforms.uTime.value = et
+		this.artwork.material.uniforms.uTime.value = et
 	}
 }
