@@ -15,10 +15,12 @@ varying vec3 vPos;
 void main() {
 	// in the case of an orthographic camera, so that the image keeps its aspect (uResolution must be a vec4)
 	// vec2 newUv = (vUv - vec2(.5)) * uResolution.zw + vec2(.5);
+	vec2 uv = gl_FragCoord.xy/uResolution.xy;
+
 	vec3 color = vec3(uColor);
 	float alpha = uAlpha;
 
-	vec4 artworkTexture = texture2D(uArtworkTexture, vUv);
+	vec4 artworkTexture = texture2D(uArtworkTexture, uv);
 
 	gl_FragColor = vec4(color * vec3(vUv, 0.), alpha);
 	gl_FragColor = artworkTexture;

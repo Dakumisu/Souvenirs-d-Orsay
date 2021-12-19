@@ -20,6 +20,7 @@ export default class Card {
 		this.webgl = new Webgl()
 		this.scene = this.webgl.scene
 		this.mouse = this.webgl.mouse.scene
+		this.camera = this.webgl.camera.pCamera
 
 		this.artwork = new Artwork()
 
@@ -46,7 +47,7 @@ export default class Card {
 
 	setGeometries() {
 		this.card.background.geometry = new PlaneBufferGeometry(Store.resolution.height / 5, Store.resolution.width / 5, 1, 1)
-		this.card.subject.geometry = new PlaneBufferGeometry(Store.resolution.width / 10, Store.resolution.height / 10, 1, 1)
+		this.card.subject.geometry = new PlaneBufferGeometry(Store.resolution.width / 12, Store.resolution.height / 10, 1, 1)
 	}
 
 	setMaterials() {
@@ -110,7 +111,11 @@ export default class Card {
 	update(et) {
 		if (!this.initialized) return
 
-		if (this.artwork) this.artwork.update(et)
+		if (this.artwork) {
+			this.artwork.update(et)
+			this.card.subject.material.uniforms.uArtworkTexture.value = this.artwork.artwork.texture
+			this.artwork.artwork.mesh.rotation.set(-this.camera.rotation._x, -this.camera.rotation._y, 0);
+		}
 
 
 		// tVec2a.set(
@@ -122,7 +127,6 @@ export default class Card {
 		// this.group.rotation.x += (.04 * (tVec2a.y / 2 - this.group.rotation.x));
 
 		// this.group.rotation.x = (twoPI * (et *.0005)) % twoPI
-		if (this.artwork) this.card.subject.material.uniforms.uArtworkTexture.value = this.artwork.artwork.texture
 
 		this.card.background.material.uniforms.uTime.value = et
 		this.card.subject.material.uniforms.uTime.value = et

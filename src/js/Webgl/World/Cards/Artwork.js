@@ -1,4 +1,4 @@
-import { BoxBufferGeometry, Color, DoubleSide, LinearFilter, Mesh, PerspectiveCamera, PlaneBufferGeometry, RGBAFormat, Scene, ShaderMaterial, sRGBEncoding, Vector3, WebGLRenderTarget } from 'three'
+import { BoxBufferGeometry, Color, DoubleSide, LinearFilter, Mesh, PerspectiveCamera, PlaneBufferGeometry, RGBAFormat, Scene, ShaderMaterial, sRGBEncoding, TorusBufferGeometry, Vector3, WebGLRenderTarget } from 'three'
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls'
 
 import Webgl from '@js/Webgl/Webgl'
@@ -29,7 +29,9 @@ export default class Artwork {
 	init() {
 		this.setScene()
 		this.setCamera()
+		/// #if DEBUG
 		this.setDebugCamera()
+		/// #endif
 		this.setRenderTarget()
 
 		this.setGeometry()
@@ -44,7 +46,7 @@ export default class Artwork {
 	}
 
 	setCamera() {
-		this.artwork.camera = new PerspectiveCamera(75, Store.resolution.width / Store.resolution.height, 0.01, 1000)
+		this.artwork.camera = new PerspectiveCamera(30, Store.resolution.width / Store.resolution.height, 0.01, 1000)
 		this.artwork.camera.position.set(0, 0, 10)
 		this.artwork.camera.rotation.reorder('YXZ')
 
@@ -78,7 +80,8 @@ export default class Artwork {
 
 	setGeometry() {
 		this.artwork.geometry = new PlaneBufferGeometry(16/3, 9/3, 1, 1)
-		this.artwork.geometry = new BoxBufferGeometry(1,1,1)
+		this.artwork.geometry = new BoxBufferGeometry(.5, .5, .5)
+		this.artwork.geometry = new TorusBufferGeometry(.5, .1, 50, 50)
 	}
 
 	setMaterial() {
@@ -93,8 +96,6 @@ export default class Artwork {
 			},
 			side: DoubleSide,
 			transparent: true,
-			depthTest: false,
-			depthWrite: false
 		})
 	}
 
@@ -136,11 +137,11 @@ export default class Artwork {
 		this.artwork.mesh.rotation.y = et * .001
 
 		/// #if DEBUG
-		this.debug.orbitControls.update()
+		// this.debug.orbitControls.update()
 
-		this.artwork.camera.position.copy(this.debug.camera.position)
-		this.artwork.camera.quaternion.copy(this.debug.camera.quaternion)
-		this.artwork.camera.updateMatrixWorld()
+		// this.artwork.camera.position.copy(this.debug.camera.position)
+		// this.artwork.camera.quaternion.copy(this.debug.camera.quaternion)
+		// this.artwork.camera.updateMatrixWorld()
 		/// #endif
 	}
 }
