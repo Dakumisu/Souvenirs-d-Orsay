@@ -17,5 +17,4 @@ void main() {
 
 	vec4 mv = modelViewMatrix * vec4(pos, 1.);
 	gl_Position = projectionMatrix * mv;
-	// gl_PointSize = 1. / -mv.z; // for Points Mesh
 }

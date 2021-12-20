@@ -16,6 +16,7 @@ void main() {
 	// in the case of an orthographic camera, so that the image keeps its aspect (uResolution must be a vec4)
 	// vec2 newUv = (vUv - vec2(.5)) * uResolution.zw + vec2(.5);
 	vec2 uv = gl_FragCoord.xy/uResolution.xy;
+	uv /= uResolution.z;
 
 	vec3 color = vec3(uColor);
 	float alpha = uAlpha;

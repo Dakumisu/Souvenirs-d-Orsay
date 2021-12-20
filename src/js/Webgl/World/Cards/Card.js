@@ -36,8 +36,6 @@ export default class Card {
 	}
 
 	init() {
-		// this.group.add(this.artwork.artwork.mesh)
-
 		this.setGeometries()
 		this.setMaterials()
 		this.setMeshes()
