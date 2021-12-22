@@ -17,6 +17,10 @@ export default class Artwork {
 		this.scene = this.webgl.scene
 		this.renderer = this.webgl.renderer.renderer
 
+		this.domSubject = Store.nodes.artwork[opt.id]
+		this.subjectWidth = this.domSubject.getBoundingClientRect().width
+		this.subjectHeight = this.domSubject.getBoundingClientRect().height
+
 		this.artwork = {}
 		this.artwork.texture = null
 
@@ -46,7 +50,8 @@ export default class Artwork {
 	}
 
 	setCamera() {
-		this.artwork.camera = new PerspectiveCamera(30, Store.resolution.width / Store.resolution.height, 0.01, 1000)
+
+		this.artwork.camera = new PerspectiveCamera(30, this.subjectWidth / this.subjectHeight, 0.01, 1000)
 		this.artwork.camera.position.set(0, 0, 10)
 		this.artwork.camera.rotation.reorder('YXZ')
 
@@ -90,7 +95,7 @@ export default class Artwork {
 				uTime: { value: 0 },
 				uColor: { value: new Color('#ffffff') },
 				uAlpha: { value: 1 },
-				uResolution: { value: tVec3.set(Store.resolution.width, Store.resolution.height, Store.resolution.dpr) },
+				uResolution: { value: tVec3.set(this.subjectWidth, this.subjectHeight, Store.resolution.dpr) },
 			},
 			side: DoubleSide,
 			transparent: true,
@@ -110,7 +115,7 @@ export default class Artwork {
 	}
 
 	resize() {
-		this.artwork.material.uniforms.uResolution.value = tVec3.set(Store.resolution.width, Store.resolution.height, Store.resolution.dpr)
+		this.artwork.material.uniforms.uResolution.value = tVec3.set(this.subjectWidth, this.subjectHeight, Store.resolution.dpr)
 	}
 
 	preRender() {

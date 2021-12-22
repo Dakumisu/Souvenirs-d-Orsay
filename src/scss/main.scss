@@ -25,7 +25,8 @@ canvas.sketch {
 }
 
 .deck {
-	width: 25%;
+	width: 90%;
+	max-width: 500px;
 	position: relative;
 	display: flex;
 	flex-direction: row;

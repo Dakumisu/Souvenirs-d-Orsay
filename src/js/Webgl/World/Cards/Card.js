@@ -24,7 +24,9 @@ export default class Card {
 
 		this.name = opt.name
 
-		this.artwork = new Artwork()
+		this.artwork = new Artwork({
+			id: opt.id
+		})
 
 		this.domCard = Store.nodes.card[opt.id]
 		this.domSubject = Store.nodes.artwork[opt.id]
@@ -71,9 +73,9 @@ export default class Card {
 				uResolution: { value: tVec3.set(Store.resolution.width, Store.resolution.height, Store.resolution.dpr) },
 			},
 			side: DoubleSide,
-			transparent: false,
-			// depthTest: false,
-			// depthWrite: false
+			// transparent: true,
+			depthTest: false,
+			depthWrite: false,
 		})
 
 		this.card.subject.material = new ShaderMaterial({

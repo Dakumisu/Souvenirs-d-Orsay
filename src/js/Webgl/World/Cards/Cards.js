@@ -26,7 +26,9 @@ export default class Cards {
 	}
 
 	init() {
-		this.setCards()
+		setTimeout(() => {
+			this.setCards()
+		}, 100);
 
 		this.initialized = true
 	}
