@@ -19,10 +19,14 @@ canvas.sketch {
 	flex-direction: column;
 	justify-content: center;
 	align-items: center;
-	z-index: 1;
+	z-index: -1;
+
+	pointer-events: none;
 }
 
 .deck {
+	width: 25%;
+	position: relative;
 	display: flex;
 	flex-direction: row;
 	justify-content: center;
@@ -41,6 +45,8 @@ canvas.sketch {
 
 	border-radius: 3px;
 	border: 1px dotted #000;
+
+	// opacity: 0;
 
 	.card {
 		width: 100%;

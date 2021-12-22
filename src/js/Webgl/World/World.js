@@ -1,6 +1,6 @@
 import Webgl from '@js/Webgl/Webgl'
 
-import Card from './Cards/Card'
+import Cards from './Cards/Cards'
 
 export default class World {
 	constructor(opt = {}) {
@@ -13,7 +13,7 @@ export default class World {
 	}
 
 	setComponent() {
-		this.card = new Card()
+		this.cards = new Cards()
 
 		this.initialized = true
 	}
@@ -21,13 +21,13 @@ export default class World {
 	resize() {
 		if (!this.initialized) return
 
-		if (this.card) this.card.resize()
+		if (this.cards) this.cards.resize()
 	}
 
 	update(et) {
 		if (!this.initialized) return
 
-		if (this.card) this.card.update(et)
+		if (this.cards) this.cards.update(et)
 	}
 
 	destroy() {

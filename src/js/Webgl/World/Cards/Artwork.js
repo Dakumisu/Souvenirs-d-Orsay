@@ -79,9 +79,7 @@ export default class Artwork {
 	}
 
 	setGeometry() {
-		this.artwork.geometry = new PlaneBufferGeometry(16/3, 9/3, 1, 1)
-		this.artwork.geometry = new BoxBufferGeometry(.5, .5, .5)
-		this.artwork.geometry = new TorusBufferGeometry(.5, .1, 50, 50)
+		this.artwork.geometry = new TorusBufferGeometry(1, .3, 50, 50)
 	}
 
 	setMaterial() {
@@ -102,8 +100,6 @@ export default class Artwork {
 	setMesh() {
 		this.artwork.mesh = new Mesh(this.artwork.geometry, this.artwork.material)
 		this.artwork.mesh.frustumCulled = false
-
-		// this.artwork.mesh.position.y = 150
 
 		this.addObject(this.artwork.mesh)
 	}

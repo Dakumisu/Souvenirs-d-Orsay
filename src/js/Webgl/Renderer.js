@@ -11,8 +11,12 @@ export default class Renderer {
 		this.webgl = new Webgl()
 		this.scene = this.webgl.scene
 		this.camera = this.webgl.camera.pCamera
+
+		this.artworks = []
 		setTimeout(() => {
-			this.artwork = this.webgl.world.card.artwork
+			for (const card in this.webgl.world.cards.cards) {
+				this.artworks.push(this.webgl.world.cards.cards[card].artwork)
+			}
 		}, 100)
 
 		/// #if DEBUG
@@ -32,14 +36,14 @@ export default class Renderer {
 
 		this.renderer = new WebGLRenderer({
 			canvas: this.webgl.canvas,
-			alpha: false,
+			alpha: true,
 			antialias: true,
 			powerPreference: 'high-performance',
 		})
 
 		this.renderer.setSize(Store.resolution.width, Store.resolution.height)
 		this.renderer.setPixelRatio(Math.min(Store.resolution.dpr, 2))
-		this.renderer.setClearColor(this.clearColor, 1)
+		// this.renderer.setClearColor(this.clearColor, 1)
 
 		this.renderer.physicallyCorrectLights = true
 		// this.renderer.gammaOutPut = true
@@ -119,18 +123,30 @@ export default class Renderer {
 
 		/// #if DEBUG
 		if (this.renderArtwork) {
-			if (this.artwork) this.artwork.render()
+			if (this.artworks) {
+				this.artworks.forEach( artwork => {
+					artwork.render()
+				})
+			}
 		} else {
-			if (this.artwork) this.artwork.preRender()
-			if (this.artwork) this.artwork.render()
-			if (this.artwork) this.artwork.postRender()
+			if (this.artworks) {
+				this.artworks.forEach( artwork => {
+					artwork.preRender()
+					artwork.render()
+					artwork.postRender()
+				})
+			}
 
 			this.usePostprocess ? this.postProcess.composer.render() : this.renderer.render(this.scene, this.camera)
 		}
 		/// #else
-		if (this.artwork) this.artwork.preRender()
-		if (this.artwork) this.artwork.render()
-		if (this.artwork) this.artwork.postRender()
+		if (this.artworks) {
+			this.artworks.forEach( artwork => {
+				artwork.preRender()
+				artwork.render()
+				artwork.postRender()
+			})
+		}
 
 		this.usePostprocess ? this.postProcess.composer.render() : this.renderer.render(this.scene, this.camera)
 		/// #endif

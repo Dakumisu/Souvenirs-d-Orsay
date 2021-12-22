@@ -3,6 +3,7 @@ import { BoxBufferGeometry, Color, DoubleSide, Group, Mesh, PlaneBufferGeometry,
 import Webgl from '@js/Webgl/Webgl'
 
 import { Store } from '@js/Tools/Store'
+import Card from './Card'
 
 const twoPI = Math.PI * 2
 const tVec3 = new Vector3()
@@ -13,8 +14,10 @@ export default class Cards {
 		this.scene = this.webgl.scene
 		this.mouse = this.webgl.mouse.scene
 
+		this.domCards = Store.nodes.cards_container
+
 		this.group = new Group()
-		this.cards = []
+		this.cards = {}
 
 		this.initialized = false
 
@@ -24,22 +27,18 @@ export default class Cards {
 
 	init() {
 		this.setCards()
-		this.getPositions()
-		this.getSizes()
 
 		this.initialized = true
 	}
 
 	setCards() {
-
-	}
-
-	getPositions() {
-
-	}
-
-	getSizes() {
-
+		this.domCards.forEach( (card, i) => {
+			const tmpCard = new Card({
+				id: i,
+				name: card.id,
+			})
+			this.cards[card.id] = tmpCard
+		})
 	}
 
 	addObject(object) {
@@ -47,12 +46,16 @@ export default class Cards {
 	}
 
 	resize() {
-		this.card.background.material.uniforms.uResolution.value = tVec3.set(Store.resolution.width, Store.resolution.height, Store.resolution.dpr)
-		this.card.subject.material.uniforms.uResolution.value = tVec3.set(Store.resolution.width, Store.resolution.height, Store.resolution.dpr)
+		for (const card in this.cards) {
+			this.cards[card].resize()
+		}
 	}
 
 	update(et) {
 		if (!this.initialized) return
 
+		for (const card in this.cards) {
+			this.cards[card].update(et)
+		}
 	}
 }

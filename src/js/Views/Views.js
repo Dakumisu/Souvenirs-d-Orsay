@@ -13,12 +13,10 @@ export default class Views extends EventEmitter {
 
 		this.setViewsList()
 
-		window.addEventListener("DOMContentLoaded", () => {
-			this.currentView = this.views['home']
+		this.currentView = this.views['home']
 
-			this.initNodes()
-			this.event()
-		})
+		this.initNodes()
+		this.event()
 	}
 
 	setViewsList() {

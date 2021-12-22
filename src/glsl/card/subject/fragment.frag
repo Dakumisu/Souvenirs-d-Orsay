@@ -21,7 +21,7 @@ void main() {
 	vec3 color = vec3(uColor);
 	float alpha = uAlpha;
 
-	vec4 artworkTexture = texture2D(uArtworkTexture, uv);
+	vec4 artworkTexture = texture2D(uArtworkTexture, mix(vUv, uv, .0));
 
 	gl_FragColor = vec4(color * vec3(vUv, 0.), alpha);
 	gl_FragColor = artworkTexture;

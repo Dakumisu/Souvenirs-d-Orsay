@@ -49,8 +49,8 @@ export default class Webgl {
 
 		// Tools
 		this.device = new Device()
-		this.sizes = new Sizes()
 		this.views = new Views()
+		this.sizes = new Sizes()
 		this.mouse = new Mouse()
 		// this.raycaster = new Raycasters()
 
