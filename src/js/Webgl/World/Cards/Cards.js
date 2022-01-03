@@ -3,7 +3,11 @@ import { BoxBufferGeometry, Color, DoubleSide, Group, Mesh, PlaneBufferGeometry,
 import Webgl from '@js/Webgl/Webgl'
 
 import { Store } from '@js/Tools/Store'
+import loadModel from '@utils/loader/loadGLTF'
+
 import Card from './Card'
+
+import modelCard from '@public/model/card2.glb'
 
 const twoPI = Math.PI * 2
 const tVec3 = new Vector3()
@@ -41,6 +45,17 @@ export default class Cards {
 			})
 			this.cards[card.id] = tmpCard
 		})
+
+		// loadModel(modelCard).then( response => {
+		// 	const mesh = response
+		// 	mesh.scale.set(
+		// 		Store.nodes.card[0].getBoundingClientRect().width,
+		// 		Store.nodes.card[0].getBoundingClientRect().height,
+		// 		100
+		// 	)
+		// 	console.log(mesh)
+		// 	this.addObject(response)
+		// })
 	}
 
 	addObject(object) {

@@ -51,13 +51,8 @@ export default class Card {
 	}
 
 	setGeometries() {
-		const cardWidth = this.domCard.getBoundingClientRect().width
-		const cardHeight = this.domCard.getBoundingClientRect().height
-		this.card.background.geometry = new PlaneBufferGeometry(cardWidth, cardHeight, 1, 1)
-
-		const subjectWidth = this.domSubject.getBoundingClientRect().width
-		const subjectHeight = this.domSubject.getBoundingClientRect().height
-		this.card.subject.geometry = new PlaneBufferGeometry(subjectWidth, subjectHeight, 1, 1)
+		this.card.background.geometry = new PlaneBufferGeometry(1, 1, 1, 1)
+		this.card.subject.geometry = new PlaneBufferGeometry(1, 1, 1, 1)
 	}
 
 	setMaterials() {
@@ -104,6 +99,7 @@ export default class Card {
 		this.card.subject.mesh.frustumCulled = false
 		this.group.add(this.card.subject.mesh)
 
+		this.setSizes()
 		this.setPositions()
 
 		this.group.renderOrder = 1
@@ -123,6 +119,25 @@ export default class Card {
 		this.card.subject.mesh.position.set(x, y, 1)
 
 		console.log(this.card.subject.mesh.position);
+	}
+
+	setSizes() {
+		const cardWidth = this.domCard.getBoundingClientRect().width
+		const cardHeight = this.domCard.getBoundingClientRect().height
+
+		const subjectWidth = this.domSubject.getBoundingClientRect().width
+		const subjectHeight = this.domSubject.getBoundingClientRect().height
+
+		this.card.background.mesh.scale.set(
+			cardWidth,
+			cardHeight,
+			1
+		)
+		this.card.subject.mesh.scale.set(
+			subjectWidth,
+			subjectHeight,
+			1
+		)
 	}
 
 	addObject(object) {
