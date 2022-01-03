@@ -56,7 +56,7 @@ export default class Views extends EventEmitter {
 	}
 
 	clickOnCards(e) {
-		console.log(e.target);
+		this.trigger('clickCard', [e.target.id])
 	}
 
 	event() {

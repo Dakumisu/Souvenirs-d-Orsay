@@ -87,3 +87,40 @@
 		@content;
 	}
 }
+
+
+// MOBILE FIRST
+/* Phone landscape */
+@mixin phone-landscape-mobile {
+    @media only screen and (min-width: 767px) and (orientation: landscape) {
+        @content;
+    }
+}
+
+/* Tablet portrait */
+@mixin tablet-portrait-mobile {
+    @media only screen and (min-width: 987px) and (orientation: portrait) {
+        @content;
+    }
+}
+
+/* Tablet landscape */
+@mixin tablet-landscape-mobile {
+    @media only screen and (min-width: 987px) and (orientation: landscape) {
+        @content;
+    }
+}
+
+/* Tablet portrait/landscape */
+@mixin tablet-mobile {
+    @media only screen and (max-width: 987px) {
+        @content;
+    }
+}
+
+/* Desktop, medium size */
+@mixin desktop-sm-mobile {
+    @media only screen and (min-width: 1280px) {
+        @content;
+    }
+}

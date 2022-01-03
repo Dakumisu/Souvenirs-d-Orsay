@@ -151,8 +151,6 @@ export default class Card {
 		x = this.domSubject.getBoundingClientRect().left - Store.resolution.width / 2 + this.domSubject.getBoundingClientRect().width / 2
 		y = -this.domSubject.getBoundingClientRect().top + Store.resolution.height / 2 - this.domSubject.getBoundingClientRect().height / 2
 		this.card.subject.mesh.position.set(x, y, 1)
-
-		// console.log(this.card.subject.mesh.position);
 	}
 
 	setSizes() {
@@ -177,6 +175,10 @@ export default class Card {
 
 	addObject(object) {
 		this.scene.add(object)
+	}
+
+	scroll() {
+		this.setPositions()
 	}
 
 	resize() {

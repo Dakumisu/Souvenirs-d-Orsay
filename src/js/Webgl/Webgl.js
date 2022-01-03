@@ -66,6 +66,10 @@ export default class Webgl {
 			this.update()
 		})
 
+		this.views.on('clickCard', (e) => {
+			this.world.clickOnCard(e)
+		})
+
 		this.views.on('changeView', () => {
 			this.views.getView()
 		})
