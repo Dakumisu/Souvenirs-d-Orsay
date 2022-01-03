@@ -27,6 +27,8 @@ const oeuvres = [
 	{id: 'card_11', artwork: '', content: 'card 11'}
 ]
 
+console.log('coucou')
+
 function createCards() {
 	oeuvres.forEach((oeuvre, c) => {
 		const card = document.createElement('div')
