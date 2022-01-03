@@ -118,7 +118,7 @@ export default class Card {
 		y = -this.domSubject.getBoundingClientRect().top + Store.resolution.height / 2 - this.domSubject.getBoundingClientRect().height / 2
 		this.card.subject.mesh.position.set(x, y, 1)
 
-		console.log(this.card.subject.mesh.position);
+		// console.log(this.card.subject.mesh.position);
 	}
 
 	setSizes() {

@@ -110,7 +110,7 @@ export default class Artwork {
 	}
 
 	addObject(object) {
-		console.log(object);
+		// console.log(object);
 		this.artwork.scene.add(object)
 	}
 
