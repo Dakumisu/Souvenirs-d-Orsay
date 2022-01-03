@@ -178,7 +178,11 @@ export default class Card {
 	}
 
 	scroll() {
-		this.setPositions()
+		// TODO position
+	}
+
+	zoom() {
+		// TODO gsap animation
 	}
 
 	resize() {

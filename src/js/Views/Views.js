@@ -40,6 +40,8 @@ export default class Views extends EventEmitter {
 			}
 		}
 
+
+
 		Store.nodes = this.nodes
 
 		this.event()
@@ -49,6 +51,10 @@ export default class Views extends EventEmitter {
 		this.currentView = this.views[view]
 
 		this.trigger('changeView')
+	}
+
+	click() {
+
 	}
 
 	getView() {
