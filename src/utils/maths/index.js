@@ -73,4 +73,3 @@ background.addEventListener('click', () => {
 })
 
 
-createCards()

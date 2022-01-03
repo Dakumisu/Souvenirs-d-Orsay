@@ -18,7 +18,7 @@ export default class Cards {
 		this.scene = this.webgl.scene
 		this.mouse = this.webgl.mouse.scene
 
-		this.domCards = Store.nodes.cards_container
+		this.domCards = Store.nodes.card
 
 		this.group = new Group()
 		this.cards = {}

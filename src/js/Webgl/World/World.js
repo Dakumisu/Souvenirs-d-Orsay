@@ -13,7 +13,7 @@ export default class World {
 	}
 
 	setComponent() {
-		//this.cards = new Cards()
+		this.cards = new Cards()
 
 		this.initialized = true
 	}
