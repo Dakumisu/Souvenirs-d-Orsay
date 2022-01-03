@@ -28,18 +28,18 @@ canvas.sketch {
 
 .deck {
 	width: 90%;
-	max-width: 500px;
+	// max-width: 500px;
 	position: relative;
 	display: flex;
 	flex-direction: row;
 	justify-content: center;
 	align-items: flex-start;
-	flex-wrap: wrap;
+	// flex-wrap: wrap;
 }
 
 .card_container {
-	width: 150px;
-	height: 250px;
+	width: 500px;
+	height: 700px;
 	position: relative;
 	display: flex;
 	flex-direction: column;

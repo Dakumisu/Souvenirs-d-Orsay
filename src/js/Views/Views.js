@@ -16,7 +16,6 @@ export default class Views extends EventEmitter {
 		this.currentView = this.views['home']
 
 		this.initNodes()
-		this.event()
 	}
 
 	setViewsList() {
@@ -42,6 +41,8 @@ export default class Views extends EventEmitter {
 		}
 
 		Store.nodes = this.nodes
+
+		this.event()
 	}
 
 	changeView(view) {
@@ -54,7 +55,13 @@ export default class Views extends EventEmitter {
 		return this.currentView
 	}
 
-	event() {
+	clickOnCards(e) {
+		console.log(e.target);
+	}
 
+	event() {
+		this.nodes.card.forEach(card => {
+			card.addEventListener('click', this.clickOnCards.bind(this))
+		})
 	}
 }

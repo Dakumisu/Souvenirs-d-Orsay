@@ -21,6 +21,7 @@ export default class Artwork {
 		this.subjectWidth = this.domSubject.getBoundingClientRect().width
 		this.subjectHeight = this.domSubject.getBoundingClientRect().height
 
+		this.background = {}
 		this.artwork = {}
 		this.artwork.texture = null
 
@@ -38,6 +39,7 @@ export default class Artwork {
 		/// #endif
 		this.setRenderTarget()
 
+		this.setBackground()
 		this.setGeometry()
 		this.setMaterial()
 		this.setMesh()
@@ -109,6 +111,16 @@ export default class Artwork {
 		this.artwork.mesh.frustumCulled = false
 
 		this.addObject(this.artwork.mesh)
+	}
+
+	setBackground() {
+		this.background.geometry = new PlaneBufferGeometry(50, 50, 1, 1)
+		this.background.material = new MeshNormalMaterial()
+		this.background.mesh = new Mesh(this.background.geometry, this.background.material)
+
+		this.background.mesh.position.z = -2
+
+		this.addObject(this.background.mesh)
 	}
 
 	addObject(object) {
