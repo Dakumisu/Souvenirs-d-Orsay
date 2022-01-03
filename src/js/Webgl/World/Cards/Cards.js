@@ -63,7 +63,8 @@ export default class Cards {
 	}
 
 	click(e) {
-		console.log(this.cards[e].zoom(), this.cards[e])
+		this.cards[e].zoom()
+		//console.log(this.cards[e].zoom(), this.cards[e])
 	}
 
 	resize() {

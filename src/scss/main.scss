@@ -10,7 +10,7 @@ canvas.sketch {
 	position: fixed;
 	top: 0;
 	left: 0;
-	z-index: 0;
+	z-index: 2;
 	pointer-events: none;
 
 }
@@ -21,7 +21,7 @@ canvas.sketch {
 	padding: 0 10px;
 
 	position: relative;
-	opacity: 1;
+	opacity: 0;
 	z-index: 1;
 
 	//z-index: -1;

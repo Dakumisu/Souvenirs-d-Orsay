@@ -1,9 +1,22 @@
-import { BoxBufferGeometry, Color, DoubleSide, FrontSide, Group, Mesh, PlaneBufferGeometry, ShaderMaterial, TextureLoader, Vector2, Vector3 } from 'three'
+import {
+	BoxBufferGeometry,
+	Color,
+	DoubleSide,
+	FrontSide,
+	Group,
+	Mesh,
+	PlaneBufferGeometry,
+	ShaderMaterial,
+	TextureLoader,
+	Vector2,
+	Vector3
+} from 'three'
 
 import Webgl from '@js/Webgl/Webgl'
 import Artwork from './Artwork'
 
-import { Store } from '@js/Tools/Store'
+import {Store} from '@js/Tools/Store'
+import gsap from 'gsap'
 
 import backgroundVertex from '@glsl/card/background/vertex.vert'
 import backgroundFragment from '@glsl/card/background/fragment.frag'
@@ -45,6 +58,8 @@ export default class Card {
 		this.card.background = {}
 		this.textures = {}
 
+		this.cardClicked = false
+
 		this.initialized = false
 
 		this.init()
@@ -83,44 +98,44 @@ export default class Card {
 			vertexShader: backgroundVertex,
 			fragmentShader: backgroundFragment,
 			uniforms: {
-				uTime: { value: 0 },
-				uColor: { value: new Color('#53706b') },
-				uColor1: { value: new Color('#00383d') },
-				uAlpha: { value: 1 },
+				uTime: {value: 0},
+				uColor: {value: new Color('#53706b')},
+				uColor1: {value: new Color('#00383d')},
+				uAlpha: {value: 1},
 
-				uSize: { value: tVec2.set(this.domCard.getBoundingClientRect().width * 1.5, this.domCard.getBoundingClientRect().height * 1.5) },
-	            uRadius: { value : 10 },
+				uSize: {value: tVec2.set(this.domCard.getBoundingClientRect().width * 1.5, this.domCard.getBoundingClientRect().height * 1.5)},
+				uRadius: {value: 10},
 
-				uWoodTexture: { value: this.textures.wood },
-				uWood2Texture: { value: this.textures.wood2 },
-				uTreeTexture: { value: this.textures.tree },
-				uLeavesTexture: { value: this.textures.leaves },
-				uDisplacementTexture: { value: this.textures.displacement },
-				uDisplacement2Texture: { value: this.textures.displacement2 },
-				uDisplacement3Texture: { value: this.textures.displacement3 },
+				uWoodTexture: {value: this.textures.wood},
+				uWood2Texture: {value: this.textures.wood2},
+				uTreeTexture: {value: this.textures.tree},
+				uLeavesTexture: {value: this.textures.leaves},
+				uDisplacementTexture: {value: this.textures.displacement},
+				uDisplacement2Texture: {value: this.textures.displacement2},
+				uDisplacement3Texture: {value: this.textures.displacement3},
 
-				uResolution: { value: tVec3.set(Store.resolution.width, Store.resolution.height, Store.resolution.dpr) },
+				uResolution: {value: tVec3.set(Store.resolution.width, Store.resolution.height, Store.resolution.dpr)},
 			},
 			side: DoubleSide,
 			// transparent: true,
-			depthTest: false,
-			depthWrite: false,
+			// depthTest: false,
+			// depthWrite: false,
 		})
 
 		this.card.subject.material = new ShaderMaterial({
 			vertexShader: subjectVertex,
 			fragmentShader: subjectFragment,
 			uniforms: {
-				uTime: { value: 0 },
-				uColor: { value: new Color('#ffffff') },
-				uAlpha: { value: 1 },
-				uArtworkTexture: { value: null },
-				uResolution: { value: tVec3.set(Store.resolution.width, Store.resolution.height, Store.resolution.dpr) },
+				uTime: {value: 0},
+				uColor: {value: new Color('#ffffff')},
+				uAlpha: {value: 1},
+				uArtworkTexture: {value: null},
+				uResolution: {value: tVec3.set(Store.resolution.width, Store.resolution.height, Store.resolution.dpr)},
 			},
 			side: FrontSide,
 			transparent: true,
-			depthTest: false,
-			depthWrite: false
+			// depthTest: false,
+			// depthWrite: false
 		})
 	}
 
@@ -146,10 +161,18 @@ export default class Card {
 
 		x = this.domCard.getBoundingClientRect().left - Store.resolution.width / 2 + this.domCard.getBoundingClientRect().width / 2
 		y = -this.domCard.getBoundingClientRect().top + Store.resolution.height / 2 - this.domCard.getBoundingClientRect().height / 2
-		this.card.background.mesh.position.set(x, y, 0)
+		// this.card.background.mesh.position.set(x, y, 0)
+		this.group.position.set(x, y, 0)
 
-		x = this.domSubject.getBoundingClientRect().left - Store.resolution.width / 2 + this.domSubject.getBoundingClientRect().width / 2
-		y = -this.domSubject.getBoundingClientRect().top + Store.resolution.height / 2 - this.domSubject.getBoundingClientRect().height / 2
+		// x = this.domSubject.getBoundingClientRect().left - Store.resolution.width / 2 + this.domSubject.getBoundingClientRect().width / 2
+		// y = -this.domSubject.getBoundingClientRect().top + Store.resolution.height / 2 - this.domSubject.getBoundingClientRect().height / 2
+
+		x = (this.domSubject.getBoundingClientRect().left - this.domCard.getBoundingClientRect().left)
+			- (this.domCard.getBoundingClientRect().width - this.domSubject.getBoundingClientRect().width) / 2
+
+		y = (-this.domSubject.getBoundingClientRect().top - -this.domCard.getBoundingClientRect().top)
+			+ (this.domCard.getBoundingClientRect().height - this.domSubject.getBoundingClientRect().height) / 2
+
 		this.card.subject.mesh.position.set(x, y, 1)
 	}
 
@@ -183,7 +206,18 @@ export default class Card {
 
 	zoom() {
 		// TODO gsap animation
-		console.log('zoom')
+		// 1- changer la scale de la card -> on utilise le z pour le faire
+		// // 2- changer la position de la card en 0-0
+		if (this.cardClicked === false) {
+			gsap.to(this.group.position, {x: 0, y: 0, z: 50, duration: 0.75})
+			this.cardClicked = true
+		} else {
+			console.log('else')
+		}
+
+		// // 3- utiliser le change view
+		// // 4- process 0-1 dans les uv du fragment
+		console.log('zoom', this.group)
 	}
 
 	resize() {

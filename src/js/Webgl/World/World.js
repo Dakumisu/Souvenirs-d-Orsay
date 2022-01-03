@@ -34,7 +34,6 @@ export default class World {
 
 	update(et) {
 		if (!this.initialized) return
-
 		if (this.cards) this.cards.update(et)
 	}
 
