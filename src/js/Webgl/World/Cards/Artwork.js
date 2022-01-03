@@ -1,4 +1,4 @@
-import { BoxBufferGeometry, Color, DoubleSide, LinearFilter, Mesh, PerspectiveCamera, PlaneBufferGeometry, RGBAFormat, Scene, ShaderMaterial, sRGBEncoding, TorusBufferGeometry, Vector3, WebGLRenderTarget } from 'three'
+import { BoxBufferGeometry, Color, DoubleSide, LinearFilter, Mesh, MeshNormalMaterial, PerspectiveCamera, PlaneBufferGeometry, RGBAFormat, Scene, ShaderMaterial, sRGBEncoding, TorusBufferGeometry, Vector3, WebGLRenderTarget } from 'three'
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls'
 
 import Webgl from '@js/Webgl/Webgl'
@@ -100,6 +100,8 @@ export default class Artwork {
 			side: DoubleSide,
 			transparent: true,
 		})
+
+		this.artwork.material = new MeshNormalMaterial()
 	}
 
 	setMesh() {
@@ -115,7 +117,7 @@ export default class Artwork {
 	}
 
 	resize() {
-		this.artwork.material.uniforms.uResolution.value = tVec3.set(this.subjectWidth, this.subjectHeight, Store.resolution.dpr)
+		// this.artwork.material.uniforms.uResolution.value = tVec3.set(this.subjectWidth, this.subjectHeight, Store.resolution.dpr)
 	}
 
 	preRender() {
@@ -134,7 +136,7 @@ export default class Artwork {
 		if (!this.initialized) return
 
 		this.artwork.texture = this.artwork.renderTarget.texture
-		this.artwork.material.uniforms.uTime.value = et
+		// this.artwork.material.uniforms.uTime.value = et
 		this.artwork.mesh.rotation.y = et * .001
 
 		/// #if DEBUG

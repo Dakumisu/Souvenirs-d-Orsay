@@ -63,7 +63,7 @@ export default class Card {
 				uTime: { value: 0 },
 				uColor: { value: new Color('#ffffff') },
 				uAlpha: { value: 1 },
-				uSize: { value: tVec2.set(Store.resolution.height / 5, Store.resolution.width / 5) },
+				uSize: { value: tVec2.set(this.domCard.getBoundingClientRect().width * .75, this.domCard.getBoundingClientRect().height * .75) },
 	            uRadius: { value : 10 },
 				uResolution: { value: tVec3.set(Store.resolution.width, Store.resolution.height, Store.resolution.dpr) },
 			},
@@ -122,20 +122,21 @@ export default class Card {
 	}
 
 	setSizes() {
-		const cardWidth = this.domCard.getBoundingClientRect().width
-		const cardHeight = this.domCard.getBoundingClientRect().height
+		let width, height
 
-		const subjectWidth = this.domSubject.getBoundingClientRect().width
-		const subjectHeight = this.domSubject.getBoundingClientRect().height
-
+		width = this.domCard.getBoundingClientRect().width
+		height = this.domCard.getBoundingClientRect().height
 		this.card.background.mesh.scale.set(
-			cardWidth,
-			cardHeight,
+			width,
+			height,
 			1
 		)
+
+		width = this.domSubject.getBoundingClientRect().width
+		height = this.domSubject.getBoundingClientRect().height
 		this.card.subject.mesh.scale.set(
-			subjectWidth,
-			subjectHeight,
+			width,
+			height,
 			1
 		)
 	}
@@ -146,7 +147,11 @@ export default class Card {
 
 	resize() {
 		this.card.background.material.uniforms.uResolution.value = tVec3.set(Store.resolution.width, Store.resolution.height, Store.resolution.dpr)
+		// this.card.background.material.uniforms.uSize.value = tVec2.set(Store.resolution.height / 5, Store.resolution.width / 5)
 		this.card.subject.material.uniforms.uResolution.value = tVec3.set(Store.resolution.width, Store.resolution.height, Store.resolution.dpr)
+
+		this.setSizes()
+		this.setPositions()
 	}
 
 	update(et) {

@@ -66,6 +66,10 @@ export default class Camera {
 
 
 	resize() {
+		const perspective = Store.resolution.height / 2
+		const fov = (180 * (2 * Math.atan((Store.resolution.height / 2) / perspective))) / Math.PI
+		this.pCamera.fov = fov
+		this.pCamera.position.z = perspective
 		this.pCamera.aspect = Store.resolution.width / Store.resolution.height
 		this.pCamera.updateProjectionMatrix()
 
@@ -76,6 +80,8 @@ export default class Camera {
 		Store.resolution.a2 = imgAspect.a2
 
 		/// #if DEBUG
+			this.debug.camera.fov = this.pCamera.fov
+			this.debug.camera.position.z = perspective
 			this.debug.camera.aspect = Store.resolution.width / Store.resolution.height
 			this.debug.camera.updateProjectionMatrix()
 		/// #endif
