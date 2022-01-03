@@ -145,6 +145,14 @@ export default class Card {
 		this.scene.add(object)
 	}
 
+	scroll() {
+		// TODO position
+	}
+
+	zoom() {
+		// TODO gsap animation
+	}
+
 	resize() {
 		this.card.background.material.uniforms.uResolution.value = tVec3.set(Store.resolution.width, Store.resolution.height, Store.resolution.dpr)
 		// this.card.background.material.uniforms.uSize.value = tVec2.set(Store.resolution.height / 5, Store.resolution.width / 5)
