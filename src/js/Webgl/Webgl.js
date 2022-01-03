@@ -70,6 +70,10 @@ export default class Webgl {
 			this.world.clickOnCard(e)
 		})
 
+		this.views.on('scroll', () => {
+			this.world.scroll()
+		})
+
 		this.views.on('changeView', () => {
 			this.views.getView()
 		})

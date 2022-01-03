@@ -1,6 +1,6 @@
 import EventEmitter from '@js/Tools/EventEmitter'
 
-import { Store } from '@js/Tools/Store'
+import {Store} from '@js/Tools/Store'
 
 export default class Views extends EventEmitter {
 	constructor() {
@@ -41,7 +41,6 @@ export default class Views extends EventEmitter {
 		}
 
 
-
 		Store.nodes = this.nodes
 
 		this.event()
@@ -53,10 +52,6 @@ export default class Views extends EventEmitter {
 		this.trigger('changeView')
 	}
 
-	click() {
-
-	}
-
 	getView() {
 		return this.currentView
 	}
@@ -65,9 +60,16 @@ export default class Views extends EventEmitter {
 		this.trigger('clickCard', [e.target.id])
 	}
 
+	onScroll() {
+		this.trigger('scroll')
+	}
+
 	event() {
 		this.nodes.card.forEach(card => {
 			card.addEventListener('click', this.clickOnCards.bind(this))
 		})
+
+		window.addEventListener('scroll', this.onScroll.bind(this))
+
 	}
 }

@@ -63,12 +63,18 @@ export default class Cards {
 	}
 
 	click(e) {
-		console.log(this.cards[e]);
+		console.log(this.cards[e].zoom(), this.cards[e])
 	}
 
 	resize() {
 		for (const card in this.cards) {
 			this.cards[card].resize()
+		}
+	}
+
+	scroll() {
+		for (const card in this.cards) {
+			this.cards[card].scroll()
 		}
 	}
 

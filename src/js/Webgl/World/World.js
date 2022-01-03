@@ -24,6 +24,10 @@ export default class World {
 		if (this.cards) this.cards.resize()
 	}
 
+	scroll() {
+		this.cards.scroll()
+	}
+
 	clickOnCard(e) {
 		this.cards.click(e)
 	}

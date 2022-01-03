@@ -11,6 +11,8 @@ canvas.sketch {
 	top: 0;
 	left: 0;
 	z-index: 0;
+	pointer-events: none;
+
 }
 
 .ui {
@@ -19,10 +21,10 @@ canvas.sketch {
 	padding: 0 10px;
 
 	position: relative;
-	//z-index: 1;
-
+	opacity: 1;
 	z-index: 1;
-	//pointer-events: none;
+
+	//z-index: -1;
 }
 
 .deck {
