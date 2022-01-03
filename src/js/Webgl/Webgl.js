@@ -41,6 +41,9 @@ export default class Webgl {
 			this.stats = new Stats()
 		/// #endif
 
+		this.sizes = new Sizes()
+		this.device = new Device()
+
 		// essentials stuff
 		this.raf = new Raf()
 		this.scene = new Scene()
@@ -48,9 +51,7 @@ export default class Webgl {
 		this.renderer = new Renderer()
 
 		// Tools
-		this.device = new Device()
 		this.views = new Views()
-		this.sizes = new Sizes()
 		this.mouse = new Mouse()
 		// this.raycaster = new Raycasters()
 

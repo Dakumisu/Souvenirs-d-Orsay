@@ -17,7 +17,7 @@ export default class Renderer {
 			for (const card in this.webgl.world.cards.cards) {
 				this.artworks.push(this.webgl.world.cards.cards[card].artwork)
 			}
-		}, 200)
+		}, 500)
 
 		/// #if DEBUG
 			this.stats = this.webgl.stats

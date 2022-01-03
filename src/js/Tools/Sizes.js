@@ -5,6 +5,7 @@ export default class Sizes extends EventEmitter {
 	constructor() {
 		super()
 
+		this.resize()
 		// Resize event
 		window.addEventListener('resize', this.resize.bind(this))
 	}
