@@ -1,4 +1,20 @@
-import { AdditiveBlending, Color, DoubleSide, InstancedBufferAttribute, InstancedBufferGeometry, LinearFilter, MathUtils, Mesh, PlaneBufferGeometry, RGBFormat, ShaderMaterial, SphereBufferGeometry, Vector3, VideoTexture } from 'three'
+import {
+	AdditiveBlending,
+	Color,
+	CylinderGeometry,
+	DoubleSide,
+	InstancedBufferAttribute,
+	InstancedBufferGeometry, InstancedMesh,
+	LinearFilter,
+	MathUtils, Matrix4,
+	Mesh, MeshBasicMaterial,
+	PlaneBufferGeometry,
+	RGBFormat,
+	ShaderMaterial,
+	SphereBufferGeometry,
+	Vector3,
+	VideoTexture
+} from 'three'
 
 import Webgl from '@js/Webgl/Webgl'
 
@@ -65,7 +81,7 @@ export default class Particles {
 		this.particles.geometry.attributes.normal = blueprintParticle.attributes.normal
 		this.particles.geometry.attributes.uv = blueprintParticle.attributes.uv
 
-		this.particles.geometry.setAttribute('aPositions', new InstancedBufferAttribute(this.positions, 3, false));
+		this.particles.geometry.setAttribute('aPositions', new InstancedBufferAttribute(this.positions, 3, false))
 		this.particles.geometry.setAttribute('aOffset', new InstancedBufferAttribute(this.offset, 1, false))
 		this.particles.geometry.setAttribute('aRandomScale', new InstancedBufferAttribute(this.randomScale, 1, false))
 	}
@@ -90,6 +106,7 @@ export default class Particles {
 			depthWrite: false,
 			blending: AdditiveBlending
 		})
+
 
 
 		/// #if DEBUG

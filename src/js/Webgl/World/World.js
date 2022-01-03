@@ -3,6 +3,7 @@ import Webgl from '@js/Webgl/Webgl'
 import Blueprint from './Blueprint'
 import Model from './Model'
 import Particles from './Particles'
+import AlguesParticles from "@js/Webgl/World/OpenParticles"
 
 export default class World {
 	constructor(opt = {}) {
@@ -15,8 +16,9 @@ export default class World {
 	}
 
 	setComponent() {
-		this.blueprint = new Blueprint()
-		// this.particles = new Particles()
+		// this.blueprint = new Blueprint()
+		//this.particles = new Particles()
+		this.alguesParticles = new AlguesParticles()
 		// this.model = new Model()
 		// this.geoMerge = new GeoMerge()
 
@@ -32,6 +34,7 @@ export default class World {
 
 		if (this.blueprint) this.blueprint.resize()
 		if (this.particles) this.particles.resize()
+		if (this.alguesParticles) this.alguesParticles.resize()
 	}
 
 	update(et) {
@@ -39,6 +42,7 @@ export default class World {
 
 		if (this.blueprint) this.blueprint.update(et)
 		if (this.particles) this.particles.update(et)
+		if (this.alguesParticles) this.alguesParticles.update(et)
 	}
 
 	destroy() {
