@@ -10,6 +10,8 @@ import backgroundVertex from '@glsl/card/background/vertex.vert'
 import backgroundFragment from '@glsl/card/background/fragment.frag'
 import subjectVertex from '@glsl/card/subject/vertex.vert'
 import subjectFragment from '@glsl/card/subject/fragment.frag'
+import numeroVertex from '@glsl/card/numero/vertex.vert'
+import numeroFragment from '@glsl/card/numero/fragment.frag'
 
 import woodImage from '@public/img/textures/card/wood.jpeg'
 import wood2Image from '@public/img/textures/card/wood2.jpeg'
@@ -21,8 +23,9 @@ import displacement3Image from '@public/img/textures/card/displacement.jpeg'
 
 const twoPI = Math.PI * 2
 const tVec3 = new Vector3()
-const tVec2 = new Vector2()
 const tVec2a = new Vector2()
+const tVec2b = new Vector2()
+const tVec2c = new Vector2()
 
 function roundedRect (ctx, x, y, width, height, radius) {
     ctx.moveTo(x, y + radius)
@@ -53,11 +56,13 @@ export default class Card {
 
 		this.domCard = Store.nodes.card[opt.id]
 		this.domSubject = Store.nodes.artwork[opt.id]
+		this.domNumero = Store.nodes.numero[opt.id]
 
 		this.group = new Group()
 		this.card = {}
 		this.card.subject = {}
 		this.card.background = {}
+		this.card.numero = {}
 		this.textures = {}
 
 		this.cardClicked = false
@@ -74,18 +79,8 @@ export default class Card {
 		this.setMaterials()
 		this.setMeshes()
 
-		// this.test()
-
 		this.initialized = true
 	}
-
-	// test() {
-
-
-	// 	const mesh = new Mesh(geometry, this.card.background.material)
-	// 	// mesh.rotation.y = Math.PI;
-	// 	this.addObject(mesh)
-	// }
 
 	setTextures() {
 		const textureLoader = new TextureLoader()
@@ -100,8 +95,7 @@ export default class Card {
 	}
 
 	setGeometries() {
-		this.card.background.geometry = new PlaneBufferGeometry(1, 1, 1, 1)
-		this.card.subject.geometry = new PlaneBufferGeometry(1, 1, 1, 1)
+		this.planeGeo = new PlaneBufferGeometry(1, 1, 1, 1)
 
 		// const extrudeSettings = { depth: 6, bevelEnabled: false, steps: 5 }
 		// this.card.background.geometry = new ExtrudeBufferGeometry(roundedRect(new Shape(), -.5, -.5, .5, .5, .1), extrudeSettings)
@@ -113,26 +107,26 @@ export default class Card {
 			vertexShader: backgroundVertex,
 			fragmentShader: backgroundFragment,
 			uniforms: {
-				uTime: {value: 0},
-				uColor: {value: new Color('#53706b')},
-				uColor1: {value: new Color('#00383d')},
-				uAlpha: {value: 1},
+				uTime: { value: 0 },
+				uColor: { value: new Color('#53706b') },
+				uColor1: { value: new Color('#00383d') },
+				uAlpha: { value: 1 },
 
-				uSize: {value: tVec2.set(this.domCard.getBoundingClientRect().width * 1.5, this.domCard.getBoundingClientRect().height * 1.5)},
-				uRadius: {value: 10},
+				uSize: { value: tVec2a.set(this.domCard.getBoundingClientRect().width * 1.5, this.domCard.getBoundingClientRect().height * 1.5) },
+				uRadius: { value: 10 },
 
-				uWoodTexture: {value: this.textures.wood},
-				uWood2Texture: {value: this.textures.wood2},
-				uTreeTexture: {value: this.textures.tree},
-				uLeavesTexture: {value: this.textures.leaves},
-				uDisplacementTexture: {value: this.textures.displacement},
-				uDisplacement2Texture: {value: this.textures.displacement2},
-				uDisplacement3Texture: {value: this.textures.displacement3},
+				uWoodTexture: { value: this.textures.wood },
+				uWood2Texture: { value: this.textures.wood2 },
+				uTreeTexture: { value: this.textures.tree },
+				uLeavesTexture: { value: this.textures.leaves },
+				uDisplacementTexture: { value: this.textures.displacement },
+				uDisplacement2Texture: { value: this.textures.displacement2 },
+				uDisplacement3Texture: { value: this.textures.displacement3 },
 
-				uResolution: {value: tVec3.set(Store.resolution.width, Store.resolution.height, Store.resolution.dpr)},
+				uResolution: { value: tVec3.set(Store.resolution.width, Store.resolution.height, Store.resolution.dpr) },
 			},
 			side: DoubleSide,
-			// transparent: true,
+			transparent: true,
 			depthTest: false,
 			depthWrite: false,
 		})
@@ -141,27 +135,51 @@ export default class Card {
 			vertexShader: subjectVertex,
 			fragmentShader: subjectFragment,
 			uniforms: {
-				uTime: {value: 0},
-				uColor: {value: new Color('#ffffff')},
-				uAlpha: {value: 1},
-				uArtworkTexture: {value: null},
-				uResolution: {value: tVec3.set(Store.resolution.width, Store.resolution.height, Store.resolution.dpr)},
+				uTime: { value: 0 },
+				uColor: { value: new Color('#ffffff') },
+				uAlpha: { value: 1 },
+				uArtworkTexture: { value: null },
+				uResolution: { value: tVec3.set(Store.resolution.width, Store.resolution.height, Store.resolution.dpr) },
 			},
 			side: FrontSide,
-			// transparent: true,
+			transparent: true,
+			// depthTest: false,
+			// depthWrite: false
+		})
+
+		this.card.numero.material = new ShaderMaterial({
+			vertexShader: numeroVertex,
+			fragmentShader: numeroFragment,
+			uniforms: {
+				uTime: { value: 0 },
+				uColor: { value: new Color('#ffffff') },
+				uAlpha: { value: 1 },
+
+				uSize: { value: tVec2c.set(this.domNumero.getBoundingClientRect().width * 1.5, this.domNumero.getBoundingClientRect().height * 1.5) },
+				uRadius: { value: 10 },
+
+				uResolution: { value: tVec3.set(Store.resolution.width, Store.resolution.height, Store.resolution.dpr) },
+			},
+			side: FrontSide,
+			transparent: true,
 			// depthTest: false,
 			// depthWrite: false
 		})
 	}
 
 	setMeshes() {
-		this.card.background.mesh = new Mesh(this.card.background.geometry, this.card.background.material)
+		this.card.background.mesh = new Mesh(this.planeGeo, this.card.background.material)
 		this.card.background.mesh.frustumCulled = false
 		this.group.add(this.card.background.mesh)
 
-		this.card.subject.mesh = new Mesh(this.card.subject.geometry, this.card.subject.material)
+		this.card.subject.mesh = new Mesh(this.planeGeo, this.card.subject.material)
 		this.card.subject.mesh.frustumCulled = false
 		this.group.add(this.card.subject.mesh)
+
+		this.card.numero.mesh = new Mesh(this.planeGeo, this.card.numero.material)
+		this.card.numero.mesh.rotation.z = Math.PI / 4
+		this.card.numero.mesh.frustumCulled = false
+		this.group.add(this.card.numero.mesh)
 
 		this.setSizes()
 		this.setPositions()
@@ -185,6 +203,10 @@ export default class Card {
 		x = (this.domSubject.getBoundingClientRect().left - this.domCard.getBoundingClientRect().left) - (this.domCard.getBoundingClientRect().width - this.domSubject.getBoundingClientRect().width) / 2
 		y = (-this.domSubject.getBoundingClientRect().top - -this.domCard.getBoundingClientRect().top) + (this.domCard.getBoundingClientRect().height - this.domSubject.getBoundingClientRect().height) / 2
 		this.card.subject.mesh.position.set(x, y, 1)
+
+		x = (this.domNumero.getBoundingClientRect().left - this.domCard.getBoundingClientRect().left) - (this.domCard.getBoundingClientRect().width - this.domNumero.getBoundingClientRect().width) / 2
+		y = (-this.domNumero.getBoundingClientRect().top - -this.domCard.getBoundingClientRect().top) + (this.domCard.getBoundingClientRect().height - this.domNumero.getBoundingClientRect().height) / 2
+		this.card.numero.mesh.position.set(x, y, 1)
 	}
 
 	setSizes() {
@@ -205,6 +227,14 @@ export default class Card {
 			height,
 			1
 		)
+
+		width = this.domNumero.getBoundingClientRect().width
+		height = this.domNumero.getBoundingClientRect().height
+		this.card.numero.mesh.scale.set(
+			width,
+			height,
+			1
+		)
 	}
 
 	addObject(object) {
@@ -212,17 +242,30 @@ export default class Card {
 	}
 
 	scroll() {
+		if (!this.initialized) return
+		if (this.cardClicked) return
 		this.setPositions()
 	}
 
 	zoom() {
+		if (!this.initialized) return
+		if (this.cardClicked) return
+
 		this.group.renderOrder = 2
 		// TODO gsap animation
 		// 1- changer la scale de la card -> on utilise le z pour le faire
 		// // 2- changer la position de la card en 0-0
 		if (this.cardClicked === false) {
-			gsap.to(this.group.position, 1, {x: 0, y: 0, z: 50, ease: 'Power3.easeOut'})
-			gsap.to(this.group.rotation, .75, {y: twoPI, ease: 'Power3.easeOut'})
+			gsap.to(this.group.position, 1, {
+				x: 0,
+				y: 0,
+				z: 50,
+				ease: 'Power3.easeOut'
+			})
+			gsap.to(this.group.rotation, .75, {
+				y: twoPI,
+				ease: 'Power3.easeOut'
+			})
 			this.cardClicked = true
 		} else {
 			console.log('else')
@@ -235,8 +278,10 @@ export default class Card {
 
 	resize() {
 		this.card.background.material.uniforms.uResolution.value = tVec3.set(Store.resolution.width, Store.resolution.height, Store.resolution.dpr)
-		this.card.background.material.uniforms.uSize.value = tVec2.set(this.domCard.getBoundingClientRect().width * 1.5, this.domCard.getBoundingClientRect().height * 1.5)
 		this.card.subject.material.uniforms.uResolution.value = tVec3.set(Store.resolution.width, Store.resolution.height, Store.resolution.dpr)
+
+		this.card.background.material.uniforms.uSize.value = tVec2a.set(this.domCard.getBoundingClientRect().width * 1.5, this.domCard.getBoundingClientRect().height * 1.5)
+		this.card.numero.material.uniforms.uSize.value = tVec2c.set(this.domNumero.getBoundingClientRect().width * 1.5, this.domNumero.getBoundingClientRect().height * 1.5)
 
 		this.setSizes()
 		this.setPositions()
@@ -254,17 +299,18 @@ export default class Card {
 		}
 
 
-		// tVec2a.set(
+		// tVec2b.set(
 		// 	this.mouse.x * 0.7,
 		// 	-this.mouse.y * 0.7
 		// )
 
-		// this.group.rotation.y += (.04 * (tVec2a.x / 2 - this.group.rotation.y));
-		// this.group.rotation.x += (.04 * (tVec2a.y / 2 - this.group.rotation.x));
+		// this.group.rotation.y += (.04 * (tVec2b.x / 2 - this.group.rotation.y));
+		// this.group.rotation.x += (.04 * (tVec2b.y / 2 - this.group.rotation.x));
 
 		// this.group.rotation.y = (twoPI * (et *.0005)) % twoPI
 
 		this.card.background.material.uniforms.uTime.value = et
 		this.card.subject.material.uniforms.uTime.value = et
+		this.card.numero.material.uniforms.uTime.value = et
 	}
 }

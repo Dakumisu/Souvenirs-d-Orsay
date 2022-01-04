@@ -12,19 +12,15 @@ canvas.sketch {
 	left: 0;
 	z-index: 2;
 	pointer-events: none;
-
+	// display: none;
 }
 
 .ui {
 	width: 100vw;
 	padding: 0 10px;
-
 	position: relative;
-	opacity: 1;
+	opacity: 0;
 	// z-index: 1;
-
-	//z-index: -1;
-
 	overflow: scroll;
 }
 
@@ -44,7 +40,7 @@ canvas.sketch {
 
 .card {
 	width: calc(50% - 20px);
-	margin: 10px;
+	margin: 15px 10px;
 	height: 250px;
 	position: relative;
 	display: flex;
@@ -83,6 +79,16 @@ canvas.sketch {
 
 	.content {
 		margin: 10px;
+	}
+
+	.numero {
+		position: absolute;
+		width: 30px;
+		height: 30px;
+		background-color: #fff;
+		bottom: -10px;
+		left: 50%;
+		transform: translateX(-50%);
 	}
 }
 
