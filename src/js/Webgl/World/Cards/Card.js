@@ -10,6 +10,8 @@ import backgroundVertex from '@glsl/card/background/vertex.vert'
 import backgroundFragment from '@glsl/card/background/fragment.frag'
 import subjectVertex from '@glsl/card/subject/vertex.vert'
 import subjectFragment from '@glsl/card/subject/fragment.frag'
+import numeroVertex from '@glsl/card/numero/vertex.vert'
+import numeroFragment from '@glsl/card/numero/fragment.frag'
 
 import woodImage from '@public/img/textures/card/wood.jpeg'
 import wood2Image from '@public/img/textures/card/wood2.jpeg'
@@ -21,8 +23,9 @@ import displacement3Image from '@public/img/textures/card/displacement.jpeg'
 
 const twoPI = Math.PI * 2
 const tVec3 = new Vector3()
-const tVec2 = new Vector2()
 const tVec2a = new Vector2()
+const tVec2b = new Vector2()
+const tVec2c = new Vector2()
 
 function roundedRect (ctx, x, y, width, height, radius) {
     ctx.moveTo(x, y + radius)
@@ -53,11 +56,13 @@ export default class Card {
 
 		this.domCard = Store.nodes.card[opt.id]
 		this.domSubject = Store.nodes.artwork[opt.id]
+		this.domNumero = Store.nodes.numero[opt.id]
 
 		this.group = new Group()
 		this.card = {}
 		this.card.subject = {}
 		this.card.background = {}
+		this.card.numero = {}
 		this.textures = {}
 
 		this.cardClicked = false
@@ -74,18 +79,8 @@ export default class Card {
 		this.setMaterials()
 		this.setMeshes()
 
-		// this.test()
-
 		this.initialized = true
 	}
-
-	// test() {
-
-
-	// 	const mesh = new Mesh(geometry, this.card.background.material)
-	// 	// mesh.rotation.y = Math.PI;
-	// 	this.addObject(mesh)
-	// }
 
 	setTextures() {
 		const textureLoader = new TextureLoader()
@@ -100,8 +95,7 @@ export default class Card {
 	}
 
 	setGeometries() {
-		this.card.background.geometry = new PlaneBufferGeometry(1, 1, 1, 1)
-		this.card.subject.geometry = new PlaneBufferGeometry(1, 1, 1, 1)
+		this.planeGeo = new PlaneBufferGeometry(1, 1, 1, 1)
 
 		// const extrudeSettings = { depth: 6, bevelEnabled: false, steps: 5 }
 		// this.card.background.geometry = new ExtrudeBufferGeometry(roundedRect(new Shape(), -.5, -.5, .5, .5, .1), extrudeSettings)
@@ -113,26 +107,26 @@ export default class Card {
 			vertexShader: backgroundVertex,
 			fragmentShader: backgroundFragment,
 			uniforms: {
-				uTime: {value: 0},
-				uColor: {value: new Color('#53706b')},
-				uColor1: {value: new Color('#00383d')},
-				uAlpha: {value: 1},
+				uTime: { value: 0 },
+				uColor: { value: new Color('#53706b') },
+				uColor1: { value: new Color('#00383d') },
+				uAlpha: { value: 1 },
 
-				uSize: {value: tVec2.set(this.domCard.getBoundingClientRect().width * 1.5, this.domCard.getBoundingClientRect().height * 1.5)},
-				uRadius: {value: 10},
+				uSize: { value: tVec2a.set(this.domCard.getBoundingClientRect().width * 1.5, this.domCard.getBoundingClientRect().height * 1.5) },
+				uRadius: { value: 10 },
 
-				uWoodTexture: {value: this.textures.wood},
-				uWood2Texture: {value: this.textures.wood2},
-				uTreeTexture: {value: this.textures.tree},
-				uLeavesTexture: {value: this.textures.leaves},
-				uDisplacementTexture: {value: this.textures.displacement},
-				uDisplacement2Texture: {value: this.textures.displacement2},
-				uDisplacement3Texture: {value: this.textures.displacement3},
+				uWoodTexture: { value: this.textures.wood },
+				uWood2Texture: { value: this.textures.wood2 },
+				uTreeTexture: { value: this.textures.tree },
+				uLeavesTexture: { value: this.textures.leaves },
+				uDisplacementTexture: { value: this.textures.displacement },
+				uDisplacement2Texture: { value: this.textures.displacement2 },
+				uDisplacement3Texture: { value: this.textures.displacement3 },
 
-				uResolution: {value: tVec3.set(Store.resolution.width, Store.resolution.height, Store.resolution.dpr)},
+				uResolution: { value: tVec3.set(Store.resolution.width, Store.resolution.height, Store.resolution.dpr) },
 			},
 			side: DoubleSide,
-			// transparent: true,
+			transparent: true,
 			depthTest: false,
 			depthWrite: false,
 		})
@@ -141,14 +135,33 @@ export default class Card {
 			vertexShader: subjectVertex,
 			fragmentShader: subjectFragment,
 			uniforms: {
-				uTime: {value: 0},
-				uColor: {value: new Color('#ffffff')},
-				uAlpha: {value: 1},
-				uArtworkTexture: {value: null},
-				uResolution: {value: tVec3.set(Store.resolution.width, Store.resolution.height, Store.resolution.dpr)},
+				uTime: { value: 0 },
+				uColor: { value: new Color('#ffffff') },
+				uAlpha: { value: 1 },
+				uArtworkTexture: { value: null },
+				uResolution: { value: tVec3.set(Store.resolution.width, Store.resolution.height, Store.resolution.dpr) },
 			},
 			side: FrontSide,
-			// transparent: true,
+			transparent: true,
+			// depthTest: false,
+			// depthWrite: false
+		})
+
+		this.card.numero.material = new ShaderMaterial({
+			vertexShader: numeroVertex,
+			fragmentShader: numeroFragment,
+			uniforms: {
+				uTime: { value: 0 },
+				uColor: { value: new Color('#ffffff') },
+				uAlpha: { value: 1 },
+
+				uSize: { value: tVec2c.set(this.domNumero.getBoundingClientRect().width * 1.5, this.domNumero.getBoundingClientRect().height * 1.5) },
+				uRadius: { value: 10 },
+
+				uResolution: { value: tVec3.set(Store.resolution.width, Store.resolution.height, Store.resolution.dpr) },
+			},
+			side: FrontSide,
+			transparent: true,
 			// depthTest: false,
 			// depthWrite: false
 		})
@@ -217,22 +230,19 @@ export default class Card {
 
 	zoom() {
 		this.group.renderOrder = 2
-
+		// TODO gsap animation
+		// 1- changer la scale de la card -> on utilise le z pour le faire
+		// // 2- changer la position de la card en 0-0
 		if (this.cardClicked === false) {
-			if (window.matchMedia("(max-width: 967px)").matches) {
-				gsap.to(this.group.position, 1, {x: 0, y: 0, z: 150, ease: 'Power3.easeOut'})
-			} else {
-				gsap.to(this.group.position, 1, {x: 0, y: 0, z: 50, ease: 'Power3.easeOut'})
-			}
-
+			gsap.to(this.group.position, 1, {x: 0, y: 0, z: 50, ease: 'Power3.easeOut'})
 			gsap.to(this.group.rotation, .75, {y: twoPI, ease: 'Power3.easeOut'})
 			this.cardClicked = true
 		} else {
 			console.log('else')
 		}
 
-		// 3- utiliser le change view
-		// 4- process 0-1 dans les uv du fragment
+		// // 3- utiliser le change view
+		// // 4- process 0-1 dans les uv du fragment
 		console.log('zoom', this.group)
 	}
 
