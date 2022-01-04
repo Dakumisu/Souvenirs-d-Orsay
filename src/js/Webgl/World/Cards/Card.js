@@ -132,10 +132,6 @@ export default class Card {
 
 	setGeometries() {
 		this.planeGeo = new PlaneBufferGeometry(1, 1, 1, 1)
-
-		// const extrudeSettings = { depth: 6, bevelEnabled: false, steps: 5 }
-		// this.card.background.geometry = new ExtrudeBufferGeometry(roundedRect(new Shape(), -.5, -.5, .5, .5, .1), extrudeSettings)
-		// this.card.background.geometry.uvsNeedUpdate = true
 	}
 
 	setMaterials() {
@@ -213,13 +209,18 @@ export default class Card {
 	}
 
 	setMeshes() {
-		this.card.background.mesh = new Mesh(this.card.background.geometry, this.card.background.material)
+		this.card.background.mesh = new Mesh(this.planeGeo, this.card.background.material)
 		this.card.background.mesh.frustumCulled = false
 		this.group.add(this.card.background.mesh)
 
-		this.card.subject.mesh = new Mesh(this.card.subject.geometry, this.card.subject.material)
+		this.card.subject.mesh = new Mesh(this.planeGeo, this.card.subject.material)
 		this.card.subject.mesh.frustumCulled = false
 		this.group.add(this.card.subject.mesh)
+
+		this.card.numero.mesh = new Mesh(this.planeGeo, this.card.numero.material)
+		this.card.numero.mesh.rotation.z = Math.PI / 4
+		this.card.numero.mesh.frustumCulled = false
+		this.group.add(this.card.numero.mesh)
 
 		this.setSizes()
 		this.setPositions()
@@ -263,6 +264,14 @@ export default class Card {
 		width = this.domSubject.getBoundingClientRect().width
 		height = this.domSubject.getBoundingClientRect().height
 		this.card.subject.mesh.scale.set(
+			width,
+			height,
+			1
+		)
+
+		width = this.domNumero.getBoundingClientRect().width
+		height = this.domNumero.getBoundingClientRect().height
+		this.card.numero.mesh.scale.set(
 			width,
 			height,
 			1
@@ -320,10 +329,10 @@ export default class Card {
 		this.group.renderOrder = 2
 
 		if (window.matchMedia("(max-width: 967px)").matches) {
-			gsap.to(this.group.position, 1, {x: 0, y: 0, z: 150, ease: 'Power3.easeOut'})
+			gsap.to(this.group.position, 1, { x: 0, y: 0, z: 150, ease: 'Power3.easeOut' })
 
 		} else {
-			gsap.to(this.group.position, 1, {x: 0, y: 0, z: 50, ease: 'Power3.easeOut'})
+			gsap.to(this.group.position, 1, { x: 0, y: 0, z: 50, ease: 'Power3.easeOut' })
 
 		}
 
@@ -363,20 +372,19 @@ export default class Card {
 
 	resize() {
 		if (!this.initialized) return
-		if (this.zoomed) return
 
 		this.card.background.material.uniforms.uResolution.value = tVec3.set(Store.resolution.width, Store.resolution.height, Store.resolution.dpr)
-		this.card.background.material.uniforms.uSize.value = tVec2.set(this.domCard.getBoundingClientRect().width * 1.5, this.domCard.getBoundingClientRect().height * 1.5)
 		this.card.subject.material.uniforms.uResolution.value = tVec3.set(Store.resolution.width, Store.resolution.height, Store.resolution.dpr)
 
 		this.card.background.material.uniforms.uSize.value = tVec2a.set(this.domCard.getBoundingClientRect().width * 1.5, this.domCard.getBoundingClientRect().height * 1.5)
 		this.card.subject.material.uniforms.uSize.value = tVec2b.set(this.domSubject.getBoundingClientRect().width * 1.5, this.domSubject.getBoundingClientRect().height * 1.5)
 		this.card.numero.material.uniforms.uSize.value = tVec2c.set(this.domNumero.getBoundingClientRect().width * 1.5, this.domNumero.getBoundingClientRect().height * 1.5)
 
+		this.artwork.resize()
+
+		if (this.zoomed) return
 		this.setSizes()
 		this.setPositions()
-
-		this.artwork.resize()
 	}
 
 	update(et) {
@@ -388,20 +396,19 @@ export default class Card {
 			// this.artwork.artwork.mesh.rotation.set(-this.camera.rotation._x, -this.camera.rotation._y, Math.PI);
 		}
 
-
 		if (this.zoomed) {
-			if (this.artwork.initialized) {
-				this.artwork.artwork.mesh.rotation.y += (.04 * (tVec2d.x / 2 - this.artwork.artwork.mesh.rotation.y));
-				this.artwork.artwork.mesh.rotation.x += (.04 * (tVec2d.y / 2 - this.artwork.artwork.mesh.rotation.x));
-			}
+			// if (this.artwork.initialized) {
+			// 	this.artwork.artwork.mesh.rotation.y += (.04 * (tVec2d.x / 2 - this.artwork.artwork.mesh.rotation.y));
+			// 	this.artwork.artwork.mesh.rotation.x += (.04 * (tVec2d.y / 2 - this.artwork.artwork.mesh.rotation.x));
+			// }
 
-			tVec2d.set(
-				this.mouse.x * (Math.PI / 4),
-				-this.mouse.y * (Math.PI / 4)
-			)
+			// tVec2d.set(
+			// 	this.mouse.x * (Math.PI / 4),
+			// 	-this.mouse.y * (Math.PI / 4)
+			// )
 
-			this.group.rotation.y += (.04 * (tVec2d.x / 2 - this.group.rotation.y));
-			this.group.rotation.x += (.04 * (tVec2d.y / 2 - this.group.rotation.x));
+			// this.group.rotation.y += (.04 * (tVec2d.x / 2 - this.group.rotation.y));
+			// this.group.rotation.x += (.04 * (tVec2d.y / 2 - this.group.rotation.x));
 		}
 
 		// this.group.rotation.y = (twoPI * (et *.0005)) % twoPI
