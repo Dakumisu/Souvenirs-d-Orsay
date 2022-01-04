@@ -1,4 +1,20 @@
-import { BoxBufferGeometry, Color, DoubleSide, ExtrudeBufferGeometry, FrontSide, Group, Mesh, MeshNormalMaterial, PlaneBufferGeometry, ShaderMaterial, Shape, TextureLoader, Vector2, Vector3 } from 'three'
+import {
+	BoxBufferGeometry,
+	Color,
+	DoubleSide,
+	ExtrudeBufferGeometry,
+	FontLoader,
+	FrontSide,
+	Group,
+	Mesh, MeshBasicMaterial, MeshMatcapMaterial,
+	MeshNormalMaterial,
+	PlaneBufferGeometry,
+	ShaderMaterial,
+	Shape, TextGeometry,
+	TextureLoader,
+	Vector2,
+	Vector3
+} from 'three'
 
 import Webgl from '@js/Webgl/Webgl'
 import Artwork from './Artwork'
@@ -27,18 +43,31 @@ const tVec2a = new Vector2()
 const tVec2b = new Vector2()
 const tVec2c = new Vector2()
 
-function roundedRect (ctx, x, y, width, height, radius) {
-    ctx.moveTo(x, y + radius)
-    ctx.lineTo(x, y + height - radius)
-    ctx.quadraticCurveTo(x, y + height, x + radius, y + height)
-    ctx.lineTo(x + width - radius, y + height)
-    ctx.quadraticCurveTo(x + width, y + height, x + width, y + height - radius)
-    ctx.lineTo(x + width, y + radius)
-    ctx.quadraticCurveTo(x + width, y, x + width - radius, y)
-    ctx.lineTo(x + radius, y)
-    ctx.quadraticCurveTo(x, y, x, y + radius)
+//const content = "La Main aux algues et aux coquillages est probablement la dernière verrerie d'Émile Gallé, réalisée en 1904, peu avant la mort de l'artiste nancéien, membre de l'École de Nancy."
+const title = "1990 - Art nouveau"
+let content = `
+    1904 - Art nouveau
+    La Main aux algues et aux
+    coquillages est probablement
+    la dernière verrerie
+    d'Émile Gallé, réalisée en 1904,
+    peu avant la mort de l'artiste
+    nancéien,membre de l'École de
+    Nancy.
+`
 
-    return ctx
+function roundedRect(ctx, x, y, width, height, radius) {
+	ctx.moveTo(x, y + radius)
+	ctx.lineTo(x, y + height - radius)
+	ctx.quadraticCurveTo(x, y + height, x + radius, y + height)
+	ctx.lineTo(x + width - radius, y + height)
+	ctx.quadraticCurveTo(x + width, y + height, x + width, y + height - radius)
+	ctx.lineTo(x + width, y + radius)
+	ctx.quadraticCurveTo(x + width, y, x + width - radius, y)
+	ctx.lineTo(x + radius, y)
+	ctx.quadraticCurveTo(x, y, x, y + radius)
+
+	return ctx
 }
 
 export default class Card {
@@ -78,6 +107,8 @@ export default class Card {
 		this.setGeometries()
 		this.setMaterials()
 		this.setMeshes()
+		//this.setText(title)
+		this.setText(content)
 
 		this.initialized = true
 	}
@@ -107,23 +138,23 @@ export default class Card {
 			vertexShader: backgroundVertex,
 			fragmentShader: backgroundFragment,
 			uniforms: {
-				uTime: { value: 0 },
-				uColor: { value: new Color('#53706b') },
-				uColor1: { value: new Color('#00383d') },
-				uAlpha: { value: 1 },
+				uTime: {value: 0},
+				uColor: {value: new Color('#53706b')},
+				uColor1: {value: new Color('#00383d')},
+				uAlpha: {value: 1},
 
-				uSize: { value: tVec2a.set(this.domCard.getBoundingClientRect().width * 1.5, this.domCard.getBoundingClientRect().height * 1.5) },
-				uRadius: { value: 10 },
+				uSize: {value: tVec2a.set(this.domCard.getBoundingClientRect().width * 1.5, this.domCard.getBoundingClientRect().height * 1.5)},
+				uRadius: {value: 10},
 
-				uWoodTexture: { value: this.textures.wood },
-				uWood2Texture: { value: this.textures.wood2 },
-				uTreeTexture: { value: this.textures.tree },
-				uLeavesTexture: { value: this.textures.leaves },
-				uDisplacementTexture: { value: this.textures.displacement },
-				uDisplacement2Texture: { value: this.textures.displacement2 },
-				uDisplacement3Texture: { value: this.textures.displacement3 },
+				uWoodTexture: {value: this.textures.wood},
+				uWood2Texture: {value: this.textures.wood2},
+				uTreeTexture: {value: this.textures.tree},
+				uLeavesTexture: {value: this.textures.leaves},
+				uDisplacementTexture: {value: this.textures.displacement},
+				uDisplacement2Texture: {value: this.textures.displacement2},
+				uDisplacement3Texture: {value: this.textures.displacement3},
 
-				uResolution: { value: tVec3.set(Store.resolution.width, Store.resolution.height, Store.resolution.dpr) },
+				uResolution: {value: tVec3.set(Store.resolution.width, Store.resolution.height, Store.resolution.dpr)},
 			},
 			side: DoubleSide,
 			transparent: true,
@@ -135,11 +166,11 @@ export default class Card {
 			vertexShader: subjectVertex,
 			fragmentShader: subjectFragment,
 			uniforms: {
-				uTime: { value: 0 },
-				uColor: { value: new Color('#ffffff') },
-				uAlpha: { value: 1 },
-				uArtworkTexture: { value: null },
-				uResolution: { value: tVec3.set(Store.resolution.width, Store.resolution.height, Store.resolution.dpr) },
+				uTime: {value: 0},
+				uColor: {value: new Color('#ffffff')},
+				uAlpha: {value: 1},
+				uArtworkTexture: {value: null},
+				uResolution: {value: tVec3.set(Store.resolution.width, Store.resolution.height, Store.resolution.dpr)},
 			},
 			side: FrontSide,
 			transparent: true,
@@ -151,14 +182,14 @@ export default class Card {
 			vertexShader: numeroVertex,
 			fragmentShader: numeroFragment,
 			uniforms: {
-				uTime: { value: 0 },
-				uColor: { value: new Color('#ffffff') },
-				uAlpha: { value: 1 },
+				uTime: {value: 0},
+				uColor: {value: new Color('#ffffff')},
+				uAlpha: {value: 1},
 
-				uSize: { value: tVec2c.set(this.domNumero.getBoundingClientRect().width * 1.5, this.domNumero.getBoundingClientRect().height * 1.5) },
-				uRadius: { value: 10 },
+				uSize: {value: tVec2c.set(this.domNumero.getBoundingClientRect().width * 1.5, this.domNumero.getBoundingClientRect().height * 1.5)},
+				uRadius: {value: 10},
 
-				uResolution: { value: tVec3.set(Store.resolution.width, Store.resolution.height, Store.resolution.dpr) },
+				uResolution: {value: tVec3.set(Store.resolution.width, Store.resolution.height, Store.resolution.dpr)},
 			},
 			side: FrontSide,
 			transparent: true,
@@ -237,6 +268,37 @@ export default class Card {
 		)
 	}
 
+	setText(content) {
+		const fontLoader = new FontLoader()
+		fontLoader.load('/static/fonts/NixieOne_Regular.json', (font) => {
+			console.log('loaded', font)
+			const textGeometry = new TextGeometry(content, {
+				font,
+				size: 8,
+				height: 0,
+				curveSegments: 5,
+				bevelThickness: 0.03,
+				bevelSize: 0.02,
+				bevelOffset: 0,
+				bevelSegments: 4,
+			})
+
+			textGeometry.computeBoundingBox()
+			textGeometry.translate(
+				- textGeometry.boundingBox.max.x * 0.54,
+				- textGeometry.boundingBox.max.y * 0.8,
+				- textGeometry.boundingBox.max.z * 0.5
+			)
+
+			const material = new MeshBasicMaterial({transparent: true})
+			const text = new Mesh(textGeometry, material)
+			text.position.z = 5
+
+			this.group.add(text)
+		})
+
+	}
+
 	addObject(object) {
 		this.scene.add(object)
 	}
@@ -258,7 +320,7 @@ export default class Card {
 				gsap.to(this.group.position, 1, {x: 0, y: 0, z: 150, ease: 'Power3.easeOut'})
 
 			} else {
-				gsap.to(this.group.position, 1, {x: 0, y: 0, z: 50, ease: 'Power3.easeOut'})
+				gsap.to(this.group.position, 1, {x: 0, y: 0, z: 120, ease: 'Power3.easeOut'})
 
 			}
 			gsap.to(this.group.rotation, .75, {y: twoPI, ease: 'Power3.easeOut'})
@@ -267,10 +329,6 @@ export default class Card {
 		} else {
 			console.log('else')
 		}
-
-		// // 3- utiliser le change view
-		// // 4- process 0-1 dans les uv du fragment
-		console.log('zoom', this.group)
 	}
 
 	resize() {

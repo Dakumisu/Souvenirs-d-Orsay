@@ -12,7 +12,7 @@ canvas.sketch {
 	left: 0;
 	z-index: 2;
 	pointer-events: none;
-	// display: none;
+	//display: none;
 }
 
 .ui {
@@ -75,7 +75,11 @@ canvas.sketch {
 	}
 
 	.content {
-		margin: 10px;
+		padding: 5px;
+		font-size: 12px;
+		text-align: center;
+		font-family: 'Nixie One', cursive;
+		pointer-events: none;
 	}
 
 	.numero {
@@ -86,6 +90,7 @@ canvas.sketch {
 		bottom: -10px;
 		left: 50%;
 		transform: translateX(-50%);
+		pointer-events: none;
 	}
 }
 
@@ -116,4 +121,12 @@ canvas.sketch {
 		width: calc(100% - 40px);
 		height: 75vh;
 	}
+}
+
+.content {
+	padding: 5px;
+	font-size: 12px;
+	text-align: center;
+	font-family: 'Nixie One', cursive;
+	color: white;
 }

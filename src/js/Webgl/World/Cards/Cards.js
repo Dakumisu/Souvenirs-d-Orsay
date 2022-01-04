@@ -17,6 +17,7 @@ export default class Cards {
 		this.webgl = new Webgl()
 		this.scene = this.webgl.scene
 		this.mouse = this.webgl.mouse.scene
+		this.camera = this.webgl.camera
 
 		this.domCards = Store.nodes.card
 
