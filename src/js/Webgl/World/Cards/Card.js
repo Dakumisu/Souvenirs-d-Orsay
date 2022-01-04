@@ -181,18 +181,13 @@ export default class Card {
 	}
 
 	setMeshes() {
-		this.card.background.mesh = new Mesh(this.planeGeo, this.card.background.material)
+		this.card.background.mesh = new Mesh(this.card.background.geometry, this.card.background.material)
 		this.card.background.mesh.frustumCulled = false
 		this.group.add(this.card.background.mesh)
 
-		this.card.subject.mesh = new Mesh(this.planeGeo, this.card.subject.material)
+		this.card.subject.mesh = new Mesh(this.card.subject.geometry, this.card.subject.material)
 		this.card.subject.mesh.frustumCulled = false
 		this.group.add(this.card.subject.mesh)
-
-		this.card.numero.mesh = new Mesh(this.planeGeo, this.card.numero.material)
-		this.card.numero.mesh.rotation.z = Math.PI / 4
-		this.card.numero.mesh.frustumCulled = false
-		this.group.add(this.card.numero.mesh)
 
 		this.setSizes()
 		this.setPositions()
@@ -236,14 +231,6 @@ export default class Card {
 		width = this.domSubject.getBoundingClientRect().width
 		height = this.domSubject.getBoundingClientRect().height
 		this.card.subject.mesh.scale.set(
-			width,
-			height,
-			1
-		)
-
-		width = this.domNumero.getBoundingClientRect().width
-		height = this.domNumero.getBoundingClientRect().height
-		this.card.numero.mesh.scale.set(
 			width,
 			height,
 			1
@@ -316,6 +303,7 @@ export default class Card {
 		if (this.zoomed) return
 
 		this.card.background.material.uniforms.uResolution.value = tVec3.set(Store.resolution.width, Store.resolution.height, Store.resolution.dpr)
+		this.card.background.material.uniforms.uSize.value = tVec2.set(this.domCard.getBoundingClientRect().width * 1.5, this.domCard.getBoundingClientRect().height * 1.5)
 		this.card.subject.material.uniforms.uResolution.value = tVec3.set(Store.resolution.width, Store.resolution.height, Store.resolution.dpr)
 
 		this.card.background.material.uniforms.uSize.value = tVec2a.set(this.domCard.getBoundingClientRect().width * 1.5, this.domCard.getBoundingClientRect().height * 1.5)
@@ -357,6 +345,5 @@ export default class Card {
 
 		this.card.background.material.uniforms.uTime.value = et
 		this.card.subject.material.uniforms.uTime.value = et
-		this.card.numero.material.uniforms.uTime.value = et
 	}
 }
