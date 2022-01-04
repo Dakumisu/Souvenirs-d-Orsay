@@ -269,12 +269,14 @@ export default class Card {
 
 		this.group.renderOrder = 2
 
-		gsap.to(this.group.position, 1, {
-			x: 0,
-			y: 0,
-			z: 50,
-			ease: 'Power3.easeOut'
-		})
+		if (window.matchMedia("(max-width: 967px)").matches) {
+			gsap.to(this.group.position, 1, {x: 0, y: 0, z: 150, ease: 'Power3.easeOut'})
+
+		} else {
+			gsap.to(this.group.position, 1, {x: 0, y: 0, z: 50, ease: 'Power3.easeOut'})
+
+		}
+
 		gsap.from(this.group.rotation, 1, {
 			y: twoPI,
 			ease: 'Power3.easeOut'
