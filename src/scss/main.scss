@@ -32,16 +32,17 @@ canvas.sketch {
 	flex-wrap: wrap;
 
 	// to align left last element with justify-content: center
-	&:after {
-		content: "";
-		flex: auto;
-	}
+	//&:after {
+	//	content: "";
+	//	flex: auto;
+	//}
 }
 
 .card {
 	width: calc(50% - 20px);
-	margin: 15px 10px;
-	height: 250px;
+	max-width: 200px;
+	margin: 20px 10px;
+	height: 300px;
 	position: relative;
 	display: flex;
 	flex-direction: column;
@@ -50,22 +51,18 @@ canvas.sketch {
 
 	@include phone-landscape-mobile {
 		width: calc(33% - 20px);
-		height: 500px;
 	}
 
 	@include tablet-portrait-mobile {
 		width: calc(33% - 20px);
-		height: 500px;
 	}
 
 	@include tablet-landscape-mobile {
 		width: calc(25% - 20px);
-		height: 500px;
 	}
 
 	@include desktop-sm-mobile {
 		width: calc(20% - 20px);
-		height: 500px;
 	}
 
 	.artwork {
