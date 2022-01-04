@@ -4,9 +4,12 @@ import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls'
 import Webgl from '@js/Webgl/Webgl'
 
 import { Store } from '@js/Tools/Store'
+import loadModel from '@utils/loader/loadGLTF'
 
 import vertex from '@glsl/artwork/vertex.vert'
 import fragment from '@glsl/artwork/fragment.frag'
+
+import model from '@public/model/main.glb'
 
 const twoPI = Math.PI * 2
 const tVec3 = new Vector3()
@@ -38,12 +41,25 @@ export default class Artwork {
 		/// #endif
 		this.setRenderTarget()
 
-		this.setBackground()
-		this.setGeometry()
 		this.setMaterial()
-		this.setMesh()
+		loadModel(model).then( response => {
+			this.artwork.mesh = response
+			this.artwork.mesh.traverse( e => {
+				if (e instanceof Mesh) {
+					e.material = this.artwork.material
+				}
+			})
+			this.artwork.mesh.scale.set(.65, .65, .65)
+			// this.artwork.mesh.rotation.y = -Math.PI / 1.25
+			// this.artwork.mesh.rotation.z = -Math.PI / 1.5
+			// this.artwork.mesh.rotation.x = -Math.PI / 2.75
+			this.addObject(this.artwork.mesh)
+			this.initialized = true
+		})
+		this.setBackground()
+		// this.setGeometry()
+		// this.setMesh()
 
-		this.initialized = true
 	}
 
 	setScene() {
@@ -51,7 +67,6 @@ export default class Artwork {
 	}
 
 	setCamera() {
-
 		this.artwork.camera = new PerspectiveCamera(30, this.subjectWidth / this.subjectHeight, 0.01, 1000)
 		this.artwork.camera.position.set(0, 0, 10)
 		this.artwork.camera.rotation.reorder('YXZ')
@@ -102,7 +117,9 @@ export default class Artwork {
 			transparent: true,
 		})
 
-		this.artwork.material = new MeshNormalMaterial()
+		this.artwork.material = new MeshNormalMaterial({
+			side: DoubleSide
+		})
 	}
 
 	setMesh() {
@@ -119,7 +136,7 @@ export default class Artwork {
 
 		this.background.mesh.position.z = -2
 
-		this.addObject(this.background.mesh)
+		// this.addObject(this.background.mesh)
 	}
 
 	addObject(object) {
@@ -151,7 +168,7 @@ export default class Artwork {
 
 		this.artwork.texture = this.artwork.renderTarget.texture
 		// this.artwork.material.uniforms.uTime.value = et
-		this.artwork.mesh.rotation.y = et * .001
+		// this.artwork.mesh.rotation.y = et * .001
 
 		/// #if DEBUG
 		// this.debug.orbitControls.update()
