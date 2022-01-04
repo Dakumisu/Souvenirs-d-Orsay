@@ -21,12 +21,22 @@ uniform sampler2D uDisplacementTexture;
 uniform sampler2D uDisplacement2Texture;
 uniform sampler2D uDisplacement3Texture;
 
+uniform sampler2D uContoursTexture;
+
 varying vec2 vUv;
 varying vec3 vPos;
 varying vec3 vNormal;
 
 float roundRect(vec2 p, vec2 b, float r) {
-  return step(.001, length(max(abs(p) - b + r, 0.)) - r);
+	return step(.001, length(max(abs(p) - b + r, 0.)) - r);
+}
+
+float random(vec2 st) {
+	return fract(sin(dot(st.xy, vec2(12.9898, 78.233))) * 43758.5453123);
+}
+
+float linearstep(float begin, float end, float t) {
+	return clamp((t - begin) / (end - begin), 0.0, 1.0);
 }
 
 void main() {
@@ -41,6 +51,16 @@ void main() {
 	vec2 pos = coord - halfSize;
 	float roundCorner = roundRect(pos, halfSize, uRadius);
 	alpha -= roundCorner;
+
+	// contours
+	float contours = 0.;
+	coord = vec2(step(vUv.x - .04, vUv.x - .02	), step(vUv.y - .04, vUv.y - .02)) * (uSize * 1.06);
+	// coord = vec2(vUv.x - .02, vUv.y - .04) * (uSize * 1.06);
+
+	pos = coord - halfSize;
+	roundCorner = roundRect(pos, halfSize, uRadius);
+	contours = roundCorner;
+
 
 	// cover
 	vec2 uv = vUv * .6;
@@ -65,4 +85,6 @@ void main() {
 	} else {
 		gl_FragColor = vec4(color * vPos, alpha);
 	}
+
+	gl_FragColor = vec4(vec3(contours), alpha);
 }

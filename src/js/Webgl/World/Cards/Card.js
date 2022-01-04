@@ -36,12 +36,14 @@ import leavesImage from '@public/img/textures/card/leaves.jpeg'
 import displacementImage from '@public/img/textures/card/displacement.jpeg'
 import displacement2Image from '@public/img/textures/card/displacement.jpeg'
 import displacement3Image from '@public/img/textures/card/displacement.jpeg'
+import contoursImage from '@public/img/textures/card/contours.png'
 
 const twoPI = Math.PI * 2
 const tVec3 = new Vector3()
 const tVec2a = new Vector2()
 const tVec2b = new Vector2()
 const tVec2c = new Vector2()
+const tVec2d = new Vector2()
 
 //const content = "La Main aux algues et aux coquillages est probablement la dernière verrerie d'Émile Gallé, réalisée en 1904, peu avant la mort de l'artiste nancéien, membre de l'École de Nancy."
 const title = "1990 - Art nouveau"
@@ -95,6 +97,8 @@ export default class Card {
 		this.textures = {}
 
 		this.cardClicked = false
+		this.zoomed = false
+		this.unZoomed = false
 
 		this.initialized = false
 
@@ -123,6 +127,7 @@ export default class Card {
 		this.textures.displacement = textureLoader.load(displacementImage)
 		this.textures.displacement2 = textureLoader.load(displacement2Image)
 		this.textures.displacement3 = textureLoader.load(displacement3Image)
+		this.textures.contours = textureLoader.load(contoursImage)
 	}
 
 	setGeometries() {
@@ -138,39 +143,48 @@ export default class Card {
 			vertexShader: backgroundVertex,
 			fragmentShader: backgroundFragment,
 			uniforms: {
-				uTime: {value: 0},
-				uColor: {value: new Color('#53706b')},
-				uColor1: {value: new Color('#00383d')},
-				uAlpha: {value: 1},
+				uTime: { value: 0 },
+				uColor: { value: new Color('#53706b') },
+				uColor1: { value: new Color('#00383d') },
+				uAlpha: { value: 1 },
 
-				uSize: {value: tVec2a.set(this.domCard.getBoundingClientRect().width * 1.5, this.domCard.getBoundingClientRect().height * 1.5)},
-				uRadius: {value: 10},
+				uSize: { value: tVec2a.set(this.domCard.getBoundingClientRect().width * 1.5, this.domCard.getBoundingClientRect().height * 1.5) },
+				uRadius: { value: 10 },
 
-				uWoodTexture: {value: this.textures.wood},
-				uWood2Texture: {value: this.textures.wood2},
-				uTreeTexture: {value: this.textures.tree},
-				uLeavesTexture: {value: this.textures.leaves},
-				uDisplacementTexture: {value: this.textures.displacement},
-				uDisplacement2Texture: {value: this.textures.displacement2},
-				uDisplacement3Texture: {value: this.textures.displacement3},
+				uWoodTexture: { value: this.textures.wood },
+				uWood2Texture: { value: this.textures.wood2 },
+				uTreeTexture: { value: this.textures.tree },
+				uLeavesTexture: { value: this.textures.leaves },
+				uDisplacementTexture: { value: this.textures.displacement },
+				uDisplacement2Texture: { value: this.textures.displacement2 },
+				uDisplacement3Texture: { value: this.textures.displacement3 },
 
-				uResolution: {value: tVec3.set(Store.resolution.width, Store.resolution.height, Store.resolution.dpr)},
+				uContoursTexture: { value: this.textures.contours },
+
+				uResolution: { value: tVec3.set(Store.resolution.width, Store.resolution.height, Store.resolution.dpr) },
 			},
 			side: DoubleSide,
-			transparent: true,
-			depthTest: false,
-			depthWrite: false,
+			// transparent: true,
+			// depthTest: false,
+			// depthWrite: false,
 		})
 
 		this.card.subject.material = new ShaderMaterial({
 			vertexShader: subjectVertex,
 			fragmentShader: subjectFragment,
 			uniforms: {
-				uTime: {value: 0},
-				uColor: {value: new Color('#ffffff')},
-				uAlpha: {value: 1},
-				uArtworkTexture: {value: null},
-				uResolution: {value: tVec3.set(Store.resolution.width, Store.resolution.height, Store.resolution.dpr)},
+				uTime: { value: 0 },
+				uColor: { value: new Color('#ffffff') },
+				uAlpha: { value: 1 },
+
+				uArtworkTexture: { value: null },
+				uProgress: { value: 0 },
+				uActive: { value: false },
+
+				uSize: { value: tVec2b.set(this.domSubject.getBoundingClientRect().width, this.domSubject.getBoundingClientRect().height) },
+				uRadius: { value: 10 },
+
+				uResolution: { value: tVec3.set(Store.resolution.width, Store.resolution.height, Store.resolution.dpr) },
 			},
 			side: FrontSide,
 			transparent: true,
@@ -182,14 +196,14 @@ export default class Card {
 			vertexShader: numeroVertex,
 			fragmentShader: numeroFragment,
 			uniforms: {
-				uTime: {value: 0},
-				uColor: {value: new Color('#ffffff')},
-				uAlpha: {value: 1},
+				uTime: { value: 0 },
+				uColor: { value: new Color('#ffffff') },
+				uAlpha: { value: 1 },
 
-				uSize: {value: tVec2c.set(this.domNumero.getBoundingClientRect().width * 1.5, this.domNumero.getBoundingClientRect().height * 1.5)},
-				uRadius: {value: 10},
+				uSize: { value: tVec2c.set(this.domNumero.getBoundingClientRect().width * 1.5, this.domNumero.getBoundingClientRect().height * 1.5) },
+				uRadius: { value: 10 },
 
-				uResolution: {value: tVec3.set(Store.resolution.width, Store.resolution.height, Store.resolution.dpr)},
+				uResolution: { value: tVec3.set(Store.resolution.width, Store.resolution.height, Store.resolution.dpr) },
 			},
 			side: FrontSide,
 			transparent: true,
@@ -226,18 +240,18 @@ export default class Card {
 		x = this.domCard.getBoundingClientRect().left - Store.resolution.width / 2 + this.domCard.getBoundingClientRect().width / 2
 		y = -this.domCard.getBoundingClientRect().top + Store.resolution.height / 2 - this.domCard.getBoundingClientRect().height / 2
 		// this.card.background.mesh.position.set(x, y, 0)
-		this.group.position.set(x, y, 0)
+		this.group.position.set(x, y, this.group.position.z)
 
 		// x = this.domSubject.getBoundingClientRect().left - Store.resolution.width / 2 + this.domSubject.getBoundingClientRect().width / 2
 		// y = -this.domSubject.getBoundingClientRect().top + Store.resolution.height / 2 - this.domSubject.getBoundingClientRect().height / 2
 
 		x = (this.domSubject.getBoundingClientRect().left - this.domCard.getBoundingClientRect().left) - (this.domCard.getBoundingClientRect().width - this.domSubject.getBoundingClientRect().width) / 2
 		y = (-this.domSubject.getBoundingClientRect().top - -this.domCard.getBoundingClientRect().top) + (this.domCard.getBoundingClientRect().height - this.domSubject.getBoundingClientRect().height) / 2
-		this.card.subject.mesh.position.set(x, y, 1)
+		this.card.subject.mesh.position.set(x, y, 5)
 
 		x = (this.domNumero.getBoundingClientRect().left - this.domCard.getBoundingClientRect().left) - (this.domCard.getBoundingClientRect().width - this.domNumero.getBoundingClientRect().width) / 2
 		y = (-this.domNumero.getBoundingClientRect().top - -this.domCard.getBoundingClientRect().top) + (this.domCard.getBoundingClientRect().height - this.domNumero.getBoundingClientRect().height) / 2
-		this.card.numero.mesh.position.set(x, y, 1)
+		this.card.numero.mesh.position.set(x, y, 5)
 	}
 
 	setSizes() {
@@ -305,37 +319,70 @@ export default class Card {
 
 	scroll() {
 		if (!this.initialized) return
-		if (this.cardClicked) return
+		if (this.zoomed) return
 		this.setPositions()
 	}
 
 	zoom() {
 		if (!this.initialized) return
-		if (this.cardClicked) return
+		if (this.zoomed) return
+
+		this.card.subject.material.uniforms.uActive.value = true
+		gsap.to(this.card.subject.material.uniforms.uProgress, 1, { value: 1 })
 
 		this.group.renderOrder = 2
 
-		if (this.cardClicked === false) {
-			if (window.matchMedia("(max-width: 967px)").matches) {
-				gsap.to(this.group.position, 1, {x: 0, y: 0, z: 150, ease: 'Power3.easeOut'})
+		if (window.matchMedia("(max-width: 967px)").matches) {
+			gsap.to(this.group.position, 1, {x: 0, y: 0, z: 150, ease: 'Power3.easeOut'})
 
-			} else {
-				gsap.to(this.group.position, 1, {x: 0, y: 0, z: 120, ease: 'Power3.easeOut'})
-
-			}
-			gsap.to(this.group.rotation, .75, {y: twoPI, ease: 'Power3.easeOut'})
-
-			this.cardClicked = true
 		} else {
-			console.log('else')
+			gsap.to(this.group.position, 1, {x: 0, y: 0, z: 50, ease: 'Power3.easeOut'})
+
 		}
+
+		gsap.from(this.group.rotation, 1, {
+			y: twoPI,
+			ease: 'Power3.easeOut'
+		})
+		this.zoomed = true
+
+		// 3- utiliser le change view
+		console.log('zoom', this.group)
+	}
+
+	unZoom() {
+		if (!this.initialized) return
+
+		this.card.subject.material.uniforms.uActive.value = false
+		gsap.to(this.card.subject.material.uniforms.uProgress, 1, { value: 0 })
+
+		this.group.renderOrder = 1
+
+		gsap.to(this.group.position, 1, {
+			x: this.domCard.getBoundingClientRect().left - Store.resolution.width / 2 + this.domCard.getBoundingClientRect().width / 2,
+			y: -this.domCard.getBoundingClientRect().top + Store.resolution.height / 2 - this.domCard.getBoundingClientRect().height / 2,
+			z: -50,
+			ease: 'Power3.easeOut'
+		})
+		gsap.to(this.group.rotation, .75, {
+			x: 0,
+			y: 0,
+			z: 0,
+			ease: 'Power3.easeOut'
+		})
+		this.zoomed = false
+
 	}
 
 	resize() {
+		if (!this.initialized) return
+		if (this.zoomed) return
+
 		this.card.background.material.uniforms.uResolution.value = tVec3.set(Store.resolution.width, Store.resolution.height, Store.resolution.dpr)
 		this.card.subject.material.uniforms.uResolution.value = tVec3.set(Store.resolution.width, Store.resolution.height, Store.resolution.dpr)
 
 		this.card.background.material.uniforms.uSize.value = tVec2a.set(this.domCard.getBoundingClientRect().width * 1.5, this.domCard.getBoundingClientRect().height * 1.5)
+		this.card.subject.material.uniforms.uSize.value = tVec2b.set(this.domSubject.getBoundingClientRect().width * 1.5, this.domSubject.getBoundingClientRect().height * 1.5)
 		this.card.numero.material.uniforms.uSize.value = tVec2c.set(this.domNumero.getBoundingClientRect().width * 1.5, this.domNumero.getBoundingClientRect().height * 1.5)
 
 		this.setSizes()
@@ -347,20 +394,27 @@ export default class Card {
 	update(et) {
 		if (!this.initialized) return
 
-		if (this.artwork) {
+		if (this.artwork.initialized) {
 			this.artwork.update(et)
 			this.card.subject.material.uniforms.uArtworkTexture.value = this.artwork.artwork.texture
-			this.artwork.artwork.mesh.rotation.set(-this.camera.rotation._x, -this.camera.rotation._y, 0);
+			// this.artwork.artwork.mesh.rotation.set(-this.camera.rotation._x, -this.camera.rotation._y, Math.PI);
 		}
 
 
-		// tVec2b.set(
-		// 	this.mouse.x * 0.7,
-		// 	-this.mouse.y * 0.7
-		// )
+		if (this.zoomed) {
+			if (this.artwork.initialized) {
+				this.artwork.artwork.mesh.rotation.y += (.04 * (tVec2d.x / 2 - this.artwork.artwork.mesh.rotation.y));
+				this.artwork.artwork.mesh.rotation.x += (.04 * (tVec2d.y / 2 - this.artwork.artwork.mesh.rotation.x));
+			}
 
-		// this.group.rotation.y += (.04 * (tVec2b.x / 2 - this.group.rotation.y));
-		// this.group.rotation.x += (.04 * (tVec2b.y / 2 - this.group.rotation.x));
+			tVec2d.set(
+				this.mouse.x * (Math.PI / 4),
+				-this.mouse.y * (Math.PI / 4)
+			)
+
+			this.group.rotation.y += (.04 * (tVec2d.x / 2 - this.group.rotation.y));
+			this.group.rotation.x += (.04 * (tVec2d.y / 2 - this.group.rotation.x));
+		}
 
 		// this.group.rotation.y = (twoPI * (et *.0005)) % twoPI
 

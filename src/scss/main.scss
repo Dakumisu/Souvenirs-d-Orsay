@@ -66,9 +66,14 @@ canvas.sketch {
 	}
 
 	.artwork {
-		width: calc(100% - 20px);
-		height: 35%;
-		margin: 10px;
+		position: absolute;
+		// width: calc(100% - 20px);
+		width: 105%;
+		height: 75%;
+		left: 50%;
+		transform: translateX(-50%);
+
+		// margin: 10px;
 
 		background-color: rgb(11, 180, 202);
 		pointer-events: none;

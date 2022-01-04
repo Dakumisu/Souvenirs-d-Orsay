@@ -53,8 +53,12 @@ export default class Cards {
 	}
 
 	click(e) {
+		for (const card in this.cards) {
+			if (card != e) {
+				this.cards[card].unZoom()
+			}
+		}
 		this.cards[e].zoom()
-		//console.log(this.cards[e].zoom(), this.cards[e])
 	}
 
 	resize() {
