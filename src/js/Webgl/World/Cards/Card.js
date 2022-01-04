@@ -284,7 +284,7 @@ export default class Card {
 			console.log('loaded', font)
 			const textGeometry = new TextGeometry(content, {
 				font,
-				size: 8,
+				size: 6,
 				height: 0,
 				curveSegments: 5,
 				bevelThickness: 0.03,

@@ -28,80 +28,95 @@
 	<link rel="apple-touch-icon" sizes="180x180" href="assets/icon/apple-touch-favicon.jpg">
 	<link rel="apple-touch-icon" href="assets/icon/apple-touch-favicon.jpg"/>
 	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.googleapis.com">
 	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-	<link href="https://fonts.googleapis.com/css2?family=Nixie+One&display=swap" rel="stylesheet">
+	<link
+		href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,400;0,500;1,500&family=Unna:wght@400;700&display=swap"
+		rel="stylesheet">
 	<meta property="og:image" content="assets/icon/favicon.jpg"/>
 	<meta name="msapplication-TileImage" content="assets/icon/favicon.jpg">
 	<meta name="msapplication-TileColor" content="#222222">
 </head>
 
 <body>
+<div class="collection-list">
+	<section class="collection">
+		<p class="collection_title">Bienvenue</p>
+		<p class="collection_subtitle">Mes collections</p>
+	</section>
+</div>
+<div class="collection-detail">
+	<section class="collection">
+		<img src="/public/img/icons/arrow-back.svg" alt="arrow">
+		<p class="collection_title">Collection</p>
+		<p class="collection_subtitle">Art Nouveau</p>
+	</section>
+	<section class="ui">
+		<div class="deck" id="deckCard">
+			<div id="background"></div>
+			<div data-ref="card" id="card_1" class="card">
+				<div data-ref="artwork" class="artwork"></div>
+				<div data-ref="content" class="content"></div>
+				<div data-ref="numero" class="numero"></div>
+			</div>
+			<div data-ref="card" id="card_2" class="card">
+				<div data-ref="artwork" class="artwork"></div>
+				<div data-ref="content" class="content"></div>
+				<div data-ref="numero" class="numero"></div>
+			</div>
+			<div data-ref="card" id="card_3" class="card">
+				<div data-ref="artwork" class="artwork"></div>
+				<div data-ref="content" class="content"></div>
+				<div data-ref="numero" class="numero"></div>
+			</div>
+			<div data-ref="card" id="card_4" class="card">
+				<div data-ref="artwork" class="artwork"></div>
+				<div data-ref="content" class="content"></div>
+				<div data-ref="numero" class="numero"></div>
+			</div>
+			<div data-ref="card" id="card_5" class="card">
+				<div data-ref="artwork" class="artwork"></div>
+				<div data-ref="content" class="content"></div>
+				<div data-ref="numero" class="numero"></div>
+			</div>
+			<div data-ref="card" id="card_6" class="card">
+				<div data-ref="artwork" class="artwork"></div>
+				<div data-ref="content" class="content"></div>
+				<div data-ref="numero" class="numero"></div>
+			</div>
+			<div data-ref="card" id="card_7" class="card">
+				<div data-ref="artwork" class="artwork"></div>
+				<div data-ref="content" class="content"></div>
+				<div data-ref="numero" class="numero"></div>
+			</div>
+			<div data-ref="card" id="card_8" class="card">
+				<div data-ref="artwork" class="artwork"></div>
+				<div data-ref="content" class="content"></div>
+				<div data-ref="numero" class="numero"></div>
+			</div>
+			<div data-ref="card" id="card_9" class="card">
+				<div data-ref="artwork" class="artwork"></div>
+				<div data-ref="content" class="content"></div>
+				<div data-ref="numero" class="numero"></div>
+			</div>
+			<div data-ref="card" id="card_10" class="card">
+				<div data-ref="artwork" class="artwork"></div>
+				<div data-ref="content" class="content"></div>
+				<div data-ref="numero" class="numero"></div>
+			</div>
+			<div data-ref="numero" class="numero"></div>
+		</div>
+	</section>
 
-<section class="ui">
-	<div class="deck" id="deckCard">
-		<div id="background"></div>
-		<div data-ref="card" id="card_1" class="card">
-			<div data-ref="artwork" class="artwork"></div>
-			<div data-ref="content" class="content"></div>
-			<div data-ref="numero" class="numero"></div>
+	<section class="canvas--container">
+		<canvas data-ref="canvas" class="sketch"></canvas>
+		<div class="navBar">
+			<div class="scan">
+				<img src="/public/img/icons/qr_code.svg" alt="icon of a qr code">
+			</div>
 		</div>
-		<div data-ref="card" id="card_2" class="card">
-			<div data-ref="artwork" class="artwork"></div>
-			<div data-ref="content" class="content"></div>
-			<div data-ref="numero" class="numero"></div>
-		</div>
-		<div data-ref="card" id="card_3" class="card">
-			<div data-ref="artwork" class="artwork"></div>
-			<div data-ref="content" class="content"></div>
-			<div data-ref="numero" class="numero"></div>
-		</div>
-		<div data-ref="card" id="card_4" class="card">
-			<div data-ref="artwork" class="artwork"></div>
-			<div data-ref="content" class="content"></div>
-			<div data-ref="numero" class="numero"></div>
-		</div>
-		<div data-ref="card" id="card_5" class="card">
-			<div data-ref="artwork" class="artwork"></div>
-			<div data-ref="content" class="content"></div>
-			<div data-ref="numero" class="numero"></div>
-		</div>
-		<div data-ref="card" id="card_6" class="card">
-			<div data-ref="artwork" class="artwork"></div>
-			<div data-ref="content" class="content"></div>
-			<div data-ref="numero" class="numero"></div>
-		</div>
-		<div data-ref="card" id="card_7" class="card">
-			<div data-ref="artwork" class="artwork"></div>
-			<div data-ref="content" class="content"></div>
-			<div data-ref="numero" class="numero"></div>
-		</div>
-		<div data-ref="card" id="card_8" class="card">
-			<div data-ref="artwork" class="artwork"></div>
-			<div data-ref="content" class="content"></div>
-			<div data-ref="numero" class="numero"></div>
-		</div>
-		<div data-ref="card" id="card_9" class="card">
-			<div data-ref="artwork" class="artwork"></div>
-			<div data-ref="content" class="content"></div>
-			<div data-ref="numero" class="numero"></div>
-		</div>
-		<div data-ref="card" id="card_10" class="card">
-			<div data-ref="artwork" class="artwork"></div>
-			<div data-ref="content" class="content"></div>
-			<div data-ref="numero" class="numero"></div>
-		</div>
-		<div data-ref="numero" class="numero"></div>
-	</div>
-</section>
-
-<section class="canvas--container">
-	<canvas data-ref="canvas" class="sketch"></canvas>
-</section>
-<!--<div data-ref="content" class="content">-->
-<!--	1990 - Art nouveau <br/>-->
-<!--	"La Main aux algues et aux coquillages est probablement la dernière verrerie d'Émile Gallé, réalisée en-->
-<!--	1904, peu avant la mort de l'artiste nancéien, membre de l'École de Nancy."-->
-<!--</div>-->
+	</section>
+</div>
 </body>
 
 </html>

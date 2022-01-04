@@ -112,7 +112,7 @@
 
 /* Tablet portrait/landscape */
 @mixin tablet-mobile {
-    @media only screen and (max-width: 987px) {
+    @media only screen and (min-width: 987px) {
         @content;
     }
 }
