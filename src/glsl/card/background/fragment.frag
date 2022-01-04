@@ -23,6 +23,7 @@ uniform sampler2D uDisplacement3Texture;
 
 varying vec2 vUv;
 varying vec3 vPos;
+varying vec3 vNormal;
 
 float roundRect(vec2 p, vec2 b, float r) {
   return step(.001, length(max(abs(p) - b + r, 0.)) - r);

@@ -45,17 +45,6 @@ export default class Cards {
 			})
 			this.cards[card.id] = tmpCard
 		})
-
-		// loadModel(modelCard).then( response => {
-		// 	const mesh = response
-		// 	mesh.scale.set(
-		// 		Store.nodes.card[0].getBoundingClientRect().width,
-		// 		Store.nodes.card[0].getBoundingClientRect().height,
-		// 		100
-		// 	)
-		// 	console.log(mesh)
-		// 	this.addObject(response)
-		// })
 	}
 
 	addObject(object) {

@@ -1,16 +1,4 @@
-import {
-	BoxBufferGeometry,
-	Color,
-	DoubleSide,
-	FrontSide,
-	Group,
-	Mesh,
-	PlaneBufferGeometry,
-	ShaderMaterial,
-	TextureLoader,
-	Vector2,
-	Vector3
-} from 'three'
+import { BoxBufferGeometry, Color, DoubleSide, ExtrudeBufferGeometry, FrontSide, Group, Mesh, MeshNormalMaterial, PlaneBufferGeometry, ShaderMaterial, Shape, TextureLoader, Vector2, Vector3 } from 'three'
 
 import Webgl from '@js/Webgl/Webgl'
 import Artwork from './Artwork'
@@ -35,6 +23,20 @@ const twoPI = Math.PI * 2
 const tVec3 = new Vector3()
 const tVec2 = new Vector2()
 const tVec2a = new Vector2()
+
+function roundedRect (ctx, x, y, width, height, radius) {
+    ctx.moveTo(x, y + radius)
+    ctx.lineTo(x, y + height - radius)
+    ctx.quadraticCurveTo(x, y + height, x + radius, y + height)
+    ctx.lineTo(x + width - radius, y + height)
+    ctx.quadraticCurveTo(x + width, y + height, x + width, y + height - radius)
+    ctx.lineTo(x + width, y + radius)
+    ctx.quadraticCurveTo(x + width, y, x + width - radius, y)
+    ctx.lineTo(x + radius, y)
+    ctx.quadraticCurveTo(x, y, x, y + radius)
+
+    return ctx
+}
 
 export default class Card {
 	constructor(opt = {}) {
@@ -72,9 +74,18 @@ export default class Card {
 		this.setMaterials()
 		this.setMeshes()
 
+		// this.test()
+
 		this.initialized = true
 	}
 
+	// test() {
+
+
+	// 	const mesh = new Mesh(geometry, this.card.background.material)
+	// 	// mesh.rotation.y = Math.PI;
+	// 	this.addObject(mesh)
+	// }
 
 	setTextures() {
 		const textureLoader = new TextureLoader()
@@ -91,6 +102,10 @@ export default class Card {
 	setGeometries() {
 		this.card.background.geometry = new PlaneBufferGeometry(1, 1, 1, 1)
 		this.card.subject.geometry = new PlaneBufferGeometry(1, 1, 1, 1)
+
+		// const extrudeSettings = { depth: 6, bevelEnabled: false, steps: 5 }
+		// this.card.background.geometry = new ExtrudeBufferGeometry(roundedRect(new Shape(), -.5, -.5, .5, .5, .1), extrudeSettings)
+		// this.card.background.geometry.uvsNeedUpdate = true
 	}
 
 	setMaterials() {
@@ -118,8 +133,8 @@ export default class Card {
 			},
 			side: DoubleSide,
 			// transparent: true,
-			// depthTest: false,
-			// depthWrite: false,
+			depthTest: false,
+			depthWrite: false,
 		})
 
 		this.card.subject.material = new ShaderMaterial({
@@ -133,7 +148,7 @@ export default class Card {
 				uResolution: {value: tVec3.set(Store.resolution.width, Store.resolution.height, Store.resolution.dpr)},
 			},
 			side: FrontSide,
-			transparent: true,
+			// transparent: true,
 			// depthTest: false,
 			// depthWrite: false
 		})
@@ -167,12 +182,8 @@ export default class Card {
 		// x = this.domSubject.getBoundingClientRect().left - Store.resolution.width / 2 + this.domSubject.getBoundingClientRect().width / 2
 		// y = -this.domSubject.getBoundingClientRect().top + Store.resolution.height / 2 - this.domSubject.getBoundingClientRect().height / 2
 
-		x = (this.domSubject.getBoundingClientRect().left - this.domCard.getBoundingClientRect().left)
-			- (this.domCard.getBoundingClientRect().width - this.domSubject.getBoundingClientRect().width) / 2
-
-		y = (-this.domSubject.getBoundingClientRect().top - -this.domCard.getBoundingClientRect().top)
-			+ (this.domCard.getBoundingClientRect().height - this.domSubject.getBoundingClientRect().height) / 2
-
+		x = (this.domSubject.getBoundingClientRect().left - this.domCard.getBoundingClientRect().left) - (this.domCard.getBoundingClientRect().width - this.domSubject.getBoundingClientRect().width) / 2
+		y = (-this.domSubject.getBoundingClientRect().top - -this.domCard.getBoundingClientRect().top) + (this.domCard.getBoundingClientRect().height - this.domSubject.getBoundingClientRect().height) / 2
 		this.card.subject.mesh.position.set(x, y, 1)
 	}
 
@@ -205,11 +216,13 @@ export default class Card {
 	}
 
 	zoom() {
+		this.group.renderOrder = 2
 		// TODO gsap animation
 		// 1- changer la scale de la card -> on utilise le z pour le faire
 		// // 2- changer la position de la card en 0-0
 		if (this.cardClicked === false) {
-			gsap.to(this.group.position, {x: 0, y: 0, z: 50, duration: 0.75})
+			gsap.to(this.group.position, 1, {x: 0, y: 0, z: 50, ease: 'Power3.easeOut'})
+			gsap.to(this.group.rotation, .75, {y: twoPI, ease: 'Power3.easeOut'})
 			this.cardClicked = true
 		} else {
 			console.log('else')
@@ -227,6 +240,8 @@ export default class Card {
 
 		this.setSizes()
 		this.setPositions()
+
+		this.artwork.resize()
 	}
 
 	update(et) {

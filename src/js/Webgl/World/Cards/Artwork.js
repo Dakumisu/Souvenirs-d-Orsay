@@ -28,7 +28,6 @@ export default class Artwork {
 		this.initialized = false
 
 		this.init()
-		this.resize()
 	}
 
 	init() {
@@ -130,6 +129,9 @@ export default class Artwork {
 
 	resize() {
 		// this.artwork.material.uniforms.uResolution.value = tVec3.set(this.subjectWidth, this.subjectHeight, Store.resolution.dpr)
+		this.artwork.camera.aspect = this.subjectWidth / this.subjectHeight
+		this.artwork.renderTarget.width =Store.resolution.width
+		this.artwork.renderTarget.height = Store.resolution.height
 	}
 
 	preRender() {
