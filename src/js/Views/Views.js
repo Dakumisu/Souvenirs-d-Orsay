@@ -58,10 +58,6 @@ export default class Views extends EventEmitter {
 
 	clickOnCards(e) {
 		this.trigger('clickCard', [e.target.id])
-		console.log(e.target.id)
-
-		// gsap.to(e.target.id, {x: 0, y: 0, duration: 1})
-
 	}
 
 	onScroll() {

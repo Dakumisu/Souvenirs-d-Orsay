@@ -217,19 +217,22 @@ export default class Card {
 
 	zoom() {
 		this.group.renderOrder = 2
-		// TODO gsap animation
-		// 1- changer la scale de la card -> on utilise le z pour le faire
-		// // 2- changer la position de la card en 0-0
+
 		if (this.cardClicked === false) {
-			gsap.to(this.group.position, 1, {x: 0, y: 0, z: 50, ease: 'Power3.easeOut'})
+			if (window.matchMedia("(max-width: 967px)").matches) {
+				gsap.to(this.group.position, 1, {x: 0, y: 0, z: 150, ease: 'Power3.easeOut'})
+			} else {
+				gsap.to(this.group.position, 1, {x: 0, y: 0, z: 50, ease: 'Power3.easeOut'})
+			}
+
 			gsap.to(this.group.rotation, .75, {y: twoPI, ease: 'Power3.easeOut'})
 			this.cardClicked = true
 		} else {
 			console.log('else')
 		}
 
-		// // 3- utiliser le change view
-		// // 4- process 0-1 dans les uv du fragment
+		// 3- utiliser le change view
+		// 4- process 0-1 dans les uv du fragment
 		console.log('zoom', this.group)
 	}
 
