@@ -11,6 +11,7 @@ import Renderer from './Renderer'
 import Camera from './Camera'
 import World from './World/World'
 import Views from '@js/Views/Views'
+import Cards from '@js/Views/Cards'
 import Device from '@js/Tools/Device'
 import Mouse from '@js/Tools/Mouse'
 import Raycasters from '@js/Tools/Raycasters'
@@ -52,10 +53,9 @@ export default class Webgl {
 
 		// Tools
 		this.views = new Views()
+		this.cards = new Cards()
 		this.mouse = new Mouse()
 		// this.raycaster = new Raycasters()
-
-		this.world = new World()
 
 		this.sizes.on('resize', () => {
 			this.resize()
@@ -66,7 +66,18 @@ export default class Webgl {
 			this.update()
 		})
 
-		this.views.on('clickCard', (e) => {
+		this.cards.on('resetNodes', () => {
+			this.views.setNodes().then( () => {
+				this.views.ready()
+
+				setTimeout(() => {
+					this.world = new World()
+					this.renderer.getArtworkRender()
+				}, 50);
+			})
+		})
+
+		this.cards.on('clickCard', (e) => {
 			this.world.clickOnCard(e)
 		})
 

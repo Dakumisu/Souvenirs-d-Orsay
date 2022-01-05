@@ -1,0 +1,50 @@
+{
+  "art_nouveau": [
+    {
+      "collection": "Art Nouveau",
+      "name": "La main aux algues et aux coquillages",
+      "author": "Emile Gallé",
+      "year": "1904",
+      "bio": "Cristal partiellement soufflé et modelé à chaud, inclusions, applications, gravé à la roue.",
+      "color": "#252525",
+      "model": "main",
+      "image": "",
+      "ext": "glb"
+    },
+    {
+      "collection": "Art Nouveau",
+      "name": "Pavot",
+      "author": "René Lalique",
+      "year": "1990",
+      "bio": "Or, argent, diamants brillantés, émail cloisonné et à jour, translucide mat et opaque brillant.",
+      "color": "#252525",
+      "model": "",
+      "image": "pavot",
+      "ext": "png"
+    },
+    {
+      "collection": "Art Nouveau",
+      "name": "Flacon a senteur",
+      "author": "René Lalique",
+      "year": "1990",
+      "bio": "Flocon à senteur entre 1900 et 1902. Verre soufflé moulé à cire perdue et monture en or fondu et ciselé.",
+      "color": "#252525",
+      "model": "",
+      "image": "flacon",
+      "ext": "png"
+    },
+    {
+      "collection": "Art Nouveau",
+      "name": "Bureau Henry Van",
+      "author": "Henry Van de Velde",
+      "year": "1863 - 1957",
+      "bio": "Le Belge Henry Van de Velde, peintre de formation, abandonne la peinture en 1893, après dix ans de pratique, car il la juge trop élitiste.",
+      "color": "#252525",
+      "model": "",
+      "image": "bureau",
+      "ext": "png"
+    }
+  ],
+  "impressionnisme": [],
+  "sculpture": []
+}

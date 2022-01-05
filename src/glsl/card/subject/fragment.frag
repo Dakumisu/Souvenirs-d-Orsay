@@ -41,7 +41,7 @@ void main() {
 	vec2 coord = vUv * uSize;
 	vec2 pos = coord - halfSize;
 	float roundCorner = roundRect(pos, halfSize, uRadius);
-	// alpha -= roundCorner;
+	alpha -= roundCorner;
 
 	vec4 artworkTexture = texture2D(uArtworkTexture, currentUv);
 	alpha = artworkTexture.a;

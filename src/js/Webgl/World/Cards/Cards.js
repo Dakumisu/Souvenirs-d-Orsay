@@ -1,13 +1,12 @@
 import { BoxBufferGeometry, Color, DoubleSide, Group, Mesh, PlaneBufferGeometry, ShaderMaterial, Vector2, Vector3 } from 'three'
 
 import Webgl from '@js/Webgl/Webgl'
+import Card from './Card'
 
 import { Store } from '@js/Tools/Store'
 import loadModel from '@utils/loader/loadGLTF'
 
-import Card from './Card'
-
-import modelCard from '@public/model/card2.glb'
+import list from '@src/json/oeuvres.json'
 
 const twoPI = Math.PI * 2
 const tVec3 = new Vector3()
@@ -30,18 +29,32 @@ export default class Cards {
 	}
 
 	init() {
-		setTimeout(() => {
-			this.setCards()
-		}, 100);
+		this.setCards()
 
 		this.initialized = true
 	}
 
 	setCards() {
 		this.domCards.forEach( (card, i) => {
+			const name = list.art_nouveau[i].name
+			const author = list.art_nouveau[i].author
+			const year = list.art_nouveau[i].year
+			const bio = list.art_nouveau[i].bio
+			const color = list.art_nouveau[i].color
+			const src = list.art_nouveau[i].model ? list.art_nouveau[i].model : list.art_nouveau[i].image
+			const type = list.art_nouveau[i].model ? 'model' : 'img'
+			const ext = list.art_nouveau[i].ext
+
 			const tmpCard = new Card({
 				id: i,
-				name: card.id,
+				name: name,
+				author: author,
+				year: year,
+				bio: bio,
+				color: color,
+				src: src,
+				type: type,
+				ext: ext
 			})
 			this.cards[card.id] = tmpCard
 		})

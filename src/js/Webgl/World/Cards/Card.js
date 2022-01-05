@@ -38,8 +38,16 @@ export default class Card {
 
 		this.name = opt.name
 
+		this.author = opt.author
+		this.year = opt.year
+		this.bio = opt.bio
+		this.color = opt.color
+
 		this.artwork = new Artwork({
-			id: opt.id
+			id: opt.id,
+			src: opt.src,
+			type: opt.type,
+			ext: opt.ext
 		})
 
 		this.domCard = Store.nodes.card[opt.id]
@@ -94,6 +102,7 @@ export default class Card {
 			fragmentShader: backgroundFragment,
 			uniforms: {
 				uTime: { value: 0 },
+				uBackgroundColor: { value: new Color(this.color) },
 				uColor: { value: new Color('#53706b') },
 				uColor1: { value: new Color('#00383d') },
 				uAlpha: { value: 1 },
@@ -114,7 +123,7 @@ export default class Card {
 				uResolution: { value: tVec3.set(Store.resolution.width, Store.resolution.height, Store.resolution.dpr) },
 			},
 			side: DoubleSide,
-			// transparent: true,
+			transparent: true,
 			// depthTest: false,
 			// depthWrite: false,
 		})
@@ -138,8 +147,8 @@ export default class Card {
 			},
 			side: FrontSide,
 			transparent: true,
-			// depthTest: false,
-			// depthWrite: false
+			depthTest: false,
+			depthWrite: false
 		})
 
 		this.card.numero.material = new ShaderMaterial({
@@ -157,8 +166,8 @@ export default class Card {
 			},
 			side: FrontSide,
 			transparent: true,
-			// depthTest: false,
-			// depthWrite: false
+			depthTest: false,
+			depthWrite: false
 		})
 	}
 
@@ -169,11 +178,13 @@ export default class Card {
 
 		this.card.subject.mesh = new Mesh(this.planeGeo, this.card.subject.material)
 		this.card.subject.mesh.frustumCulled = false
+		this.card.subject.mesh.renderOrder = 2
 		this.group.add(this.card.subject.mesh)
 
 		this.card.numero.mesh = new Mesh(this.planeGeo, this.card.numero.material)
 		this.card.numero.mesh.rotation.z = Math.PI / 4
 		this.card.numero.mesh.frustumCulled = false
+		this.card.numero.mesh.renderOrder = 2
 		this.group.add(this.card.numero.mesh)
 
 		this.setSizes()
@@ -249,7 +260,7 @@ export default class Card {
 		this.card.subject.material.uniforms.uActive.value = true
 		gsap.to(this.card.subject.material.uniforms.uProgress, 1, { value: 1 })
 
-		this.group.renderOrder = 2
+		this.group.renderOrder = 3
 
 		if (window.matchMedia("(max-width: 967px)").matches) {
 			gsap.to(this.group.position, 1, { x: 0, y: 0, z: 150, ease: 'Power3.easeOut' })
@@ -320,18 +331,18 @@ export default class Card {
 		}
 
 		if (this.zoomed) {
-			// if (this.artwork.initialized) {
-			// 	this.artwork.artwork.mesh.rotation.y += (.04 * (tVec2d.x / 2 - this.artwork.artwork.mesh.rotation.y));
-			// 	this.artwork.artwork.mesh.rotation.x += (.04 * (tVec2d.y / 2 - this.artwork.artwork.mesh.rotation.x));
-			// }
+			if (this.artwork.initialized) {
+				this.artwork.artwork.mesh.rotation.y += (.04 * (tVec2d.x / 2 - this.artwork.artwork.mesh.rotation.y));
+				this.artwork.artwork.mesh.rotation.x += (.04 * (tVec2d.y / 2 - (Math.PI * .5 + this.artwork.artwork.mesh.rotation.x)));
+			}
 
-			// tVec2d.set(
-			// 	this.mouse.x * (Math.PI / 4),
-			// 	-this.mouse.y * (Math.PI / 4)
-			// )
+			tVec2d.set(
+				this.mouse.x * (Math.PI / 4),
+				-this.mouse.y * (Math.PI / 4)
+			)
 
-			// this.group.rotation.y += (.04 * (tVec2d.x / 2 - this.group.rotation.y));
-			// this.group.rotation.x += (.04 * (tVec2d.y / 2 - this.group.rotation.x));
+			this.group.rotation.y += .2 * (.04 * (tVec2d.x / 2 - this.group.rotation.y));
+			this.group.rotation.x += .2 * (.04 * (tVec2d.y / 2 - this.group.rotation.x));
 		}
 
 		// this.group.rotation.y = (twoPI * (et *.0005)) % twoPI

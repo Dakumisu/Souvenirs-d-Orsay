@@ -9,6 +9,7 @@ uniform float uTime;
 uniform float uAlpha;
 uniform float uRadius;
 uniform vec2 uSize;
+uniform vec3 uBackgroundColor;
 uniform vec3 uColor;
 uniform vec3 uColor1;
 // uniform vec4 uResolution;
@@ -80,11 +81,11 @@ void main() {
 	vec3 finalTexture = mix(wood2Texture, treeTexture, cnoise(vec3(uv, uTime * .0001)));
 
 	if (gl_FrontFacing) {
-		gl_FragColor = vec4(color * vec3(vUv, 0.), alpha);
-		gl_FragColor = vec4(finalTexture, alpha);
+		gl_FragColor = vec4(uBackgroundColor, alpha);
+		// gl_FragColor = vec4(finalTexture, alpha);
 	} else {
 		gl_FragColor = vec4(color * vPos, alpha);
 	}
 
-	gl_FragColor = vec4(vec3(contours), alpha);
+	// gl_FragColor = vec4(vec3(contours), alpha);
 }

@@ -13,11 +13,6 @@ export default class Renderer {
 		this.camera = this.webgl.camera.pCamera
 
 		this.artworks = []
-		setTimeout(() => {
-			for (const card in this.webgl.world.cards.cards) {
-				this.artworks.push(this.webgl.world.cards.cards[card].artwork)
-			}
-		}, 500)
 
 		/// #if DEBUG
 			this.stats = this.webgl.stats
@@ -31,8 +26,14 @@ export default class Renderer {
 		this.setPostProcess()
 	}
 
+	getArtworkRender() {
+		for (const card in this.webgl.world.cards.cards) {
+			this.artworks.push(this.webgl.world.cards.cards[card].artwork)
+		}
+	}
+
 	setRenderer() {
-		this.clearColor = '#222222'
+		this.clearColor = '#fff'
 
 		this.renderer = new WebGLRenderer({
 			canvas: this.webgl.canvas,
@@ -43,7 +44,7 @@ export default class Renderer {
 
 		this.renderer.setSize(Store.resolution.width, Store.resolution.height)
 		this.renderer.setPixelRatio(Math.min(Store.resolution.dpr, 2))
-		// this.renderer.setClearColor(this.clearColor, 1)
+		this.renderer.setClearColor(this.clearColor, 0)
 
 		this.renderer.physicallyCorrectLights = true
 		// this.renderer.gammaOutPut = true
