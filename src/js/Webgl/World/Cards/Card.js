@@ -3,6 +3,7 @@ import {
 	Color,
 	DoubleSide,
 	ExtrudeBufferGeometry,
+	Font,
 	FontLoader,
 	FrontSide,
 	Group,
@@ -37,6 +38,8 @@ import displacementImage from '@public/img/textures/card/displacement.jpeg'
 import displacement2Image from '@public/img/textures/card/displacement.jpeg'
 import displacement3Image from '@public/img/textures/card/displacement.jpeg'
 import contoursImage from '@public/img/textures/card/contours.png'
+
+import font from '@public/fonts/NixieOne_Regular.json'
 
 const twoPI = Math.PI * 2
 const tVec3 = new Vector3()
@@ -290,34 +293,32 @@ export default class Card {
 	}
 
 	setText(content) {
-		const fontLoader = new FontLoader()
-		fontLoader.load('/static/fonts/NixieOne_Regular.json', (font) => {
-			console.log('loaded', font)
-			const textGeometry = new TextGeometry(content, {
-				font,
-				size: 6,
-				height: 0,
-				curveSegments: 5,
-				bevelThickness: 0.03,
-				bevelSize: 0.02,
-				bevelOffset: 0,
-				bevelSegments: 4,
-			})
+		const textFont = new Font()
+		textFont.data = font
 
-			textGeometry.computeBoundingBox()
-			textGeometry.translate(
-				- textGeometry.boundingBox.max.x * 0.54,
-				- textGeometry.boundingBox.max.y * 0.8,
-				- textGeometry.boundingBox.max.z * 0.5
-			)
-
-			const material = new MeshBasicMaterial({transparent: true})
-			const text = new Mesh(textGeometry, material)
-			text.position.z = 5
-
-			this.group.add(text)
+		const textGeometry = new TextGeometry(content, {
+			font: textFont,
+			size: 6,
+			height: 0,
+			curveSegments: 5,
+			bevelThickness: 0.03,
+			bevelSize: 0.02,
+			bevelOffset: 0,
+			bevelSegments: 4,
 		})
 
+		textGeometry.computeBoundingBox()
+		textGeometry.translate(
+			- textGeometry.boundingBox.max.x * 0.54,
+			- textGeometry.boundingBox.max.y * 0.8,
+			- textGeometry.boundingBox.max.z * 0.5
+		)
+
+		const material = new MeshBasicMaterial({transparent: true})
+		const text = new Mesh(textGeometry, material)
+		text.position.z = 5
+
+		this.group.add(text)
 	}
 
 	addObject(object) {

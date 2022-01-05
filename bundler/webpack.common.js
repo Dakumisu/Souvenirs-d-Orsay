@@ -116,6 +116,17 @@ module.exports = {
 				}]
 			},
 
+			// JSON
+			// {
+			// 	test: /\.(json)$/,
+			// 	use: [{
+			// 		loader: 'json-loader',
+			// 		options: {
+			// 			outputPath: 'assets/json/'
+			// 		}
+			// 	}]
+			// },
+
 			// Sounds/Music
 			{
 				test: /\.(mp3|wav)$/,
