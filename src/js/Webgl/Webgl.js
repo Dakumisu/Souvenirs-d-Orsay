@@ -73,23 +73,24 @@ export default class Webgl {
 				setTimeout(() => {
 					this.world = new World()
 					this.renderer.getArtworkRender()
+					this.initialized = true
 				}, 50);
 			})
 		})
 
 		this.cards.on('clickCard', (e) => {
+			if (!this.initialized) return
 			this.world.clickOnCard(e)
 		})
 
 		this.views.on('scroll', () => {
+			if (!this.initialized) return
 			this.world.scroll()
 		})
 
 		this.views.on('changeView', () => {
 			this.views.getView()
 		})
-
-		this.initialized = true
 	}
 
 	update() {

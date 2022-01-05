@@ -337,7 +337,7 @@ export default class Card {
 		this.card.subject.material.uniforms.uActive.value = true
 		gsap.to(this.card.subject.material.uniforms.uProgress, 1, { value: 1 })
 
-		this.group.renderOrder = 3
+		this.group.renderOrder = 2
 
 		if (window.matchMedia("(max-width: 967px)").matches) {
 			gsap.to(this.group.position, 1, { x: 0, y: 0, z: 150, ease: 'Power3.easeOut' })
@@ -361,9 +361,6 @@ export default class Card {
 		if (!this.initialized) return
 
 		this.card.subject.material.uniforms.uActive.value = false
-		gsap.to(this.card.subject.material.uniforms.uProgress, 1, { value: 0 })
-
-		this.group.renderOrder = 1
 
 		gsap.to(this.group.position, 1, {
 			x: this.domCard.getBoundingClientRect().left - Store.resolution.width / 2 + this.domCard.getBoundingClientRect().width / 2,
@@ -371,11 +368,14 @@ export default class Card {
 			z: -50,
 			ease: 'Power3.easeOut'
 		})
-		gsap.to(this.group.rotation, .75, {
+		gsap.to(this.group.rotation, .5, {
 			x: 0,
 			y: 0,
 			z: 0,
-			ease: 'Power3.easeOut'
+			ease: 'Power3.easeOut',
+			onComplete: () => {
+				this.group.renderOrder = 1
+			}
 		})
 		this.zoomed = false
 

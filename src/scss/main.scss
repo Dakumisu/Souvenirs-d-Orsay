@@ -6,6 +6,7 @@
 
 body {
 	background-color: #fff;
+	color: #fff;
 }
 
 canvas.sketch {
@@ -23,7 +24,7 @@ canvas.sketch {
 	width: 100vw;
 	padding: 0 10px 120px 10px;
 	position: relative;
-	opacity: 0;
+	// opacity: 0;
 	// z-index: 1;
 	overflow: scroll;
 }
@@ -43,6 +44,7 @@ canvas.sketch {
 }
 
 .card {
+	opacity: 0;
 	width: calc(50% - 20px);
 	max-width: 200px;
 	margin: 20px 10px;
@@ -107,7 +109,6 @@ canvas.sketch {
 	bottom: -3px;
 	width: 100%;
 	height: 67px;
-	background: #2D2A2A;
 
 	.scan {
 		position: absolute;
