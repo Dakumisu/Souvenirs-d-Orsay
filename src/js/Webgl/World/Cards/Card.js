@@ -83,7 +83,6 @@ export default class Card {
 		this.camera = this.webgl.camera.pCamera
 
 		this.name = opt.name
-
 		this.author = opt.author
 		this.year = opt.year
 		this.bio = opt.bio
@@ -122,8 +121,10 @@ export default class Card {
 		this.setGeometries()
 		this.setMaterials()
 		this.setMeshes()
-		//this.setText(title)
-		this.setText(content)
+
+		this.setText(this.name, "name")
+		this.setText(this.bio, "bio")
+		this.setText(`${this.year} - ${this.author}`, "year")
 
 		this.initialized = true
 	}
@@ -292,27 +293,42 @@ export default class Card {
 		)
 	}
 
-	setText(content) {
+	setText(content, element) {
 		const textFont = new Font()
 		textFont.data = font
 
 		const textGeometry = new TextGeometry(content, {
 			font: textFont,
-			size: 6,
-			height: 0,
+			size: element === "bio" ? 6 : element === "name" ? 8 : 7,
+			height: 1,
 			curveSegments: 5,
 			bevelThickness: 0.03,
 			bevelSize: 0.02,
 			bevelOffset: 0,
-			bevelSegments: 4,
+			bevelSegments: 4
 		})
 
 		textGeometry.computeBoundingBox()
-		textGeometry.translate(
-			- textGeometry.boundingBox.max.x * 0.54,
-			- textGeometry.boundingBox.max.y * 0.8,
-			- textGeometry.boundingBox.max.z * 0.5
-		)
+		if (element === "bio") {
+			textGeometry.translate(
+				- textGeometry.boundingBox.max.x * 0.50,
+				- textGeometry.boundingBox.max.y * 13.5,
+				- textGeometry.boundingBox.max.z * 0.5
+			)
+		} else if (element === "name") {
+			textGeometry.translate(
+				- textGeometry.boundingBox.max.x * 0.50,
+				- textGeometry.boundingBox.max.y * -14,
+				- textGeometry.boundingBox.max.z * 0.5
+			)
+		} else if (element === "year") {
+			textGeometry.translate(
+				- textGeometry.boundingBox.max.x * 0.50,
+				- textGeometry.boundingBox.max.y * 8.5,
+				- textGeometry.boundingBox.max.z * 0.5
+			)
+		} else return
+
 
 		const material = new MeshBasicMaterial({transparent: true})
 		const text = new Mesh(textGeometry, material)
