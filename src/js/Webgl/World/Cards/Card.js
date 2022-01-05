@@ -1,4 +1,20 @@
-import { BoxBufferGeometry, Color, DoubleSide, ExtrudeBufferGeometry, FrontSide, Group, Mesh, MeshNormalMaterial, PlaneBufferGeometry, ShaderMaterial, Shape, TextureLoader, Vector2, Vector3 } from 'three'
+import {
+	BoxBufferGeometry,
+	Color,
+	DoubleSide,
+	ExtrudeBufferGeometry,
+	FontLoader,
+	FrontSide,
+	Group,
+	Mesh, MeshBasicMaterial, MeshMatcapMaterial,
+	MeshNormalMaterial,
+	PlaneBufferGeometry,
+	ShaderMaterial,
+	Shape, TextGeometry,
+	TextureLoader,
+	Vector2,
+	Vector3
+} from 'three'
 
 import Webgl from '@js/Webgl/Webgl'
 import Artwork from './Artwork'
@@ -28,6 +44,33 @@ const tVec2a = new Vector2()
 const tVec2b = new Vector2()
 const tVec2c = new Vector2()
 const tVec2d = new Vector2()
+
+//const content = "La Main aux algues et aux coquillages est probablement la dernière verrerie d'Émile Gallé, réalisée en 1904, peu avant la mort de l'artiste nancéien, membre de l'École de Nancy."
+const title = "1990 - Art nouveau"
+let content = `
+    1904 - Art nouveau
+    La Main aux algues et aux
+    coquillages est probablement
+    la dernière verrerie
+    d'Émile Gallé, réalisée en 1904,
+    peu avant la mort de l'artiste
+    nancéien,membre de l'École de
+    Nancy.
+`
+
+function roundedRect(ctx, x, y, width, height, radius) {
+	ctx.moveTo(x, y + radius)
+	ctx.lineTo(x, y + height - radius)
+	ctx.quadraticCurveTo(x, y + height, x + radius, y + height)
+	ctx.lineTo(x + width - radius, y + height)
+	ctx.quadraticCurveTo(x + width, y + height, x + width, y + height - radius)
+	ctx.lineTo(x + width, y + radius)
+	ctx.quadraticCurveTo(x + width, y, x + width - radius, y)
+	ctx.lineTo(x + radius, y)
+	ctx.quadraticCurveTo(x, y, x, y + radius)
+
+	return ctx
+}
 
 export default class Card {
 	constructor(opt = {}) {
@@ -61,6 +104,7 @@ export default class Card {
 		this.card.numero = {}
 		this.textures = {}
 
+		this.cardClicked = false
 		this.zoomed = false
 		this.unZoomed = false
 
@@ -75,6 +119,8 @@ export default class Card {
 		this.setGeometries()
 		this.setMaterials()
 		this.setMeshes()
+		//this.setText(title)
+		this.setText(content)
 
 		this.initialized = true
 	}
@@ -241,6 +287,37 @@ export default class Card {
 			height,
 			1
 		)
+	}
+
+	setText(content) {
+		const fontLoader = new FontLoader()
+		fontLoader.load('/static/fonts/NixieOne_Regular.json', (font) => {
+			console.log('loaded', font)
+			const textGeometry = new TextGeometry(content, {
+				font,
+				size: 6,
+				height: 0,
+				curveSegments: 5,
+				bevelThickness: 0.03,
+				bevelSize: 0.02,
+				bevelOffset: 0,
+				bevelSegments: 4,
+			})
+
+			textGeometry.computeBoundingBox()
+			textGeometry.translate(
+				- textGeometry.boundingBox.max.x * 0.54,
+				- textGeometry.boundingBox.max.y * 0.8,
+				- textGeometry.boundingBox.max.z * 0.5
+			)
+
+			const material = new MeshBasicMaterial({transparent: true})
+			const text = new Mesh(textGeometry, material)
+			text.position.z = 5
+
+			this.group.add(text)
+		})
+
 	}
 
 	addObject(object) {

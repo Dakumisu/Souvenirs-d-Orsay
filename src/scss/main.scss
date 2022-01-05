@@ -16,12 +16,12 @@ canvas.sketch {
 	left: 0;
 	z-index: 2;
 	pointer-events: none;
-	// display: none;
+	//display: none;
 }
 
 .ui {
 	width: 100vw;
-	padding: 0 10px;
+	padding: 0 10px 120px 10px;
 	position: relative;
 	opacity: 0;
 	// z-index: 1;
@@ -77,14 +77,16 @@ canvas.sketch {
 		left: 50%;
 		transform: translateX(-50%);
 
-		// margin: 10px;
-
 		background-color: rgb(11, 180, 202);
 		pointer-events: none;
 	}
 
 	.content {
-		margin: 10px;
+		padding: 5px;
+		font-size: 12px;
+		text-align: center;
+		font-family: 'Nixie One', cursive;
+		pointer-events: none;
 	}
 
 	.numero {
@@ -95,34 +97,109 @@ canvas.sketch {
 		bottom: -10px;
 		left: 50%;
 		transform: translateX(-50%);
+		pointer-events: none;
 	}
 }
 
-.zoom-in {
-	animation: zoom 1s forwards;
+.navBar {
+	z-index: 5;
 	position: fixed;
-	max-width: 300px;
+	bottom: -3px;
+	width: 100%;
+	height: 67px;
+	background: #2D2A2A;
 
-	z-index: 3;
-	top: 5%;
-	left: 47%;
-	transform: translate(-50%, 0%);
+	.scan {
+		position: absolute;
+		top: -47px;
+		left: 50%;
+		transform: translate(-50%);
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		border-radius: 50%;
+		width: 95px;
+		height: 95px;
+		background: #E59E33;
+	}
 }
 
-.zoom-background {
-	background: black;
-	opacity: 0.5;
+.collection {
+	font-family: 'Unna', serif;
+	color: white;
+	padding: 10% 15px 5% 15px;
+	line-height: 35px;
+
+	@include tablet-mobile {
+		padding-top: 20px;
+	}
+
+	&_title {
+		font-size: 24px;
+		font-weight: 400;
+	}
+
+	&_subtitle {
+		font-size: 48px;
+	}
+
+	&_wrapper {
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+
+		.detail {
+			position: relative;
+			margin-bottom: 50px;
+
+			img {
+				border-top-left-radius: 8px;
+				border-top-right-radius: 8px;
+			}
+		}
+
+		.infos {
+			position: absolute;
+			bottom: 0;
+			left: 0;
+			background: #252525;
+			width: 100%;
+			padding: 9px 20px;
+			border-bottom-left-radius: 8px;
+			border-bottom-right-radius: 8px;
+			line-height: 24px;
+
+			&_title {
+				font-family: 'Unna', serif;
+				font-size: 24px;
+			}
+
+			&_subtitle {
+				font-family: 'Poppins', sans-serif;
+				font-weight: 400;
+				font-size: 18px;
+			}
+		}
+	}
+}
+
+.landing {
 	height: 100vh;
-	width: 100vw;
-	z-index: 2;
-	position: fixed;
-}
+	position: relative;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	font-size: 24px;
+	font-weight: 400;
+	font-family: 'Unna', serif;
+	z-index: 10;
+	background: #252525;
+	text-align: center;
 
-@keyframes zoom {
-	0% {}
-
-	100% {
-		width: calc(100% - 40px);
-		height: 75vh;
+	&_logos {
+		position: absolute;
+		bottom: 0;
+		left: 50%;
+		transform: translate(-50%);
 	}
 }
