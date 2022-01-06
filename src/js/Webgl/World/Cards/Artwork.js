@@ -78,7 +78,6 @@ export default class Artwork {
 			})
 		} else {
 			this.setGeometry()
-			// this.setBackground()
 			this.setMesh()
 			this.initialized = true
 		}
@@ -223,16 +222,6 @@ export default class Artwork {
 		this.artwork.mesh.frustumCulled = false
 
 		this.addObject(this.artwork.mesh)
-	}
-
-	setBackground() {
-		this.background.geometry = new PlaneBufferGeometry(50, 50, 1, 1)
-		this.background.material = new MeshNormalMaterial()
-		this.background.mesh = new Mesh(this.background.geometry, this.background.material)
-
-		this.background.mesh.position.z = -2
-
-		this.addObject(this.background.mesh)
 	}
 
 	zoom() {

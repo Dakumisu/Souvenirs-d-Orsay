@@ -365,9 +365,10 @@ export default class Card {
 
 		this.artwork.zoom()
 
-		this.content.name.material.opacity = 1
-		this.content.year.material.opacity = 1
-		this.content.bio.material.opacity = 1
+		gsap.to(this.content.name.material, .75, { opacity: 1, ease: 'Power3.easeOut', delay: .1 })
+		gsap.to(this.content.year.material, .75, { opacity: 1, ease: 'Power3.easeOut', delay: .2 })
+		gsap.to(this.content.bio.material, .75, { opacity: 1, ease: 'Power3.easeOut', delay: .3 })
+
 		this.zoomed = true
 	}
 
@@ -394,9 +395,9 @@ export default class Card {
 
 		this.artwork.unZoom()
 
-		this.content.name.material.opacity = 0
-		this.content.year.material.opacity = 0
-		this.content.bio.material.opacity = 0
+		gsap.to(this.content.name.material, .75, { opacity: 0, ease: 'Power3.easeOut' })
+		gsap.to(this.content.year.material, .75, { opacity: 0, ease: 'Power3.easeOut' })
+		gsap.to(this.content.bio.material, .75, { opacity: 0, ease: 'Power3.easeOut' })
 
 		this.zoomed = false
 	}
@@ -427,9 +428,9 @@ export default class Card {
 
 		this.artwork.unZoom()
 
-		this.content.name.material.opacity = 0
-		this.content.year.material.opacity = 0
-		this.content.bio.material.opacity = 0
+		gsap.to(this.content.name.material, .75, { opacity: 0, ease: 'Power3.easeOut' })
+		gsap.to(this.content.year.material, .75, { opacity: 0, ease: 'Power3.easeOut' })
+		gsap.to(this.content.bio.material, .75, { opacity: 0, ease: 'Power3.easeOut' })
 
 		this.zoomed = false
 	}

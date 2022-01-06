@@ -16,8 +16,6 @@ export default class Renderer {
 
 		/// #if DEBUG
 			this.stats = this.webgl.stats
-			this.debugFolder = this.webgl.debug.addFolder('renderer')
-			this.renderArtwork = false
 		/// #endif
 
 		this.usePostprocess = false
@@ -38,7 +36,6 @@ export default class Renderer {
 		this.renderer = new WebGLRenderer({
 			canvas: this.webgl.canvas,
 			alpha: true,
-			// antialias: true,
 			powerPreference: 'high-performance',
 		})
 
@@ -53,34 +50,6 @@ export default class Renderer {
 		// this.renderer.shadowMap.enabled = false
 		this.renderer.toneMapping = NoToneMapping
 		this.renderer.toneMappingExposure = 1
-
-
-		/// #if DEBUG
-			this.context = this.renderer.getContext()
-
-			if (this.stats) {
-				// this.stats.setRenderPanel(this.context)
-			}
-
-			this.debugFolder
-				.addColor(
-					this,
-					'clearColor'
-				)
-				.onChange(() => {
-					this.renderer.setClearColor(this.clearColor)
-				})
-
-			this.debugFolder
-				.add(
-					this,
-					'renderArtwork',
-					{
-						'scene': false,
-						'artwork': true,
-					}
-				)
-		/// #endif
 	}
 
 	setPostProcess() {

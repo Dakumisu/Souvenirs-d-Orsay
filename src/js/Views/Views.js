@@ -13,7 +13,7 @@ export default class Views extends EventEmitter {
 
 		this.currentView = this.views['home']
 
-		this.initNodes()
+		this.setNodes()
 	}
 
 	setViewsList() {
@@ -51,10 +51,6 @@ export default class Views extends EventEmitter {
 		})
 	}
 
-	initNodes() {
-		this.setNodes()
-	}
-
 	ready() {
 		this.event()
 	}
@@ -76,25 +72,17 @@ export default class Views extends EventEmitter {
 	event() {
 		window.addEventListener('scroll', this.onScroll.bind(this))
 
-		// navigation
-		const landing = document.getElementById('sectionLanding')
-		const sectionCollections = document.getElementById("sectionCollections") // page collection
-		const detailCollection = document.getElementById("detailCollection") // une collection: art nouveau par exemple
-		const fakeCards = document.getElementById("sectionFakeCards") // cartes du DOM
-		const cards = document.getElementById("sectionCards") // cartes 3D
-		const startButton = document.getElementById("startButton") // start button
-
 		//landing
-		startButton.addEventListener("click", () => {
-			landing.classList.add('hidden')
+		this.nodes.start_exp.addEventListener("click", () => {
+			this.nodes.landing.classList.add('hidden')
 		})
 
 		// see deck
-		detailCollection.addEventListener("click", () => {
+		this.nodes.collection_an.addEventListener("click", () => {
 			console.log("click")
-			cards.classList.remove("hidden")
-			fakeCards.classList.remove("hidden")
-			sectionCollections.classList.add("hidden")
+			this.nodes.canvas.classList.remove("hidden")
+			this.nodes.fakeCards.classList.remove("hidden")
+			this.nodes.collections.classList.add("hidden")
 		})
 
 		//go back to collection list

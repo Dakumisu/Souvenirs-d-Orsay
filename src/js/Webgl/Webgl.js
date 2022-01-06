@@ -39,6 +39,7 @@ export default class Webgl {
 	start() {
 		/// #if DEBUG
 			this.debug = new GUI()
+			this.debug.close()
 			this.stats = new Stats()
 		/// #endif
 
