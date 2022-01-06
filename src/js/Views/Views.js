@@ -82,10 +82,12 @@ export default class Views extends EventEmitter {
 		const detailCollection = document.getElementById("detailCollection") // une collection: art nouveau par exemple
 		const fakeCards = document.getElementById("sectionFakeCards") // cartes du DOM
 		const cards = document.getElementById("sectionCards") // cartes 3D
+		const startButton = document.getElementById("startButton") // start button
 
-		setTimeout(() => {
+		//landing
+		startButton.addEventListener("click", () => {
 			landing.classList.add('hidden')
-		}, 1000)
+		})
 
 		// see deck
 		detailCollection.addEventListener("click", () => {
