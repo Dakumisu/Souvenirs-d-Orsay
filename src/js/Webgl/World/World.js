@@ -13,7 +13,12 @@ export default class World {
 	}
 
 	setComponent() {
-		this.cards = new Cards()
+		const detailCollection = document.getElementById("detailCollection") // une collection: art nouveau par exemple
+		detailCollection.addEventListener("click", () => {
+			console.log("click world")
+			this.cards = new Cards()
+		})
+
 
 		this.initialized = true
 	}

@@ -104,7 +104,7 @@ export default class Card {
 		this.setMeshes()
 
 		this.content.name = this.setText(this.name, "name")
-		this.content.year = this.setText(`${this.author}, ${this.year}`, "year")
+		this.content.year = this.setText(`${this.author}\n${this.year}`, "year")
 		this.content.bio = this.setText(this.bio, "bio")
 
 		this.content.name.position.z = 5
@@ -307,7 +307,7 @@ export default class Card {
 		if (element === "bio") {
 			textGeometry.translate(
 				- textGeometry.boundingBox.max.x * 0.50,
-				- textGeometry.boundingBox.max.y * 12,
+				- textGeometry.boundingBox.max.y * 14,
 				- textGeometry.boundingBox.max.z * 0.5
 			)
 		} else if (element === "name") {
