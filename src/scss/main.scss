@@ -221,7 +221,6 @@ canvas.sketch {
 }
 
 .landing {
-	// display: none;
 	display: flex;
 	color: #fff;
 	height: 100vh;
@@ -259,5 +258,6 @@ canvas.sketch {
 		bottom: 30px;
 		left: 50%;
 		transform: translate(-50%);
+		display: flex;
 	}
 }

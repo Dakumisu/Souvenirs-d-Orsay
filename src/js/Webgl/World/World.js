@@ -15,7 +15,6 @@ export default class World {
 	setComponent() {
 		const detailCollection = document.getElementById("detailCollection") // une collection: art nouveau par exemple
 		detailCollection.addEventListener("click", () => {
-			console.log("click world")
 			this.cards = new Cards()
 		})
 
