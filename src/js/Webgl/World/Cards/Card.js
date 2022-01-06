@@ -16,12 +16,12 @@ import {
 	Vector2,
 	Vector3
 } from 'three'
+import gsap from 'gsap'
 
 import Webgl from '@js/Webgl/Webgl'
 import Artwork from './Artwork'
 
 import {Store} from '@js/Tools/Store'
-import gsap from 'gsap'
 
 import backgroundVertex from '@glsl/card/background/vertex.vert'
 import backgroundFragment from '@glsl/card/background/fragment.frag'
@@ -349,7 +349,7 @@ export default class Card {
 			ease: 'Power3.easeOut'
 		})
 
-		gsap.to(this.artwork.artwork.mesh.scale, .75, { x: .55,y: .55,z: .55, ease: 'Power3.easeOut' })
+		this.artwork.zoom()
 
 		this.content.name.material.opacity = 1
 		this.content.year.material.opacity = 1
@@ -378,8 +378,7 @@ export default class Card {
 			}
 		})
 
-		if (this.artwork.artwork.mesh)
-			gsap.to(this.artwork.artwork.mesh.scale, .75, { x: .75,y: .75,z: .75, ease: 'Power3.easeOut' })
+		this.artwork.unzoom()
 
 		this.content.name.material.opacity = 0
 		this.content.year.material.opacity = 0

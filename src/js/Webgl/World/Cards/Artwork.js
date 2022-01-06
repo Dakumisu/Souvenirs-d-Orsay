@@ -1,5 +1,6 @@
 import { BoxBufferGeometry, Color, DoubleSide, LinearFilter, Mesh, MeshNormalMaterial, PerspectiveCamera, PlaneBufferGeometry, RGBAFormat, Scene, ShaderMaterial, sRGBEncoding, TextureLoader, TorusBufferGeometry, Vector3, WebGLRenderTarget } from 'three'
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls'
+import gsap from 'gsap'
 
 import Webgl from '@js/Webgl/Webgl'
 
@@ -57,12 +58,12 @@ export default class Artwork {
 						e.material = this.artwork.material
 					}
 				})
-				this.artwork.mesh.scale.set(.75, .75, .75)
+				this.artwork.mesh.scale.set(.7, .7, .7)
 				// this.artwork.mesh.rotation.y = Math.PI / 2
 				this.artwork.mesh.rotation.z = -Math.PI / 1.5
 				this.artwork.mesh.rotation.x = -Math.PI / 2
 
-				this.artwork.mesh.position.y = -.5
+				this.artwork.mesh.position.y = -.35
 
 				this.addObject(this.artwork.mesh)
 				this.initialized = true
@@ -118,7 +119,7 @@ export default class Artwork {
 	}
 
 	setGeometry() {
-		this.artwork.geometry = new PlaneBufferGeometry(3, 3, 1, 1)
+		this.artwork.geometry = new PlaneBufferGeometry(3.5, 3.5, 1, 1)
 	}
 
 	setMaterial() {
@@ -178,6 +179,21 @@ export default class Artwork {
 
 		this.addObject(this.background.mesh)
 	}
+
+	zoom() {
+		const scale = this.ext == 'glb' ? .4 : .65
+		const position = this.ext == 'glb' ? .35 : .45
+		gsap.to(this.artwork.mesh.scale, .75, { x: scale, y: scale, z: scale,  ease: 'Power3.easeOut' })
+		gsap.to(this.artwork.mesh.position, .75, { y: position, ease: 'Power3.easeOut' })
+	}
+
+	unzoom() {
+		const scale = this.ext == 'glb' ? .7 : 1
+		const position = this.ext == 'glb' ? -.35 : 0
+		gsap.to(this.artwork.mesh.position, .75, { y: position, ease: 'Power3.easeOut' })
+		gsap.to(this.artwork.mesh.scale, .75, { x: scale, y: scale, z: scale, ease: 'Power3.easeOut' })
+	}
+
 
 	addObject(object) {
 		// console.log(object);
