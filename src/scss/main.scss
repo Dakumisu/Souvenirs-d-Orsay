@@ -8,6 +8,10 @@ body {
 	background-color: #fff;
 }
 
+.hidden {
+	display: none !important;
+}
+
 canvas.sketch {
 	width: 100vw;
 	height: 100vh;

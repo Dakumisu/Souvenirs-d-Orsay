@@ -72,7 +72,10 @@ export default class Webgl {
 
 				setTimeout(() => {
 					this.world = new World()
-					this.renderer.getArtworkRender()
+					const detailCollection = document.getElementById("detailCollection") // une collection: art nouveau par exemple
+					detailCollection.addEventListener("click", () => {
+						this.renderer.getArtworkRender()
+					})
 					this.initialized = true
 				}, 50);
 			})

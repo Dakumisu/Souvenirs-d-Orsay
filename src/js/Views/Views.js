@@ -75,5 +75,27 @@ export default class Views extends EventEmitter {
 
 	event() {
 		window.addEventListener('scroll', this.onScroll.bind(this))
+
+		// navigation
+		const landing = document.getElementById('sectionLanding')
+		const sectionCollections = document.getElementById("sectionCollections") // page collection
+		const detailCollection = document.getElementById("detailCollection") // une collection: art nouveau par exemple
+		const fakeCards = document.getElementById("sectionFakeCards") // cartes du DOM
+		const cards = document.getElementById("sectionCards") // cartes 3D
+
+		setTimeout(() => {
+			landing.classList.add('hidden')
+		}, 1000)
+
+		// see deck
+		detailCollection.addEventListener("click", () => {
+			console.log("click")
+			cards.classList.remove("hidden")
+			fakeCards.classList.remove("hidden")
+			sectionCollections.classList.add("hidden")
+		})
+
+		//go back to collection list
+
 	}
 }
