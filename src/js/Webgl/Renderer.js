@@ -38,7 +38,7 @@ export default class Renderer {
 		this.renderer = new WebGLRenderer({
 			canvas: this.webgl.canvas,
 			alpha: true,
-			antialias: true,
+			// antialias: true,
 			powerPreference: 'high-performance',
 		})
 

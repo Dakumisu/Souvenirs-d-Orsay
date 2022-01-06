@@ -30,7 +30,8 @@ void main() {
 	// set round corners
 	vec2 halfSize = uSize * .5;
 	vec2 coord = vUv * uSize;
-	vec2 pos = coord - halfSize;
+
+	vec2 pos = (coord - halfSize);
 	float roundCorner = roundRect(pos, halfSize, uRadius);
 	alpha -= roundCorner;
 
@@ -41,6 +42,10 @@ void main() {
     //Top right
     vec2 tr = step(vec2(0.05), 1.-vUv);
     pct *= (tr.x * tr.y);
+
+	pos = (coord - halfSize) * 1.1;
+	pct -= roundRect(pos, halfSize, uRadius);
+
 
     color = mix(uColor, uStrokeColor, 1. - pct);
 

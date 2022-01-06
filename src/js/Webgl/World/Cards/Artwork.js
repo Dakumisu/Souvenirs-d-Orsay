@@ -1,4 +1,4 @@
-import { BoxBufferGeometry, Color, DoubleSide, LinearFilter, Mesh, MeshNormalMaterial, PerspectiveCamera, PlaneBufferGeometry, RGBAFormat, Scene, ShaderMaterial, sRGBEncoding, TorusBufferGeometry, Vector3, WebGLRenderTarget } from 'three'
+import { BoxBufferGeometry, Color, DoubleSide, LinearFilter, Mesh, MeshNormalMaterial, PerspectiveCamera, PlaneBufferGeometry, RGBAFormat, Scene, ShaderMaterial, sRGBEncoding, TextureLoader, TorusBufferGeometry, Vector3, WebGLRenderTarget } from 'three'
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls'
 
 import Webgl from '@js/Webgl/Webgl'
@@ -13,6 +13,7 @@ import fragment from '@glsl/artwork/fragment.frag'
 
 const twoPI = Math.PI * 2
 const tVec3 = new Vector3()
+const textureLoader = new TextureLoader()
 
 export default class Artwork {
 	constructor(opt = {}) {
@@ -46,6 +47,7 @@ export default class Artwork {
 		this.setRenderTarget()
 
 		this.setMaterial()
+
 		if (this.ext == 'glb') {
 			const model = require(`@public/${this.type}/${this.src}.${this.ext}`)
 			loadModel(model.default).then( response => {
@@ -66,10 +68,11 @@ export default class Artwork {
 				this.initialized = true
 			})
 		} else {
-			this.setBackground()
+			this.setGeometry()
+			// this.setBackground()
+			this.setMesh()
+			this.initialized = true
 		}
-		// this.setGeometry()
-		// this.setMesh()
 
 	}
 
@@ -110,32 +113,58 @@ export default class Artwork {
 		})
 	}
 
+	getTexture(img) {
+		return textureLoader.load(img)
+	}
+
 	setGeometry() {
-		this.artwork.geometry = new TorusBufferGeometry(1, .3, 50, 50)
+		this.artwork.geometry = new PlaneBufferGeometry(3, 3, 1, 1)
 	}
 
 	setMaterial() {
-		this.artwork.material = new ShaderMaterial({
-			vertexShader: vertex,
-			fragmentShader: fragment,
-			uniforms: {
-				uTime: { value: 0 },
-				uColor: { value: new Color('#ffffff') },
-				uAlpha: { value: 1 },
-				uResolution: { value: tVec3.set(this.subjectWidth, this.subjectHeight, Store.resolution.dpr) },
-			},
-			side: DoubleSide,
-			transparent: true,
-		})
+		if (this.ext == 'glb') {
+			this.artwork.material = new ShaderMaterial({
+				vertexShader: vertex,
+				fragmentShader: fragment,
+				uniforms: {
+					uTime: { value: 0 },
+					uColor: { value: new Color('#ffffff') },
+					uAlpha: { value: 1 },
+					uResolution: { value: tVec3.set(this.subjectWidth, this.subjectHeight, Store.resolution.dpr) },
+					uType: { value: 0 }
+				},
+				side: DoubleSide,
+				transparent: true,
+			})
 
-		this.artwork.material = new MeshNormalMaterial({
-			side: DoubleSide
-		})
+			this.artwork.material = new MeshNormalMaterial({
+				side: DoubleSide
+			})
+		} else {
+			const image = require(`@public/${this.type}/${this.src}.${this.ext}`)
+
+			this.artwork.material = new ShaderMaterial({
+				vertexShader: vertex,
+				fragmentShader: fragment,
+				uniforms: {
+					uTime: { value: 0 },
+					uColor: { value: new Color('#ffffff') },
+					uAlpha: { value: 1 },
+					uTexture: { value: this.getTexture(image.default) },
+					uResolution: { value: tVec3.set(this.subjectWidth, this.subjectHeight, Store.resolution.dpr) },
+					uType: { value: 1 }
+				},
+				side: DoubleSide,
+				transparent: true,
+			})
+		}
 	}
 
 	setMesh() {
 		this.artwork.mesh = new Mesh(this.artwork.geometry, this.artwork.material)
 		this.artwork.mesh.frustumCulled = false
+
+		console.log(this.artwork.mesh)
 
 		this.addObject(this.artwork.mesh)
 	}
@@ -179,7 +208,7 @@ export default class Artwork {
 
 		this.artwork.texture = this.artwork.renderTarget.texture
 		// this.artwork.material.uniforms.uTime.value = et
-		this.artwork.mesh.rotation.z = et * .001
+		if (this.ext == 'glb') this.artwork.mesh.rotation.z = et * .001
 
 		/// #if DEBUG
 		// this.debug.orbitControls.update()

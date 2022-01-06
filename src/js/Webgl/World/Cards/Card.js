@@ -186,7 +186,7 @@ export default class Card {
 				uAlpha: { value: 1 },
 
 				uSize: { value: tVec2c.set(this.domNumero.getBoundingClientRect().width * 1.5, this.domNumero.getBoundingClientRect().height * 1.5) },
-				uRadius: { value: 4 },
+				uRadius: { value: 5 },
 
 				uResolution: { value: tVec3.set(Store.resolution.width, Store.resolution.height, Store.resolution.dpr) },
 			},
@@ -400,9 +400,10 @@ export default class Card {
 		}
 
 		if (this.zoomed) {
+			const offset = this.artwork.ext == 'glb' ? Math.PI * .5 : 0
 			if (this.artwork.initialized) {
 				this.artwork.artwork.mesh.rotation.y += (.04 * (tVec2d.x / 2 - this.artwork.artwork.mesh.rotation.y));
-				this.artwork.artwork.mesh.rotation.x += (.04 * (tVec2d.y / 2 - (Math.PI * .5 + this.artwork.artwork.mesh.rotation.x)));
+				this.artwork.artwork.mesh.rotation.x += (.04 * (tVec2d.y / 2 - (offset + this.artwork.artwork.mesh.rotation.x)));
 			}
 
 			tVec2d.set(
