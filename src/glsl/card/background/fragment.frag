@@ -1,5 +1,8 @@
 #pragma glslify: curlNoise = require(../../../utils/glsl/curlNoise.glsl)
 #pragma glslify: cnoise = require(glsl-noise/classic/3d)
+#pragma glslify: cnoise2 = require(glsl-noise/classic/2d)
+#pragma glslify: snoise = require(glsl-noise/simplex/2d)
+
 
 precision highp float;
 
@@ -8,6 +11,7 @@ precision highp float;
 uniform float uTime;
 uniform float uAlpha;
 uniform float uRadius;
+uniform float uBackgroundOffset;
 uniform vec2 uSize;
 uniform vec3 uBackgroundColor;
 uniform vec3 uStrokeColor;
@@ -23,7 +27,8 @@ uniform sampler2D uDisplacementTexture;
 uniform sampler2D uDisplacement2Texture;
 uniform sampler2D uDisplacement3Texture;
 
-uniform sampler2D uContoursTexture;
+uniform sampler2D uWhiteGlowMC;
+uniform sampler2D uCardBackTexture;
 
 varying vec2 vUv;
 varying vec3 vPos;
@@ -73,6 +78,9 @@ void main() {
 	vec3 color = vec3(uBackgroundColor);
 	float alpha = uAlpha;
 
+	vec2 mUv = vec2(viewMatrix * vec4(normalize(vNormal), 0)) * 0.5 + vec2(0.5, 0.5);
+	vec4 whiteGlowMC = texture2D(uWhiteGlowMC, vec2(mUv.x, 1.0 - mUv.y));
+
 	// round corners
 	vec2 halfSize = uSize * .5;
 	vec2 coord = vUv * uSize;
@@ -93,11 +101,17 @@ void main() {
 
 	strokes = (stroke1 + stroke2) - (stroke1 * stroke2);
 
-	color = mix(color, uStrokeColor, vec3(strokes));
+	vec3 finalStrokes = mix(vec3(0.), uStrokeColor, vec3(strokes));
+	finalStrokes *= .75 + cnoise2(uBackgroundOffset + (vUv * 1.5) + (uTime * .0004));
+	finalStrokes *= uStrokeColor * (1. + whiteGlowMC.xyz);
+
+
+	// vec3 frontSide = mix(color, uStrokeColor * whiteGlowMC.xyz, vec3(strokes));
+	vec3 frontSide = color + finalStrokes;
 
 	// cover
 	vec2 uv = vUv * .6;
-	vec2 curlUv = curlNoise(vec3(uv, uTime * .0001)).xy * .5;
+	vec2 curlUv = vec2(snoise(uBackgroundOffset + uv + (uTime * .0001)) * (uv * 1.5));
 
 	vec3 displacementTexture = texture2D(uDisplacementTexture, uv).xyz;
 	vec3 displacement2Texture = texture2D(uDisplacement2Texture, uv).xyz;
@@ -110,13 +124,23 @@ void main() {
 	vec3 wood2Texture = texture2D(uWood2Texture, mix(leavesTexture.xy, displacement3Texture.xy, curlUv)).xyz;
 	vec3 treeTexture = texture2D(uTreeTexture, weirdNoiseUv).xyz;
 
+	vec3 backSide = texture2D(uCardBackTexture, vUv).xyz;
+	vec3 cursedBackSide = texture2D(uCardBackTexture, curlUv).xyz;
+
+	vec3 motif = smoothstep(.2, .5, backSide);
+
+	backSide = mix(backSide, cursedBackSide, motif);
+	backSide += strokes - (backSide * strokes);
+	backSide *= 1.5 * (mix(cursedBackSide, 1.5 + 3. * whiteGlowMC.xyz, motif));
+
 	vec3 finalTexture = mix(wood2Texture, treeTexture, cnoise(vec3(uv, uTime * .0001)));
 
 
 	if (gl_FrontFacing) {
-		gl_FragColor = vec4(color, alpha);
+		gl_FragColor = vec4(frontSide, alpha);
 	} else {
-		gl_FragColor = vec4(color * vPos, alpha);
+		gl_FragColor = vec4(backSide, alpha);
+		// gl_FragColor = vec4(.25 + smoothstep(.25, .75, whiteGlowMC.xyz), alpha);
 	}
 
 	// gl_FragColor = vec4(vec3(contours), alpha);

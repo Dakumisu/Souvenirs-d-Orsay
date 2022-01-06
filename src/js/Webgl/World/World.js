@@ -32,6 +32,10 @@ export default class World {
 		this.cards.click(e)
 	}
 
+	quitCard() {
+		this.cards.quitCard()
+	}
+
 	update(et) {
 		if (!this.initialized) return
 		if (this.cards) this.cards.update(et)

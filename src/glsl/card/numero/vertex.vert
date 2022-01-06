@@ -9,10 +9,12 @@ uniform float uTime;
 
 varying vec2 vUv;
 varying vec3 vPos;
+varying vec3 vNormal;
 
 void main() {
 	vUv = uv;
 	vPos = position;
+	vNormal = normalize( vec3( vec4( normal, .0 ) * modelMatrix ) );
 	vec3 pos = position;
 
 	vec4 mv = modelViewMatrix * vec4(pos, 1.);

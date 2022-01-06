@@ -74,6 +74,12 @@ export default class Cards {
 		this.cards[e].zoom()
 	}
 
+	quitCard() {
+		for (const card in this.cards) {
+			this.cards[card].default()
+		}
+	}
+
 	resize() {
 		for (const card in this.cards) {
 			this.cards[card].resize()

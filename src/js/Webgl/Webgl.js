@@ -83,6 +83,11 @@ export default class Webgl {
 			this.world.clickOnCard(e)
 		})
 
+		this.cards.on('quitCard', () => {
+			if (!this.initialized) return
+			this.world.quitCard()
+		})
+
 		this.views.on('scroll', () => {
 			if (!this.initialized) return
 			this.world.scroll()

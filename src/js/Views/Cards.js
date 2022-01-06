@@ -59,6 +59,8 @@ export default class Cards extends EventEmitter {
 
 	clickOnCards(e) {
 		this.trigger('clickCard', [e.target.id])
+
+		// this.trigger('quitCard')
 	}
 
 	event() {

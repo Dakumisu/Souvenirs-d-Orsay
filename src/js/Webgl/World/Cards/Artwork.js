@@ -10,7 +10,10 @@ import loadModel from '@utils/loader/loadGLTF'
 import vertex from '@glsl/artwork/vertex.vert'
 import fragment from '@glsl/artwork/fragment.frag'
 
-// import model from '@public/model/main.glb'
+import waterBlueMCImage from '@public/img/textures/matcap/water_blue.png'
+import waterPurpleMCImage from '@public/img/textures/matcap/water_purple.png'
+import alguesMCImage from '@public/img/textures/matcap/algues.png'
+import handMCImage from '@public/img/textures/matcap/hand.png'
 
 const twoPI = Math.PI * 2
 const tVec3 = new Vector3()
@@ -53,11 +56,16 @@ export default class Artwork {
 			const model = require(`@public/${this.type}/${this.src}.${this.ext}`)
 			loadModel(model.default).then( response => {
 				this.artwork.mesh = response
-				this.artwork.mesh.traverse( e => {
-					if (e instanceof Mesh) {
-						e.material = this.artwork.material
-					}
-				})
+				// this.artwork.mesh.traverse( e => {
+				// 	if (e instanceof Mesh) {
+				// 		e.material = this.artwork.material
+				// 	}
+				// })
+				// nsm ya que la main de toute façon
+				this.artwork.mesh.children[0].material = this.artwork.material.hand // Main
+				this.artwork.mesh.children[1].material = this.artwork.material.water // Eau
+				this.artwork.mesh.children[2].material = this.artwork.material.algues // Algues
+				this.artwork.mesh.children[3].material = this.artwork.material.coquillages // Coquillages
 				this.artwork.mesh.scale.set(.7, .7, .7)
 				// this.artwork.mesh.rotation.y = Math.PI / 2
 				this.artwork.mesh.rotation.z = -Math.PI / 1.5
@@ -124,22 +132,71 @@ export default class Artwork {
 
 	setMaterial() {
 		if (this.ext == 'glb') {
-			this.artwork.material = new ShaderMaterial({
+			this.artwork.material = {}
+
+			this.artwork.material.hand = new ShaderMaterial({
 				vertexShader: vertex,
 				fragmentShader: fragment,
 				uniforms: {
 					uTime: { value: 0 },
 					uColor: { value: new Color('#ffffff') },
 					uAlpha: { value: 1 },
+
+					uMatCaptexture: { value: this.getTexture(handMCImage) },
+
 					uResolution: { value: tVec3.set(this.subjectWidth, this.subjectHeight, Store.resolution.dpr) },
-					uType: { value: 0 }
+					uType: { value: 0 },
 				},
 				side: DoubleSide,
 				transparent: true,
 			})
+			this.artwork.material.water = new ShaderMaterial({
+				vertexShader: vertex,
+				fragmentShader: fragment,
+				uniforms: {
+					uTime: { value: 0 },
+					uColor: { value: new Color('#ffffff') },
+					uAlpha: { value: 1 },
 
-			this.artwork.material = new MeshNormalMaterial({
-				side: DoubleSide
+					uMatCaptexture: { value: this.getTexture(waterBlueMCImage) },
+
+					uResolution: { value: tVec3.set(this.subjectWidth, this.subjectHeight, Store.resolution.dpr) },
+					uType: { value: 0 },
+				},
+				side: DoubleSide,
+				transparent: true,
+			})
+			this.artwork.material.algues = new ShaderMaterial({
+				vertexShader: vertex,
+				fragmentShader: fragment,
+				uniforms: {
+					uTime: { value: 0 },
+					uColor: { value: new Color('#ffffff') },
+					uAlpha: { value: 1 },
+
+					uMatCaptexture: { value: this.getTexture(alguesMCImage) },
+
+					uResolution: { value: tVec3.set(this.subjectWidth, this.subjectHeight, Store.resolution.dpr) },
+					uType: { value: 0 },
+				},
+				side: DoubleSide,
+				transparent: true,
+			})
+			this.artwork.material.coquillages = new ShaderMaterial({
+				vertexShader: vertex,
+				fragmentShader: fragment,
+				uniforms: {
+					uTime: { value: 0 },
+					uColor: { value: new Color('#ffffff') },
+					uAlpha: { value: 1 },
+
+					uMatCaptexture: { value: this.getTexture(waterPurpleMCImage) },
+
+					uResolution: { value: tVec3.set(this.subjectWidth, this.subjectHeight, Store.resolution.dpr) },
+					uType: { value: 0 },
+				},
+				side: DoubleSide,
+				transparent: true,
 			})
 		} else {
 			const image = require(`@public/${this.type}/${this.src}.${this.ext}`)
@@ -165,8 +222,6 @@ export default class Artwork {
 		this.artwork.mesh = new Mesh(this.artwork.geometry, this.artwork.material)
 		this.artwork.mesh.frustumCulled = false
 
-		console.log(this.artwork.mesh)
-
 		this.addObject(this.artwork.mesh)
 	}
 
@@ -187,7 +242,7 @@ export default class Artwork {
 		gsap.to(this.artwork.mesh.position, .75, { y: position, ease: 'Power3.easeOut' })
 	}
 
-	unzoom() {
+	unZoom() {
 		const scale = this.ext == 'glb' ? .7 : 1
 		const position = this.ext == 'glb' ? -.35 : 0
 		gsap.to(this.artwork.mesh.position, .75, { y: position, ease: 'Power3.easeOut' })
@@ -196,7 +251,6 @@ export default class Artwork {
 
 
 	addObject(object) {
-		// console.log(object);
 		this.artwork.scene.add(object)
 	}
 
@@ -224,7 +278,9 @@ export default class Artwork {
 
 		this.artwork.texture = this.artwork.renderTarget.texture
 		// this.artwork.material.uniforms.uTime.value = et
-		if (this.ext == 'glb') this.artwork.mesh.rotation.z = et * .001
+		if (this.ext == 'glb') {
+			this.artwork.mesh.rotation.z = et * .001
+		}
 
 		/// #if DEBUG
 		// this.debug.orbitControls.update()

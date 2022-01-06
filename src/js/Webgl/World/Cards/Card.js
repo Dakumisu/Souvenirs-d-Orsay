@@ -7,6 +7,7 @@ import {
 	FontLoader,
 	FrontSide,
 	Group,
+	MathUtils,
 	Mesh, MeshBasicMaterial, MeshMatcapMaterial,
 	MeshNormalMaterial,
 	PlaneBufferGeometry,
@@ -21,7 +22,7 @@ import gsap from 'gsap'
 import Webgl from '@js/Webgl/Webgl'
 import Artwork from './Artwork'
 
-import {Store} from '@js/Tools/Store'
+import { Store } from '@js/Tools/Store'
 
 import backgroundVertex from '@glsl/card/background/vertex.vert'
 import backgroundFragment from '@glsl/card/background/fragment.frag'
@@ -37,7 +38,9 @@ import leavesImage from '@public/img/textures/card/leaves.jpeg'
 import displacementImage from '@public/img/textures/card/displacement.jpeg'
 import displacement2Image from '@public/img/textures/card/displacement.jpeg'
 import displacement3Image from '@public/img/textures/card/displacement.jpeg'
-import contoursImage from '@public/img/textures/card/contours.png'
+
+import whiteGlowMC from '@public/img/textures/matcap/white_glow.png'
+import cardBackImage from '@public/img/card_back.png'
 
 import fontContent from '@public/fonts/Spartan.json'
 import fontTitle from '@public/fonts/Marcellus_Regular.json'
@@ -80,6 +83,8 @@ export default class Card {
 		this.card.numero = {}
 		this.textures = {}
 
+		this.visble = true
+
 		this.cardClicked = false
 		this.zoomed = false
 		this.unZoomed = false
@@ -119,7 +124,9 @@ export default class Card {
 		this.textures.displacement = textureLoader.load(displacementImage)
 		this.textures.displacement2 = textureLoader.load(displacement2Image)
 		this.textures.displacement3 = textureLoader.load(displacement3Image)
-		this.textures.contours = textureLoader.load(contoursImage)
+
+		this.textures.whiteGlow = textureLoader.load(whiteGlowMC)
+		this.textures.cardBack = textureLoader.load(cardBackImage)
 	}
 
 	setGeometries() {
@@ -149,7 +156,9 @@ export default class Card {
 				uDisplacement2Texture: { value: this.textures.displacement2 },
 				uDisplacement3Texture: { value: this.textures.displacement3 },
 
-				uContoursTexture: { value: this.textures.contours },
+				uWhiteGlowMC: { value: this.textures.whiteGlow },
+				uCardBackTexture: { value: this.textures.cardBack },
+				uBackgroundOffset: { value: (Math.sign(.5 - Math.random())) * MathUtils.randFloatSpread(1, 10) },
 
 				uResolution: { value: tVec3.set(Store.resolution.width, Store.resolution.height, Store.resolution.dpr) },
 			},
@@ -194,6 +203,9 @@ export default class Card {
 				uSize: { value: tVec2c.set(this.domNumero.getBoundingClientRect().width * 1.5, this.domNumero.getBoundingClientRect().height * 1.5) },
 				uRadius: { value: 5 },
 
+				uWhiteGlowMC: { value: this.textures.whiteGlow },
+				uBackgroundOffset: { value: (Math.sign(.5 - Math.random())) * MathUtils.randFloatSpread(1, 20) },
+
 				uResolution: { value: tVec3.set(Store.resolution.width, Store.resolution.height, Store.resolution.dpr) },
 			},
 			side: FrontSide,
@@ -223,6 +235,8 @@ export default class Card {
 		this.setPositions()
 
 		this.group.renderOrder = 1
+
+		if (!this.visble) this.group.rotation.y = Math.PI
 
 		this.addObject(this.group)
 	}
@@ -344,10 +358,10 @@ export default class Card {
 			gsap.to(this.group.position, 1, { x: 0, y: 0, z: 50, ease: 'Power3.easeOut' })
 		}
 
-		gsap.from(this.group.rotation, 1, {
-			y: twoPI,
-			ease: 'Power3.easeOut'
-		})
+		// gsap.from(this.group.rotation, 1, {
+		// 	y: twoPI,
+		// 	ease: 'Power3.easeOut'
+		// })
 
 		this.artwork.zoom()
 
@@ -378,7 +392,40 @@ export default class Card {
 			}
 		})
 
-		this.artwork.unzoom()
+		this.artwork.unZoom()
+
+		this.content.name.material.opacity = 0
+		this.content.year.material.opacity = 0
+		this.content.bio.material.opacity = 0
+
+		this.zoomed = false
+	}
+
+	default() {
+		if (!this.initialized) return
+
+		this.card.subject.material.uniforms.uActive.value = false
+
+		gsap.to(this.group.position, 1, {
+			x: this.domCard.getBoundingClientRect().left - Store.resolution.width / 2 + this.domCard.getBoundingClientRect().width / 2,
+			y: -this.domCard.getBoundingClientRect().top + Store.resolution.height / 2 - this.domCard.getBoundingClientRect().height / 2,
+			z: 0,
+			ease: 'Power3.easeOut'
+		})
+		gsap.to(this.group.rotation, .5, {
+			x: 0,
+			y: 0,
+			z: 0,
+			ease: 'Power3.easeOut',
+			onComplete: () => {
+				this.group.renderOrder = 1
+			}
+		})
+
+		// this.setPositions()
+		// this.setSizes()
+
+		this.artwork.unZoom()
 
 		this.content.name.material.opacity = 0
 		this.content.year.material.opacity = 0
@@ -433,5 +480,6 @@ export default class Card {
 
 		this.card.background.material.uniforms.uTime.value = et
 		this.card.subject.material.uniforms.uTime.value = et
+		this.card.numero.material.uniforms.uTime.value = et
 	}
 }
