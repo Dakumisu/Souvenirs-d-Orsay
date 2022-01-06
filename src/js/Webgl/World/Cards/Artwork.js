@@ -55,7 +55,7 @@ export default class Artwork {
 						e.material = this.artwork.material
 					}
 				})
-				this.artwork.mesh.scale.set(.75, .75, .75)
+				this.artwork.mesh.scale.set(.55, .55, .55)
 				// this.artwork.mesh.rotation.y = Math.PI / 2
 				this.artwork.mesh.rotation.z = -Math.PI / 1.5
 				this.artwork.mesh.rotation.x = -Math.PI / 2

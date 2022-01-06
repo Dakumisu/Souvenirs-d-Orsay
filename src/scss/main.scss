@@ -6,7 +6,6 @@
 
 body {
 	background-color: #fff;
-	color: #fff;
 }
 
 canvas.sketch {
@@ -132,7 +131,6 @@ canvas.sketch {
 
 .collection {
 	font-family: 'Unna', serif;
-	color: white;
 	padding: 10% 15px 5% 15px;
 	line-height: 35px;
 
@@ -169,6 +167,7 @@ canvas.sketch {
 			bottom: 0;
 			left: 0;
 			background: #252525;
+			color: #fff;
 			width: 100%;
 			padding: 9px 20px;
 			border-bottom-left-radius: 8px;
@@ -192,6 +191,7 @@ canvas.sketch {
 .landing {
 	// display: none;
 	display: flex;
+	color: #fff;
 	height: 100vh;
 	position: relative;
 	align-items: center;

@@ -39,7 +39,8 @@ import displacement2Image from '@public/img/textures/card/displacement.jpeg'
 import displacement3Image from '@public/img/textures/card/displacement.jpeg'
 import contoursImage from '@public/img/textures/card/contours.png'
 
-import font from '@public/fonts/NixieOne_Regular.json'
+import fontContent from '@public/fonts/Spartan.json'
+import fontTitle from '@public/fonts/Marcellus_Regular.json'
 
 const twoPI = Math.PI * 2
 const tVec3 = new Vector3()
@@ -47,19 +48,6 @@ const tVec2a = new Vector2()
 const tVec2b = new Vector2()
 const tVec2c = new Vector2()
 const tVec2d = new Vector2()
-
-//const content = "La Main aux algues et aux coquillages est probablement la dernière verrerie d'Émile Gallé, réalisée en 1904, peu avant la mort de l'artiste nancéien, membre de l'École de Nancy."
-const title = "1990 - Art nouveau"
-let content = `
-    1904 - Art nouveau
-    La Main aux algues et aux
-    coquillages est probablement
-    la dernière verrerie
-    d'Émile Gallé, réalisée en 1904,
-    peu avant la mort de l'artiste
-    nancéien,membre de l'École de
-    Nancy.
-`
 
 export default class Card {
 	constructor(opt = {}) {
@@ -69,7 +57,6 @@ export default class Card {
 		this.camera = this.webgl.camera.pCamera
 
 		this.name = opt.name
-
 		this.author = opt.author
 		this.year = opt.year
 		this.bio = opt.bio
@@ -108,8 +95,10 @@ export default class Card {
 		this.setGeometries()
 		this.setMaterials()
 		this.setMeshes()
-		//this.setText(title)
-		this.setText(content)
+
+		this.setText(this.name, "name")
+		this.setText(this.bio, "bio")
+		this.setText(`${this.author}, ${this.year}`, "year")
 
 		this.initialized = true
 	}
@@ -277,29 +266,46 @@ export default class Card {
 		)
 	}
 
-	setText(content) {
+	setText(content, element) {
 		const textFont = new Font()
-		textFont.data = font
+		const titleFont = new Font()
+		textFont.data = fontContent
+		titleFont.data = fontTitle
 
 		const textGeometry = new TextGeometry(content, {
-			font: textFont,
-			size: 6,
-			height: 0,
+			font: element === "name" ? titleFont : textFont,
+			size: element === "bio" ? 6 : element === "name" ? 8 : 7,
+			height: element === "year" ? 2 : 1,
 			curveSegments: 5,
 			bevelThickness: 0.03,
 			bevelSize: 0.02,
 			bevelOffset: 0,
-			bevelSegments: 4,
+			bevelSegments: 4
 		})
 
 		textGeometry.computeBoundingBox()
-		textGeometry.translate(
-			- textGeometry.boundingBox.max.x * 0.54,
-			- textGeometry.boundingBox.max.y * 0.8,
-			- textGeometry.boundingBox.max.z * 0.5
-		)
+		if (element === "bio") {
+			textGeometry.translate(
+				- textGeometry.boundingBox.max.x * 0.50,
+				- textGeometry.boundingBox.max.y * 10,
+				- textGeometry.boundingBox.max.z * 0.5
+			)
+		} else if (element === "name") {
+			textGeometry.translate(
+				- textGeometry.boundingBox.max.x * 0.50,
+				- textGeometry.boundingBox.max.y * -14,
+				- textGeometry.boundingBox.max.z * 0.5
+			)
+		} else if (element === "year") {
+			textGeometry.translate(
+				- textGeometry.boundingBox.max.x * 0.50,
+				- textGeometry.boundingBox.max.y * 6.5,
+				- textGeometry.boundingBox.max.z * 0.5
+			)
+		} else return
 
-		const material = new MeshBasicMaterial({transparent: true})
+
+		const material = new MeshBasicMaterial({transparent: true, color: '#FFF5E6'})
 		const text = new Mesh(textGeometry, material)
 		text.position.z = 5
 
