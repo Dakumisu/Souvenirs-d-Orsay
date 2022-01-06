@@ -30,15 +30,18 @@ export default class World {
 	}
 
 	scroll() {
-		this.cards.scroll()
+		if (this.cards)
+			this.cards.scroll()
 	}
 
 	clickOnCard(e) {
-		this.cards.click(e)
+		if (this.cards)
+			this.cards.click(e)
 	}
 
 	quitCard() {
-		this.cards.quitCard()
+		if (this.cards)
+			this.cards.quitCard()
 	}
 
 	update(et) {
