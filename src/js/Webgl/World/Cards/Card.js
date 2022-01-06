@@ -84,6 +84,8 @@ export default class Card {
 		this.zoomed = false
 		this.unZoomed = false
 
+		this.content = {}
+
 		this.initialized = false
 
 		this.init()
@@ -96,9 +98,13 @@ export default class Card {
 		this.setMaterials()
 		this.setMeshes()
 
-		this.setText(this.name, "name")
-		this.setText(this.bio, "bio")
-		this.setText(`${this.author}, ${this.year}`, "year")
+		this.content.name = this.setText(this.name, "name")
+		this.content.year = this.setText(`${this.author}, ${this.year}`, "year")
+		this.content.bio = this.setText(this.bio, "bio")
+
+		this.content.name.position.z = 5
+		this.content.year.position.z = 10
+		this.content.bio.position.z = 5
 
 		this.initialized = true
 	}
@@ -274,7 +280,7 @@ export default class Card {
 
 		const textGeometry = new TextGeometry(content, {
 			font: element === "name" ? titleFont : textFont,
-			size: element === "bio" ? 6 : element === "name" ? 8 : 7,
+			size: element === "bio" ? 5 : element === "name" ? 7 : 6,
 			height: element === "year" ? 2 : 1,
 			curveSegments: 5,
 			bevelThickness: 0.03,
@@ -287,29 +293,29 @@ export default class Card {
 		if (element === "bio") {
 			textGeometry.translate(
 				- textGeometry.boundingBox.max.x * 0.50,
-				- textGeometry.boundingBox.max.y * 10,
+				- textGeometry.boundingBox.max.y * 12,
 				- textGeometry.boundingBox.max.z * 0.5
 			)
 		} else if (element === "name") {
 			textGeometry.translate(
 				- textGeometry.boundingBox.max.x * 0.50,
-				- textGeometry.boundingBox.max.y * -14,
+				- textGeometry.boundingBox.max.y * -16,
 				- textGeometry.boundingBox.max.z * 0.5
 			)
 		} else if (element === "year") {
 			textGeometry.translate(
 				- textGeometry.boundingBox.max.x * 0.50,
-				- textGeometry.boundingBox.max.y * 6.5,
+				- textGeometry.boundingBox.max.y * 7.5,
 				- textGeometry.boundingBox.max.z * 0.5
 			)
-		} else return
+		}
 
 
-		const material = new MeshBasicMaterial({transparent: true, color: '#FFF5E6'})
+		const material = new MeshBasicMaterial({transparent: true, color: '#FFF5E6', opacity: 0})
 		const text = new Mesh(textGeometry, material)
-		text.position.z = 5
 
 		this.group.add(text)
+		return text
 	}
 
 	addObject(object) {
@@ -332,21 +338,23 @@ export default class Card {
 		this.group.renderOrder = 2
 
 		if (window.matchMedia("(max-width: 967px)").matches) {
-			gsap.to(this.group.position, 1, { x: 0, y: 0, z: 150, ease: 'Power3.easeOut' })
+			gsap.to(this.group.position, 1, { x: 0, y: 0, z: 210, ease: 'Power3.easeOut' })
 
 		} else {
 			gsap.to(this.group.position, 1, { x: 0, y: 0, z: 50, ease: 'Power3.easeOut' })
-
 		}
 
 		gsap.from(this.group.rotation, 1, {
 			y: twoPI,
 			ease: 'Power3.easeOut'
 		})
-		this.zoomed = true
 
-		// 3- utiliser le change view
-		console.log('zoom', this.group)
+		gsap.to(this.artwork.artwork.mesh.scale, .75, { x: .55,y: .55,z: .55, ease: 'Power3.easeOut' })
+
+		this.content.name.material.opacity = 1
+		this.content.year.material.opacity = 1
+		this.content.bio.material.opacity = 1
+		this.zoomed = true
 	}
 
 	unZoom() {
@@ -369,8 +377,15 @@ export default class Card {
 				this.group.renderOrder = 1
 			}
 		})
-		this.zoomed = false
 
+		if (this.artwork.artwork.mesh)
+			gsap.to(this.artwork.artwork.mesh.scale, .75, { x: .75,y: .75,z: .75, ease: 'Power3.easeOut' })
+
+		this.content.name.material.opacity = 0
+		this.content.year.material.opacity = 0
+		this.content.bio.material.opacity = 0
+
+		this.zoomed = false
 	}
 
 	resize() {
