@@ -10,6 +10,7 @@ uniform float uAlpha;
 uniform float uRadius;
 uniform vec2 uSize;
 uniform vec3 uBackgroundColor;
+uniform vec3 uStrokeColor;
 uniform vec3 uColor;
 uniform vec3 uColor1;
 // uniform vec4 uResolution;
@@ -40,28 +41,59 @@ float linearstep(float begin, float end, float t) {
 	return clamp((t - begin) / (end - begin), 0.0, 1.0);
 }
 
+float setStroke(vec2 halfSize, vec2 coord, vec2 size, float strokeWidth, float offset) {
+
+	vec2 pos = vec2(0.);
+	pos = offset - (coord - halfSize) * (vec2(1.099, 1.055) * size);
+	float stroke = roundRect(pos, halfSize, uRadius);
+	pos = offset - (coord - halfSize) * (vec2(1.09, 1.05) * size);
+	stroke -= roundRect(pos, halfSize, uRadius);
+
+	// vec2 innerBottomLeftStroke = step(vec2(size, size / 2.) * (uResolution.xy / uSize), vUv - offset);
+    // float innerStroke = innerBottomLeftStroke.x * innerBottomLeftStroke.y;
+
+    // vec2 innerTopRightStroke = step(vec2(size, size / 2.) * (uResolution.xy / uSize), 1. - vUv + offset);
+    // innerStroke *= (innerTopRightStroke.x * innerTopRightStroke.y);
+
+	// float outerStrokeWidth = size - strokeWidth;
+    // vec2 outerBottomLeftStroke = step(vec2(outerStrokeWidth, outerStrokeWidth / 2.) * (uResolution.xy / uSize), vUv - offset);
+    // float outerStroke = outerBottomLeftStroke.x * outerBottomLeftStroke.y;
+
+    // vec2 outerTopRightStroke = step(vec2(outerStrokeWidth, outerStrokeWidth / 2.) * (uResolution.xy / uSize), 1. - vUv + offset);
+    // outerStroke *= (outerTopRightStroke.x * outerTopRightStroke.y);
+
+	// float stroke = outerStroke - innerStroke;
+
+	return stroke;
+}
+
 void main() {
 	// in the case of an orthographic camera, so that the image keeps its aspect (uResolution must be a vec4)
 	// vec2 newUv = (vUv - vec2(.5)) * uResolution.zw + vec2(.5);
-	vec3 color = vec3(uColor);
+	vec3 color = vec3(uBackgroundColor);
 	float alpha = uAlpha;
 
-	// set round corners
+	// round corners
 	vec2 halfSize = uSize * .5;
 	vec2 coord = vUv * uSize;
 	vec2 pos = coord - halfSize;
 	float roundCorner = roundRect(pos, halfSize, uRadius);
 	alpha -= roundCorner;
 
-	// contours
-	float contours = 0.;
-	coord = vec2(step(vUv.x - .04, vUv.x - .02	), step(vUv.y - .04, vUv.y - .02)) * (uSize * 1.06);
-	// coord = vec2(vUv.x - .02, vUv.y - .04) * (uSize * 1.06);
+	// strokes
+	float strokes = 0.;
+	vec2 size = vec2(1.05, 1.025);
+	// const float size = .07;
+	const float width = .006;
 
-	pos = coord - halfSize;
-	roundCorner = roundRect(pos, halfSize, uRadius);
-	contours = roundCorner;
+	float stroke1 = setStroke(halfSize, coord, size, width, 4.);
+	float stroke2 = setStroke(halfSize, coord, size, width, -4.);
+	// float stroke1 = setStroke(size, width, vec2(.01, .005));
+	// float stroke2 = setStroke(size, width, vec2(-.01, -.005));
 
+	strokes = (stroke1 + stroke2) - (stroke1 * stroke2);
+
+	color = mix(color, uStrokeColor, vec3(strokes));
 
 	// cover
 	vec2 uv = vUv * .6;
@@ -80,9 +112,9 @@ void main() {
 
 	vec3 finalTexture = mix(wood2Texture, treeTexture, cnoise(vec3(uv, uTime * .0001)));
 
+
 	if (gl_FrontFacing) {
-		gl_FragColor = vec4(uBackgroundColor, alpha);
-		// gl_FragColor = vec4(finalTexture, alpha);
+		gl_FragColor = vec4(color, alpha);
 	} else {
 		gl_FragColor = vec4(color * vPos, alpha);
 	}

@@ -5,6 +5,7 @@ precision highp float;
 uniform float uTime;
 uniform float uAlpha;
 uniform vec3 uColor;
+uniform vec3 uStrokeColor;
 uniform float uRadius;
 uniform vec2 uSize;
 // uniform vec4 uResolution;
@@ -32,6 +33,16 @@ void main() {
 	vec2 pos = coord - halfSize;
 	float roundCorner = roundRect(pos, halfSize, uRadius);
 	alpha -= roundCorner;
+
+	//Bottom left
+    vec2 bl = step(vec2(0.05), vUv);
+    float pct = bl.x * bl.y;
+
+    //Top right
+    vec2 tr = step(vec2(0.05), 1.-vUv);
+    pct *= (tr.x * tr.y);
+
+    color = mix(uColor, uStrokeColor, 1. - pct);
 
 	gl_FragColor = vec4(color, alpha);
 }

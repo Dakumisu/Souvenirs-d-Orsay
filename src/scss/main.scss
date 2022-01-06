@@ -93,10 +93,10 @@ canvas.sketch {
 
 	.numero {
 		position: absolute;
-		width: 30px;
-		height: 30px;
+		width: 20px;
+		height: 20px;
 		background-color: #fff;
-		bottom: -10px;
+		bottom: -4px;
 		left: 50%;
 		transform: translateX(-50%);
 		pointer-events: none;
@@ -104,6 +104,7 @@ canvas.sketch {
 }
 
 .navBar {
+	// display: none;
 	z-index: 5;
 	position: fixed;
 	bottom: -3px;
@@ -123,6 +124,10 @@ canvas.sketch {
 		height: 95px;
 		background: #E59E33;
 	}
+}
+
+.collection-list {
+	// display: none;
 }
 
 .collection {
@@ -185,9 +190,10 @@ canvas.sketch {
 }
 
 .landing {
+	// display: none;
+	display: flex;
 	height: 100vh;
 	position: relative;
-	display: flex;
 	align-items: center;
 	justify-content: center;
 	font-size: 24px;

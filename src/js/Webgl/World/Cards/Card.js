@@ -61,20 +61,6 @@ let content = `
     Nancy.
 `
 
-function roundedRect(ctx, x, y, width, height, radius) {
-	ctx.moveTo(x, y + radius)
-	ctx.lineTo(x, y + height - radius)
-	ctx.quadraticCurveTo(x, y + height, x + radius, y + height)
-	ctx.lineTo(x + width - radius, y + height)
-	ctx.quadraticCurveTo(x + width, y + height, x + width, y + height - radius)
-	ctx.lineTo(x + width, y + radius)
-	ctx.quadraticCurveTo(x + width, y, x + width - radius, y)
-	ctx.lineTo(x + radius, y)
-	ctx.quadraticCurveTo(x, y, x, y + radius)
-
-	return ctx
-}
-
 export default class Card {
 	constructor(opt = {}) {
 		this.webgl = new Webgl()
@@ -87,7 +73,7 @@ export default class Card {
 		this.author = opt.author
 		this.year = opt.year
 		this.bio = opt.bio
-		this.color = opt.color
+		this.backgroundColor = opt.color
 
 		this.artwork = new Artwork({
 			id: opt.id,
@@ -151,7 +137,8 @@ export default class Card {
 			fragmentShader: backgroundFragment,
 			uniforms: {
 				uTime: { value: 0 },
-				uBackgroundColor: { value: new Color(this.color) },
+				uBackgroundColor: { value: new Color(this.backgroundColor) },
+				uStrokeColor: { value: new Color('#fff5e6') },
 				uColor: { value: new Color('#53706b') },
 				uColor1: { value: new Color('#00383d') },
 				uAlpha: { value: 1 },
@@ -205,11 +192,12 @@ export default class Card {
 			fragmentShader: numeroFragment,
 			uniforms: {
 				uTime: { value: 0 },
-				uColor: { value: new Color('#ffffff') },
+				uColor: { value: new Color('#252525') },
+				uStrokeColor: { value: new Color('#fff5e6') },
 				uAlpha: { value: 1 },
 
 				uSize: { value: tVec2c.set(this.domNumero.getBoundingClientRect().width * 1.5, this.domNumero.getBoundingClientRect().height * 1.5) },
-				uRadius: { value: 10 },
+				uRadius: { value: 4 },
 
 				uResolution: { value: tVec3.set(Store.resolution.width, Store.resolution.height, Store.resolution.dpr) },
 			},
@@ -251,9 +239,6 @@ export default class Card {
 		y = -this.domCard.getBoundingClientRect().top + Store.resolution.height / 2 - this.domCard.getBoundingClientRect().height / 2
 		// this.card.background.mesh.position.set(x, y, 0)
 		this.group.position.set(x, y, this.group.position.z)
-
-		// x = this.domSubject.getBoundingClientRect().left - Store.resolution.width / 2 + this.domSubject.getBoundingClientRect().width / 2
-		// y = -this.domSubject.getBoundingClientRect().top + Store.resolution.height / 2 - this.domSubject.getBoundingClientRect().height / 2
 
 		x = (this.domSubject.getBoundingClientRect().left - this.domCard.getBoundingClientRect().left) - (this.domCard.getBoundingClientRect().width - this.domSubject.getBoundingClientRect().width) / 2
 		y = (-this.domSubject.getBoundingClientRect().top - -this.domCard.getBoundingClientRect().top) + (this.domCard.getBoundingClientRect().height - this.domSubject.getBoundingClientRect().height) / 2
