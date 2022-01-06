@@ -39,7 +39,8 @@ import displacement2Image from '@public/img/textures/card/displacement.jpeg'
 import displacement3Image from '@public/img/textures/card/displacement.jpeg'
 import contoursImage from '@public/img/textures/card/contours.png'
 
-import font from '@public/fonts/NixieOne_Regular.json'
+import fontContent from '@public/fonts/Spartan.json'
+import fontTitle from '@public/fonts/Marcellus_Regular.json'
 
 const twoPI = Math.PI * 2
 const tVec3 = new Vector3()
@@ -47,19 +48,6 @@ const tVec2a = new Vector2()
 const tVec2b = new Vector2()
 const tVec2c = new Vector2()
 const tVec2d = new Vector2()
-
-//const content = "La Main aux algues et aux coquillages est probablement la dernière verrerie d'Émile Gallé, réalisée en 1904, peu avant la mort de l'artiste nancéien, membre de l'École de Nancy."
-const title = "1990 - Art nouveau"
-let content = `
-    1904 - Art nouveau
-    La Main aux algues et aux
-    coquillages est probablement
-    la dernière verrerie
-    d'Émile Gallé, réalisée en 1904,
-    peu avant la mort de l'artiste
-    nancéien,membre de l'École de
-    Nancy.
-`
 
 function roundedRect(ctx, x, y, width, height, radius) {
 	ctx.moveTo(x, y + radius)
@@ -295,12 +283,14 @@ export default class Card {
 
 	setText(content, element) {
 		const textFont = new Font()
-		textFont.data = font
+		const titleFont = new Font()
+		textFont.data = fontContent
+		titleFont.data = fontTitle
 
 		const textGeometry = new TextGeometry(content, {
-			font: textFont,
+			font: element === "name" ? titleFont : textFont,
 			size: element === "bio" ? 6 : element === "name" ? 8 : 7,
-			height: 1,
+			height: element === "year" ? 2 : 1,
 			curveSegments: 5,
 			bevelThickness: 0.03,
 			bevelSize: 0.02,
@@ -312,7 +302,7 @@ export default class Card {
 		if (element === "bio") {
 			textGeometry.translate(
 				- textGeometry.boundingBox.max.x * 0.50,
-				- textGeometry.boundingBox.max.y * 13.5,
+				- textGeometry.boundingBox.max.y * 10,
 				- textGeometry.boundingBox.max.z * 0.5
 			)
 		} else if (element === "name") {
@@ -324,13 +314,13 @@ export default class Card {
 		} else if (element === "year") {
 			textGeometry.translate(
 				- textGeometry.boundingBox.max.x * 0.50,
-				- textGeometry.boundingBox.max.y * 8.5,
+				- textGeometry.boundingBox.max.y * 6.5,
 				- textGeometry.boundingBox.max.z * 0.5
 			)
 		} else return
 
 
-		const material = new MeshBasicMaterial({transparent: true})
+		const material = new MeshBasicMaterial({transparent: true, color: '#FFF5E6'})
 		const text = new Mesh(textGeometry, material)
 		text.position.z = 5
 
