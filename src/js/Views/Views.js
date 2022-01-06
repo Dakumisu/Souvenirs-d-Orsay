@@ -79,13 +79,16 @@ export default class Views extends EventEmitter {
 
 		// see deck
 		this.nodes.collection_an.addEventListener("click", () => {
-			console.log("click")
 			this.nodes.canvas.classList.remove("hidden")
 			this.nodes.fakeCards.classList.remove("hidden")
 			this.nodes.collections.classList.add("hidden")
 		})
 
 		//go back to collection list
-
+		this.nodes.backButton.addEventListener("click", () => {
+			this.nodes.canvas.classList.add("hidden")
+			this.nodes.fakeCards.classList.add("hidden")
+			this.nodes.collections.classList.remove("hidden")
+		})
 	}
 }
