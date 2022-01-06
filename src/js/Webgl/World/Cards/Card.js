@@ -112,7 +112,7 @@ export default class Card {
 
 		this.setText(this.name, "name")
 		this.setText(this.bio, "bio")
-		this.setText(`${this.year} - ${this.author}`, "year")
+		this.setText(`${this.author}, ${this.year}`, "year")
 
 		this.initialized = true
 	}
