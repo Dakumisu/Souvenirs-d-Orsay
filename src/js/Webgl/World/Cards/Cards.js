@@ -45,6 +45,7 @@ export default class Cards {
 			const src = list.art_nouveau[i].model ? list.art_nouveau[i].model : list.art_nouveau[i].image
 			const type = list.art_nouveau[i].model ? 'model' : 'img'
 			const ext = list.art_nouveau[i].ext
+			const visible = i == 0
 
 			const tmpCard = new Card({
 				id: i,
@@ -55,7 +56,8 @@ export default class Cards {
 				color: color,
 				src: src,
 				type: type,
-				ext: ext
+				ext: ext,
+				visible: visible
 			})
 			this.cards[card.id] = tmpCard
 		})
@@ -66,12 +68,14 @@ export default class Cards {
 	}
 
 	click(e) {
-		for (const card in this.cards) {
-			if (card != e) {
-				this.cards[card].unZoom()
+		if (this.cards[e].visible) {
+			this.cards[e].zoom()
+			for (const card in this.cards) {
+				if (card != e) {
+					this.cards[card].unZoom()
+				}
 			}
-		}
-		this.cards[e].zoom()
+		} else this.quitCard()
 	}
 
 	quitCard() {

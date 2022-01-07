@@ -18,6 +18,7 @@ import {
 	Vector3
 } from 'three'
 import gsap from 'gsap'
+gsap.registerPlugin(CustomEase)
 
 import Webgl from '@js/Webgl/Webgl'
 import Artwork from './Artwork'
@@ -59,11 +60,13 @@ export default class Card {
 		this.mouse = this.webgl.mouse.scene
 		this.camera = this.webgl.camera.pCamera
 
+		this.id = opt.id
 		this.name = opt.name
 		this.author = opt.author
 		this.year = opt.year
 		this.bio = opt.bio
 		this.backgroundColor = opt.color
+		this.visible = opt.visible
 
 		this.artwork = new Artwork({
 			id: opt.id,
@@ -82,8 +85,6 @@ export default class Card {
 		this.card.background = {}
 		this.card.numero = {}
 		this.textures = {}
-
-		this.visble = true
 
 		this.cardClicked = false
 		this.zoomed = false
@@ -236,7 +237,9 @@ export default class Card {
 
 		this.group.renderOrder = 1
 
-		if (!this.visble) this.group.rotation.y = Math.PI
+		if (!this.visible) this.group.rotation.y = Math.PI
+
+		// gsap.to(this.domCard, 1, { opacity: 1, ease: 'Power3.easeOut', delay: .75 })
 
 		this.addObject(this.group)
 	}
@@ -263,27 +266,15 @@ export default class Card {
 
 		width = this.domCard.getBoundingClientRect().width
 		height = this.domCard.getBoundingClientRect().height
-		this.card.background.mesh.scale.set(
-			width,
-			height,
-			1
-		)
+		gsap.to(this.card.background.mesh.scale, 1, { x: width,y: height, z: 1, ease: 'Power3.easeOut' })
 
 		width = this.domSubject.getBoundingClientRect().width
 		height = this.domSubject.getBoundingClientRect().height
-		this.card.subject.mesh.scale.set(
-			width,
-			height,
-			1
-		)
+		gsap.to(this.card.subject.mesh.scale, 1, { x: width,y: height, z: 1, ease: 'Power3.easeOut' })
 
 		width = this.domNumero.getBoundingClientRect().width
 		height = this.domNumero.getBoundingClientRect().height
-		this.card.numero.mesh.scale.set(
-			width,
-			height,
-			1
-		)
+		gsap.to(this.card.numero.mesh.scale, 1, { x: width,y: height, z: 1, ease: 'Power3.easeOut' })
 	}
 
 	setText(content, element) {
@@ -345,29 +336,50 @@ export default class Card {
 	zoom() {
 		if (!this.initialized) return
 		if (this.zoomed) return
+		if (!this.visible) return
 
-		this.card.subject.material.uniforms.uActive.value = true
-		gsap.to(this.card.subject.material.uniforms.uProgress, 1, { value: 1 })
+		gsap.to(this.domCard, .5, { opacity: 0, ease: 'Expo.easeOut'})
 
-		this.group.renderOrder = 2
+		gsap.to(this.group.scale, .2, {
+			x: .85,
+			y: .85,
+			z: .85,
+			ease: 'Power3.easeOut',
+			onComplete: () => {
+				gsap.to(this.group.scale, .75, {
+					x: 1,
+					y: 1,
+					z: 1,
+					ease: 'Power3.easeInOut'
+				})
 
-		if (window.matchMedia("(max-width: 967px)").matches) {
-			gsap.to(this.group.position, 1, { x: 0, y: 0, z: 210, ease: 'Power3.easeOut' })
+				if (window.matchMedia("(max-width: 967px)").matches) {
+					gsap.to(this.group.position, 1, { x: 0, y: 0, z: 210, ease: 'Power3.easeInOut' })
 
-		} else {
-			gsap.to(this.group.position, 1, { x: 0, y: 0, z: 50, ease: 'Power3.easeOut' })
-		}
+				} else {
+					gsap.to(this.group.position, 1, { x: 0, y: 0, z: 50, ease: 'Power3.easeInOut' })
+				}
 
-		// gsap.from(this.group.rotation, 1, {
-		// 	y: twoPI,
-		// 	ease: 'Power3.easeOut'
-		// })
+				gsap.to(this.domCard, .5, { scale: 1, ease: 'Power3.easeInOut', onUpdate: () => {
+					this.setSizes()
+
+					gsap.to(this.card.numero.mesh.position, 0, {
+						x: (this.domNumero.getBoundingClientRect().left - this.domCard.getBoundingClientRect().left) - (this.domCard.getBoundingClientRect().width - this.domNumero.getBoundingClientRect().width) / 2,
+						y: (-this.domNumero.getBoundingClientRect().top - -this.domCard.getBoundingClientRect().top) + (this.domCard.getBoundingClientRect().height - this.domNumero.getBoundingClientRect().height) / 2,
+						z: 5,
+						ease: 'Power3.easeInOut'
+					})
+				}, onComplete: () => {
+					this.group.renderOrder = 2
+				} })
+			}
+		})
 
 		this.artwork.zoom()
 
-		gsap.to(this.content.name.material, .75, { opacity: 1, ease: 'Power3.easeOut', delay: .1 })
-		gsap.to(this.content.year.material, .75, { opacity: 1, ease: 'Power3.easeOut', delay: .2 })
-		gsap.to(this.content.bio.material, .75, { opacity: 1, ease: 'Power3.easeOut', delay: .3 })
+		gsap.to(this.content.name.material, .75, { opacity: 1, ease: 'Power3.easeOut', delay: .15 })
+		gsap.to(this.content.year.material, .75, { opacity: 1, ease: 'Power3.easeOut', delay: .4 })
+		gsap.to(this.content.bio.material, .75, { opacity: 1, ease: 'Power3.easeOut', delay: .6 })
 
 		this.zoomed = true
 	}
@@ -377,22 +389,34 @@ export default class Card {
 
 		this.card.subject.material.uniforms.uActive.value = false
 
+		gsap.to(this.domCard, 0, { scale: .75 })
+		gsap.to(this.domCard, .5, { opacity: 1, ease: 'Power3.easeInOut' })
+
 		gsap.to(this.group.position, 1, {
 			x: this.domCard.getBoundingClientRect().left - Store.resolution.width / 2 + this.domCard.getBoundingClientRect().width / 2,
 			y: -this.domCard.getBoundingClientRect().top + Store.resolution.height / 2 - this.domCard.getBoundingClientRect().height / 2,
-			z: -50,
+			z: 0,
 			ease: 'Power3.easeOut'
 		})
+		gsap.to(this.card.numero.mesh.position, 1, {
+			x: (this.domNumero.getBoundingClientRect().left - this.domCard.getBoundingClientRect().left) - (this.domCard.getBoundingClientRect().width - this.domNumero.getBoundingClientRect().width) / 2,
+			y: (-this.domNumero.getBoundingClientRect().top - -this.domCard.getBoundingClientRect().top) + (this.domCard.getBoundingClientRect().height - this.domNumero.getBoundingClientRect().height) / 2,
+			z: 5,
+			ease: 'Power3.easeOut'
+		})
+
+		this.setSizes()
+
+		if (!this.zoomed) return
 		gsap.to(this.group.rotation, .5, {
 			x: 0,
 			y: 0,
 			z: 0,
-			ease: 'Power3.easeOut',
+			ease: 'Power3.easeInOut',
 			onComplete: () => {
 				this.group.renderOrder = 1
 			}
 		})
-
 		this.artwork.unZoom()
 
 		gsap.to(this.content.name.material, .75, { opacity: 0, ease: 'Power3.easeOut' })
@@ -407,12 +431,32 @@ export default class Card {
 
 		this.card.subject.material.uniforms.uActive.value = false
 
+		gsap.to(this.domCard, .5, { opacity: 1, ease: 'Power3.easeInOut', delay: .5 })
+
+		gsap.to(this.domCard, 1, { scale: 1, ease: 'Power3.easeInOut', onUpdate: () => {
+			let width, height
+
+			width = this.domCard.getBoundingClientRect().width
+			height = this.domCard.getBoundingClientRect().height
+			gsap.to(this.card.background.mesh.scale, 0, { x: width,y: height, z: 1 })
+
+			width = this.domSubject.getBoundingClientRect().width
+			height = this.domSubject.getBoundingClientRect().height
+			gsap.to(this.card.subject.mesh.scale, 0, { x: width,y: height, z: 1 })
+
+			width = this.domNumero.getBoundingClientRect().width
+			height = this.domNumero.getBoundingClientRect().height
+			gsap.to(this.card.numero.mesh.scale, 0, { x: width,y: height, z: 1 })
+		} })
+
 		gsap.to(this.group.position, 1, {
 			x: this.domCard.getBoundingClientRect().left - Store.resolution.width / 2 + this.domCard.getBoundingClientRect().width / 2,
 			y: -this.domCard.getBoundingClientRect().top + Store.resolution.height / 2 - this.domCard.getBoundingClientRect().height / 2,
 			z: 0,
-			ease: 'Power3.easeOut'
+			ease: 'Power3.easeInOut'
 		})
+
+		if (!this.visible) return
 		gsap.to(this.group.rotation, .5, {
 			x: 0,
 			y: 0,
@@ -422,9 +466,6 @@ export default class Card {
 				this.group.renderOrder = 1
 			}
 		})
-
-		// this.setPositions()
-		// this.setSizes()
 
 		this.artwork.unZoom()
 

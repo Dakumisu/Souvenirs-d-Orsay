@@ -56,7 +56,7 @@ void main() {
 
 	vec3 stroke = vec3(pct);
 
-	stroke *= .75 + cnoise2(uBackgroundOffset + vUv + (uTime * .00035));
+	stroke *= .5 + cnoise2(uBackgroundOffset + vUv + (uTime * .00035));
 	stroke *= uStrokeColor + whiteGlowMC.xyz;
 
 	// vec3 test = pct * (1. + whiteGlowMC.xyz);

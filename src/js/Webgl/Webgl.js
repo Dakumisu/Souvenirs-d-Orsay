@@ -40,7 +40,7 @@ export default class Webgl {
 		/// #if DEBUG
 			this.debug = new GUI()
 			this.debug.close()
-			this.stats = new Stats()
+			// this.stats = new Stats()
 		/// #endif
 
 		this.sizes = new Sizes()
