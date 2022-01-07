@@ -19,6 +19,7 @@ import {
 } from 'three'
 import gsap from 'gsap'
 gsap.registerPlugin(CustomEase)
+import {Text} from 'troika-three-text'
 
 import Webgl from '@js/Webgl/Webgl'
 import Artwork from './Artwork'
@@ -43,8 +44,8 @@ import displacement3Image from '@public/img/textures/card/displacement.jpeg'
 import whiteGlowMC from '@public/img/textures/matcap/white_glow.png'
 import cardBackImage from '@public/img/card_back.png'
 
-import fontContent from '@public/fonts/Spartan.json'
-import fontTitle from '@public/fonts/Marcellus_Regular.json'
+import fontTitle from '@public/fonts/Marcellus-Regular.woff'
+import fontContent from '@public/fonts/Spartan.woff'
 
 const twoPI = Math.PI * 2
 const tVec3 = new Vector3()
@@ -239,8 +240,6 @@ export default class Card {
 
 		if (!this.visible) this.group.rotation.y = Math.PI
 
-		// gsap.to(this.domCard, 1, { opacity: 1, ease: 'Power3.easeOut', delay: .75 })
-
 		this.addObject(this.group)
 	}
 
@@ -278,47 +277,51 @@ export default class Card {
 	}
 
 	setText(content, element) {
-		const textFont = new Font()
-		const titleFont = new Font()
-		textFont.data = fontContent
-		titleFont.data = fontTitle
+		const text = new Text()
+		text.text = content
 
-		const textGeometry = new TextGeometry(content, {
-			font: element === "name" ? titleFont : textFont,
-			size: element === "bio" ? 5 : element === "name" ? 7 : 6,
-			height: element === "year" ? 2 : 1,
-			curveSegments: 5,
-			bevelThickness: 0.03,
-			bevelSize: 0.02,
-			bevelOffset: 0,
-			bevelSegments: 4
-		})
+		// default values
+		text.color = 0xFFF5E6
+		text.font = fontContent
+		text.fontSize = 9
 
-		textGeometry.computeBoundingBox()
+		text.fillOpacity = 0
+		text.outlineOpacity = 0
+
+		text.maxWidth = 130
+		text.textAlign = "center"
+
 		if (element === "bio") {
-			textGeometry.translate(
-				- textGeometry.boundingBox.max.x * 0.50,
-				- textGeometry.boundingBox.max.y * 14,
-				- textGeometry.boundingBox.max.z * 0.5
-			)
+			text.position.y = -75
+			text.position.x = -65
 		} else if (element === "name") {
-			textGeometry.translate(
-				- textGeometry.boundingBox.max.x * 0.50,
-				- textGeometry.boundingBox.max.y * -16,
-				- textGeometry.boundingBox.max.z * 0.5
-			)
+			text.font = fontTitle
+			text.fontSize = 13
+			text.position.y = 120
+			if(text.text === "PAVOT") {
+				text.position.x = -20
+			} else if (text.text.includes("MAIN")) {
+				text.maxWidth = 180
+				text.position.x = -90
+			} else {
+				text.maxWidth = 100
+				text.position.x = -50
+			}
 		} else if (element === "year") {
-			textGeometry.translate(
-				- textGeometry.boundingBox.max.x * 0.50,
-				- textGeometry.boundingBox.max.y * 7.5,
-				- textGeometry.boundingBox.max.z * 0.5
-			)
+			if(text.text.includes("Henry")) {
+				text.maxWidth = 100
+				text.position.x = -50
+			} else {
+				text.maxWidth = 64
+				text.position.x = -32
+			}
+
+			text.position.y = -45
+			text.outlineWidth = 0.2
+			text.outlineColor = 0xFFF5E6
 		}
 
-
-		const material = new MeshBasicMaterial({transparent: true, color: '#FFF5E6', opacity: 0})
-		const text = new Mesh(textGeometry, material)
-
+		text.renderOrder = 1
 		this.group.add(text)
 		return text
 	}
@@ -377,9 +380,9 @@ export default class Card {
 
 		this.artwork.zoom()
 
-		gsap.to(this.content.name.material, .75, { opacity: 1, ease: 'Power3.easeOut', delay: .15 })
-		gsap.to(this.content.year.material, .75, { opacity: 1, ease: 'Power3.easeOut', delay: .4 })
-		gsap.to(this.content.bio.material, .75, { opacity: 1, ease: 'Power3.easeOut', delay: .6 })
+		gsap.to(this.content.name, .75, { fillOpacity: 1, ease: 'Power3.easeOut', delay: .35 })
+		gsap.to(this.content.year, .75, { fillOpacity: 1, outlineOpacity: 1, ease: 'Power3.easeOut', delay: .5 })
+		gsap.to(this.content.bio, .75, { fillOpacity: 1, ease: 'Power3.easeOut', delay: .7 })
 
 		this.zoomed = true
 	}
@@ -419,9 +422,9 @@ export default class Card {
 		})
 		this.artwork.unZoom()
 
-		gsap.to(this.content.name.material, .75, { opacity: 0, ease: 'Power3.easeOut' })
-		gsap.to(this.content.year.material, .75, { opacity: 0, ease: 'Power3.easeOut' })
-		gsap.to(this.content.bio.material, .75, { opacity: 0, ease: 'Power3.easeOut' })
+		gsap.to(this.content.name, .75, { fillOpacity: 0, ease: 'Power3.easeOut' })
+		gsap.to(this.content.year, .75, { fillOpacity: 0, outlineOpacity: 0, ease: 'Power3.easeOut' })
+		gsap.to(this.content.bio, .75, { fillOpacity: 0, ease: 'Power3.easeOut' })
 
 		this.zoomed = false
 	}
@@ -469,9 +472,9 @@ export default class Card {
 
 		this.artwork.unZoom()
 
-		gsap.to(this.content.name.material, .75, { opacity: 0, ease: 'Power3.easeOut' })
-		gsap.to(this.content.year.material, .75, { opacity: 0, ease: 'Power3.easeOut' })
-		gsap.to(this.content.bio.material, .75, { opacity: 0, ease: 'Power3.easeOut' })
+		gsap.to(this.content.name, .75, { fillOpacity: 0, ease: 'Power3.easeOut' })
+		gsap.to(this.content.year, .75, { fillOpacity: 0, outlineOpacity: 0, ease: 'Power3.easeOut' })
+		gsap.to(this.content.bio, .75, { fillOpacity: 0, ease: 'Power3.easeOut' })
 
 		this.zoomed = false
 	}

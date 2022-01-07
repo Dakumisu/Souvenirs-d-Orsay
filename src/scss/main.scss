@@ -216,11 +216,11 @@ canvas.sketch {
 }
 
 .landing {
-	// display: none;
 	display: flex;
 	color: #fff;
 	height: 100vh;
-	position: relative;
+	width: 100vw;
+	position: fixed;
 	align-items: center;
 	justify-content: center;
 	font-size: 24px;
@@ -253,5 +253,6 @@ canvas.sketch {
 		bottom: 30px;
 		left: 50%;
 		transform: translate(-50%);
+		display: flex;
 	}
 }

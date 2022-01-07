@@ -225,7 +225,7 @@ export default class Artwork {
 	}
 
 	zoom() {
-		const scale = this.ext == 'glb' ? .4 : .65
+		const scale = this.ext == 'glb' ? .35 : .65
 		const position = this.ext == 'glb' ? .35 : .45
 		gsap.to(this.artwork.mesh.scale, .75, { x: scale, y: scale, z: scale,  ease: 'Power3.easeOut' })
 		gsap.to(this.artwork.mesh.position, .75, { y: position, ease: 'Power3.easeOut' })

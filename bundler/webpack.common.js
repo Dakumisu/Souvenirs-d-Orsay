@@ -47,7 +47,7 @@ module.exports = {
 		new HtmlWebpackPlugin({
 			filename: 'index.html',
 			title: 'WebGL Starter',
-			favicon: path.resolve(__dirname, '../static/icon/favicon.jpg'),
+			favicon: path.resolve(__dirname, '../static/icon/favicon.png'),
 			template: path.resolve(__dirname, '../src/index.html'),
 			chunks: ['app'],
 			minify: true
