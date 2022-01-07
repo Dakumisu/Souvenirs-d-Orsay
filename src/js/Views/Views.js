@@ -72,14 +72,27 @@ export default class Views extends EventEmitter {
 		// this.trigger('scroll')
 	}
 
+	preload() {
+
+		// loader_container
+		// progress_bar
+	}
+
 	camera() {
 		const video = this.nodes.video
 
 		if(navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
-			navigator.mediaDevices.getUserMedia({ video: { facingMode: { exact: "environment" } } }).then(function(stream) {
-				video.srcObject = stream
-				video.play()
-			});
+			if (Store.device == "Mobile") {
+				navigator.mediaDevices.getUserMedia({ video: { facingMode: { exact: "environment" } } }).then(function(stream) {
+					video.srcObject = stream
+					video.play()
+				});
+			} else {
+				navigator.mediaDevices.getUserMedia({ video: true }).then(function(stream) {
+					video.srcObject = stream
+					video.play()
+				});
+			}
 		}
 	}
 

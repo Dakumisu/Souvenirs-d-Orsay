@@ -13,7 +13,11 @@ import fragment from '@glsl/artwork/fragment.frag'
 import waterBlueMCImage from '@public/img/textures/matcap/water_blue.png'
 import waterPurpleMCImage from '@public/img/textures/matcap/water_purple.png'
 import alguesMCImage from '@public/img/textures/matcap/algues.png'
+import algues2MCImage from '@public/img/textures/matcap/algues2.png'
 import handMCImage from '@public/img/textures/matcap/hand.png'
+import hand2MCImage from '@public/img/textures/matcap/hand2.png'
+import fingerMCImage from '@public/img/textures/matcap/finger.png'
+import coquillagesMCImage from '@public/img/textures/matcap/coquillages.png'
 
 const twoPI = Math.PI * 2
 const tVec3 = new Vector3()
@@ -141,7 +145,8 @@ export default class Artwork {
 					uColor: { value: new Color('#ffffff') },
 					uAlpha: { value: 1 },
 
-					uMatCaptexture: { value: this.getTexture(handMCImage) },
+					uMatCaptexture: { value: this.getTexture(hand2MCImage) },
+					uMatCaptexture2: { value: this.getTexture(hand2MCImage) },
 
 					uResolution: { value: tVec3.set(this.subjectWidth, this.subjectHeight, Store.resolution.dpr) },
 					uType: { value: 0 },
@@ -158,6 +163,7 @@ export default class Artwork {
 					uAlpha: { value: 1 },
 
 					uMatCaptexture: { value: this.getTexture(waterBlueMCImage) },
+					uMatCaptexture2: { value: this.getTexture(waterPurpleMCImage) },
 
 					uResolution: { value: tVec3.set(this.subjectWidth, this.subjectHeight, Store.resolution.dpr) },
 					uType: { value: 0 },
@@ -174,6 +180,7 @@ export default class Artwork {
 					uAlpha: { value: 1 },
 
 					uMatCaptexture: { value: this.getTexture(alguesMCImage) },
+					uMatCaptexture2: { value: this.getTexture(algues2MCImage) },
 
 					uResolution: { value: tVec3.set(this.subjectWidth, this.subjectHeight, Store.resolution.dpr) },
 					uType: { value: 0 },
@@ -189,7 +196,8 @@ export default class Artwork {
 					uColor: { value: new Color('#ffffff') },
 					uAlpha: { value: 1 },
 
-					uMatCaptexture: { value: this.getTexture(waterPurpleMCImage) },
+					uMatCaptexture: { value: this.getTexture(coquillagesMCImage) },
+					uMatCaptexture2: { value: this.getTexture(coquillagesMCImage) },
 
 					uResolution: { value: tVec3.set(this.subjectWidth, this.subjectHeight, Store.resolution.dpr) },
 					uType: { value: 0 },
