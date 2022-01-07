@@ -43,8 +43,6 @@ import displacement3Image from '@public/img/textures/card/displacement.jpeg'
 import whiteGlowMC from '@public/img/textures/matcap/white_glow.png'
 import cardBackImage from '@public/img/card_back.png'
 
-// import fontContent from '@public/fonts/Spartan.json'
-// import fontTitle from '@public/fonts/Marcellus_Regular.json'
 import fontTitle from '@public/fonts/Marcellus-Regular.woff'
 import fontContent from '@public/fonts/Spartan.woff'
 
@@ -290,89 +288,54 @@ export default class Card {
 	}
 
 	setText(content, element) {
-		const textFont = new Font()
-		const titleFont = new Font()
-		textFont.data = fontContent
-		titleFont.data = fontTitle
+		// const textFont = new Font()
+		// const titleFont = new Font()
+		// textFont.data = fontContent
+		// titleFont.data = fontTitle
 
-		const myText = new Text()
-		myText.color = 0xFFF5E6
-		myText.font = element === "name" ? fontTitle : fontContent
+		const text = new Text()
+		text.text = content
 
-		myText.text = content
+		// default values
+		text.color = 0xFFF5E6
+		text.font = fontContent
+		text.fontSize = 9
 
-		myText.maxWidth = 130
-		myText.textAlign = "center"
-		myText.fontSize = element === "name" ? 13 : 10
-		myText.position.z = 0.5
+		text.maxWidth = 130
+		text.textAlign = "center"
+		text.position.z = 15
 
 		if (element === "bio") {
-			myText.position.y = -65
-			myText.position.x = -65
+			text.position.y = -75
+			text.position.x = -65
 		} else if (element === "name") {
-			myText.position.y = 120
-			if(myText.text === "PAVOT") {
-				myText.position.x = -23
+			text.font = fontTitle
+			text.fontSize = 13
+			text.position.y = 120
+			if(text.text === "PAVOT") {
+				text.position.x = -20
 			} else {
-				myText.maxWidth = 100
-				myText.position.x = -50
+				text.maxWidth = 100
+				text.position.x = -50
 			}
 		} else if (element === "year") {
-			if(myText.text.includes("Henry")) {
-				myText.maxWidth = 110
-				myText.position.x = -55
+			if(text.text.includes("Henry")) {
+				text.maxWidth = 100
+				text.position.x = -50
 			} else {
-				myText.maxWidth = 68
-				myText.position.x = -34
+				text.maxWidth = 64
+				text.position.x = -32
 			}
 
-			myText.position.y = -35
-			myText.outlineWidth = 0.2
-			myText.outlineColor = 0xFFF5E6
+			text.position.y = -45
+			text.outlineWidth = 0.2
+			text.outlineColor = 0xFFF5E6
 		}
 
-		console.log(myText.text)
-
-		// const textGeometry = new TextGeometry(content, {
-		// 	font: element === "name" ? titleFont : textFont,
-		// 	size: element === "bio" ? 5 : element === "name" ? 7 : 6,
-		// 	height: element === "year" ? 2 : 1,
-		// 	curveSegments: 5,
-		// 	bevelThickness: 0.03,
-		// 	bevelSize: 0.02,
-		// 	bevelOffset: 0,
-		// 	bevelSegments: 4
-		// })
-		//
-		// textGeometry.computeBoundingBox()
-		// if (element === "bio") {
-		// 	textGeometry.translate(
-		// 		- textGeometry.boundingBox.max.x * 0.50,
-		// 		- textGeometry.boundingBox.max.y * 14,
-		// 		- textGeometry.boundingBox.max.z * 0.5
-		// 	)
-		// } else if (element === "name") {
-		// 	textGeometry.translate(
-		// 		- textGeometry.boundingBox.max.x * 0.50,
-		// 		- textGeometry.boundingBox.max.y * -16,
-		// 		- textGeometry.boundingBox.max.z * 0.5
-		// 	)
-		// } else if (element === "year") {
-		// 	textGeometry.translate(
-		// 		- textGeometry.boundingBox.max.x * 0.50,
-		// 		- textGeometry.boundingBox.max.y * 7.5,
-		// 		- textGeometry.boundingBox.max.z * 0.5
-		// 	)
-		// }
-		//
-		//
-		// const material = new MeshBasicMaterial({transparent: true, color: '#FFF5E6', opacity: 0})
-		// const text = new Mesh(textGeometry, material)
-		// this.group.add(text)
-		// return text
-
-		this.group.add(myText)
-		return myText
+		text.renderOrder = 2
+		//console.log(text, text.material)
+		this.group.add(text)
+		return text
 	}
 
 	addObject(object) {
