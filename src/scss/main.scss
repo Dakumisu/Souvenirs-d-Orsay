@@ -236,7 +236,7 @@ canvas.sketch {
 .landing {
 	display: flex;
 	color: #fff;
-	height: 100vh;
+	height: 100%;
 	width: 100vw;
 	position: fixed;
 	align-items: center;
@@ -258,9 +258,10 @@ canvas.sketch {
 			text-transform: uppercase;
 			border: none;
 			border-radius: 36px;
-			padding: 10px 30px;
-			font-weight: bold;
-			letter-spacing: 5px;
+			padding: 8px 15px;
+			// font-weight: bold;
+			letter-spacing: 2px;
+			font-size: 16px;
 			font-family: 'Marcellus-Regular', serif;
 			margin-top: 60px;
 		}
