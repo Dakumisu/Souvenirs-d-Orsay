@@ -96,37 +96,82 @@ export default class Views extends EventEmitter {
 		}
 	}
 
-	goDeck(){
+	goCollections() {
+		gsap.to(this.nodes.canvas, .75, { opacity: 0, ease: "Power3.easeOut", onComplete: () => {
+			this.nodes.canvas.classList.add("hidden")
+		} })
+		gsap.to(this.nodes.scanButton, .75, { opacity: 0, ease: "Power3.easeOut", onComplete: () => {
+			this.nodes.scanButton.classList.add("hidden")
+		} })
+		gsap.to(this.nodes.backButton, .75, { opacity: 0, ease: "Power3.easeOut", onComplete: () => {
+			this.nodes.backButton.classList.add("hidden")
+		} })
+		gsap.to(this.nodes.fakeCards, .75, { opacity: 0, ease: "Power3.easeOut", onComplete: () => {
+			this.nodes.fakeCards.classList.add("hidden")
+
+			this.nodes.collections.classList.remove("hidden")
+			this.nodes.collections.style.opacity = 0
+			gsap.to(this.nodes.collections, .75, { opacity: 1, ease: "Power3.easeOut", onComplete: () => {
+				luge.emitter.emit('update')
+				this.trigger('goToCollections')
+			} })
+		} })
+	}
+
+	goDeck() {
 		this.nodes.canvas.classList.remove("hidden")
 		this.nodes.fakeCards.classList.remove("hidden")
-		this.nodes.collections.classList.add("hidden")
 		this.nodes.scanButton.classList.remove("hidden")
 		this.nodes.backButton.classList.remove("hidden")
+		this.nodes.fakeCards.classList.remove("hidden")
 
-		this.nodes.sectionQr.classList.add("hidden")
+		this.nodes.canvas.style.opacity = 0
+		this.nodes.fakeCards.style.opacity = 0
+		this.nodes.scanButton.style.opacity = 0
+		this.nodes.backButton.style.opacity = 0
+		this.nodes.fakeCards.style.opacity = 0
 
-		luge.emitter.emit('update')
-		this.trigger('goToDeck')
+		gsap.to(this.nodes.collections, .75, { opacity: 0, ease: "Power3.easeOut", onComplete: () => {
+			this.nodes.collections.classList.add("hidden")
+
+			gsap.to(this.nodes.fakeCards, .75, { opacity: 1, ease: "Power3.easeOut", onComplete: () => {
+				luge.emitter.emit('update')
+				this.trigger('goToDeck')
+			} })
+			gsap.to(this.nodes.canvas, .75, { opacity: 1, ease: "Power3.easeOut" })
+			gsap.to(this.nodes.scanButton, .75, { opacity: 1, ease: "Power3.easeOut" })
+			gsap.to(this.nodes.backButton, .75, { opacity: 1, ease: "Power3.easeOut" })
+		} })
+		gsap.to(this.nodes.sectionQr, .75, { opacity: 0, ease: "Power3.easeOut", onComplete: () => {
+			this.nodes.sectionQr.classList.add("hidden")
+		} })
+
 	}
 
-	goCollections(){
-		this.nodes.canvas.classList.add("hidden")
-		this.nodes.fakeCards.classList.add("hidden")
-		this.nodes.collections.classList.remove("hidden")
-		this.nodes.scanButton.classList.add("hidden")
-		this.nodes.backButton.classList.add("hidden")
-
-		luge.emitter.emit('update')
-		this.trigger('goToCollections')
-	}
-
-	goScan(){
-		this.nodes.canvas.classList.add("hidden")
-		this.nodes.fakeCards.classList.add("hidden")
+	goScan() {
 		this.nodes.sectionQr.classList.remove("hidden")
-		this.nodes.scanButton.classList.add("hidden")
-		this.nodes.backButton.classList.add("hidden")
-		luge.emitter.emit('update')
+
+		this.nodes.sectionQr.style.opacity = 0
+
+		gsap.to(this.nodes.fakeCards, .75, { opacity: 0, ease: "Power3.easeOut", onComplete: () => {
+			this.nodes.fakeCards.classList.add("hidden")
+
+			gsap.to(this.nodes.sectionQr, .75, { opacity: 1, ease: "Power3.easeOut", onComplete: () => {
+				luge.emitter.emit('update')
+				this.trigger('goToScan')
+			} })
+
+		} })
+		gsap.to(this.nodes.canvas, .75, { opacity: 0, ease: "Power3.easeOut", onComplete: () => {
+			this.nodes.canvas.classList.add("hidden")
+		} })
+		gsap.to(this.nodes.scanButton, .75, { opacity: 0, ease: "Power3.easeOut", onComplete: () => {
+			this.nodes.scanButton.classList.add("hidden")
+		} })
+		gsap.to(this.nodes.backButton, .75, { opacity: 0, ease: "Power3.easeOut", onComplete: () => {
+			this.nodes.backButton.classList.add("hidden")
+		} })
+
 	}
 
 	event() {
@@ -134,8 +179,14 @@ export default class Views extends EventEmitter {
 
 		// landing
 		this.nodes.start_exp.addEventListener("click", () => {
-			this.nodes.landing.classList.add('hidden')
-			// document.body.requestFullscreen()
+
+			gsap.to(this.nodes.landing, 1, { yPercent: -100, ease: "Power3.easeInOut", onComplete: () => {
+				this.nodes.landing.classList.add("hidden")
+
+				this.nodes.collections.classList.remove("hidden")
+				luge.emitter.emit('update')
+				this.trigger('goToCollections')
+			} })
 		})
 
 		// see deck
@@ -163,7 +214,7 @@ export default class Views extends EventEmitter {
 			this.goDeck()
 			setTimeout(() => {
 				this.trigger('scan')
-			}, 500);
+			}, 1000);
 		})
 	}
 }

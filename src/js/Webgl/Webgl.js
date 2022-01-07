@@ -88,14 +88,18 @@ export default class Webgl {
 
 		this.views.on('goToCollections', () => {
 			if (!this.initialized) return
-			this.world.quitCard()
-			console.log('back');
+			if (this.world)	this.world.quitCard()
 		})
 
 		this.views.on('scan', () => {
 			if (!this.initialized) return
 			console.log(this.world.cards);
 			this.world.cards.unlockCard()
+		})
+
+		this.views.on('goToScan', () => {
+			if (!this.initialized) return
+			this.world.quitCard()
 		})
 
 		this.cards.on('clickCard', (e) => {
