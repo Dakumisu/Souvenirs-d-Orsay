@@ -18,7 +18,6 @@ import {
 	Vector3
 } from 'three'
 import gsap from 'gsap'
-gsap.registerPlugin(CustomEase)
 import {Text} from 'troika-three-text'
 
 import Webgl from '@js/Webgl/Webgl'
@@ -33,16 +32,9 @@ import subjectFragment from '@glsl/card/subject/fragment.frag'
 import numeroVertex from '@glsl/card/numero/vertex.vert'
 import numeroFragment from '@glsl/card/numero/fragment.frag'
 
-import woodImage from '@public/img/textures/card/wood.jpeg'
-import wood2Image from '@public/img/textures/card/wood2.jpeg'
-import treeImage from '@public/img/textures/card/tree.jpeg'
-import leavesImage from '@public/img/textures/card/leaves.jpeg'
-import displacementImage from '@public/img/textures/card/displacement.jpeg'
-import displacement2Image from '@public/img/textures/card/displacement.jpeg'
-import displacement3Image from '@public/img/textures/card/displacement.jpeg'
-
 import whiteGlowMC from '@public/img/textures/matcap/white_glow.png'
 import cardBackImage from '@public/img/card_back.png'
+import marbreImage from '@public/img/textures/card/marbre.jpg'
 
 import fontTitle from '@public/fonts/Marcellus-Regular.woff'
 import fontContent from '@public/fonts/Spartan.woff'
@@ -53,6 +45,7 @@ const tVec2a = new Vector2()
 const tVec2b = new Vector2()
 const tVec2c = new Vector2()
 const tVec2d = new Vector2()
+const textureLoader = new TextureLoader()
 
 export default class Card {
 	constructor(opt = {}) {
@@ -89,7 +82,7 @@ export default class Card {
 
 		this.cardClicked = false
 		this.zoomed = false
-		this.unZoomed = false
+		this.scrollable = true
 
 		this.content = {}
 
@@ -97,10 +90,31 @@ export default class Card {
 
 		this.init()
 		this.resize()
+
+		window.addEventListener("deviceorientation", this.onTilt.bind(this))
+
+		///#if DEBUG
+		this.debugFolder = this.webgl.debug.addFolder('card')
+
+		this.debugFolder
+			.add(
+				this,
+				'visible',
+				{
+					'visible': true,
+					'not visible': false,
+				}
+			)
+			.onChange(
+				() => {
+					if (this.visible) gsap.to(this.group.rotation, 1, { y: 0, ease: 'Power3.easeOut' })
+					else gsap.to(this.group.rotation, 1, { y: Math.PI, ease: 'Power3.easeOut' })
+				}
+			)
+		///#endif
 	}
 
 	init() {
-		this.setTextures()
 		this.setGeometries()
 		this.setMaterials()
 		this.setMeshes()
@@ -116,19 +130,22 @@ export default class Card {
 		this.initialized = true
 	}
 
-	setTextures() {
-		const textureLoader = new TextureLoader()
+	onTilt(e) {
+		if (Store.device == "Mobile") {
+			const y = 1 + (e.beta.toFixed(2) / 30) - 2
+			const x = (e.gamma.toFixed(2) / 30)
 
-		this.textures.wood = textureLoader.load(woodImage)
-		this.textures.wood2 = textureLoader.load(wood2Image)
-		this.textures.tree = textureLoader.load(treeImage)
-		this.textures.leaves = textureLoader.load(leavesImage)
-		this.textures.displacement = textureLoader.load(displacementImage)
-		this.textures.displacement2 = textureLoader.load(displacement2Image)
-		this.textures.displacement3 = textureLoader.load(displacement3Image)
+			tVec2d.set(
+				x,
+				y
+			)
+		}
 
-		this.textures.whiteGlow = textureLoader.load(whiteGlowMC)
-		this.textures.cardBack = textureLoader.load(cardBackImage)
+		// console.log(tVec2d);
+	}
+
+	getTexture(src) {
+		return textureLoader.load(src)
 	}
 
 	setGeometries() {
@@ -150,16 +167,9 @@ export default class Card {
 				uSize: { value: tVec2a.set(this.domCard.getBoundingClientRect().width * 1.5, this.domCard.getBoundingClientRect().height * 1.5) },
 				uRadius: { value: 10 },
 
-				uWoodTexture: { value: this.textures.wood },
-				uWood2Texture: { value: this.textures.wood2 },
-				uTreeTexture: { value: this.textures.tree },
-				uLeavesTexture: { value: this.textures.leaves },
-				uDisplacementTexture: { value: this.textures.displacement },
-				uDisplacement2Texture: { value: this.textures.displacement2 },
-				uDisplacement3Texture: { value: this.textures.displacement3 },
-
-				uWhiteGlowMC: { value: this.textures.whiteGlow },
-				uCardBackTexture: { value: this.textures.cardBack },
+				uWhiteGlowMC: { value: this.getTexture(whiteGlowMC) },
+				uCardBackTexture: { value: this.getTexture(cardBackImage) },
+				uMarbreTexture: { value: this.getTexture(marbreImage) },
 				uBackgroundOffset: { value: (Math.sign(.5 - Math.random())) * MathUtils.randFloatSpread(1, 10) },
 
 				uResolution: { value: tVec3.set(Store.resolution.width, Store.resolution.height, Store.resolution.dpr) },
@@ -266,14 +276,17 @@ export default class Card {
 		width = this.domCard.getBoundingClientRect().width
 		height = this.domCard.getBoundingClientRect().height
 		gsap.to(this.card.background.mesh.scale, 1, { x: width,y: height, z: 1, ease: 'Power3.easeOut' })
+		// console.log(this.domCard.getBoundingClientRect());
 
 		width = this.domSubject.getBoundingClientRect().width
 		height = this.domSubject.getBoundingClientRect().height
 		gsap.to(this.card.subject.mesh.scale, 1, { x: width,y: height, z: 1, ease: 'Power3.easeOut' })
+		// console.log(this.domSubject, width, height);
 
 		width = this.domNumero.getBoundingClientRect().width
 		height = this.domNumero.getBoundingClientRect().height
 		gsap.to(this.card.numero.mesh.scale, 1, { x: width,y: height, z: 1, ease: 'Power3.easeOut' })
+		// console.log(this.domNumero, width, height);
 	}
 
 	setText(content, element) {
@@ -301,8 +314,8 @@ export default class Card {
 			if(text.text === "PAVOT") {
 				text.position.x = -20
 			} else if (text.text.includes("MAIN")) {
-				text.maxWidth = 180
-				text.position.x = -90
+				text.maxWidth = 150
+				text.position.x = -75
 			} else {
 				text.maxWidth = 100
 				text.position.x = -50
@@ -334,12 +347,15 @@ export default class Card {
 		if (!this.initialized) return
 		if (this.zoomed) return
 		this.setPositions()
+		this.setSizes()
 	}
 
 	zoom() {
 		if (!this.initialized) return
 		if (this.zoomed) return
 		if (!this.visible) return
+
+		this.scrollable = false
 
 		gsap.to(this.domCard, .5, { opacity: 0, ease: 'Expo.easeOut'})
 
@@ -357,8 +373,7 @@ export default class Card {
 				})
 
 				if (window.matchMedia("(max-width: 967px)").matches) {
-					gsap.to(this.group.position, 1, { x: 0, y: 0, z: 210, ease: 'Power3.easeInOut' })
-
+					gsap.to(this.group.position, 1, { x: 0, y: 0, z: 160, ease: 'Power3.easeInOut' })
 				} else {
 					gsap.to(this.group.position, 1, { x: 0, y: 0, z: 50, ease: 'Power3.easeInOut' })
 				}
@@ -405,7 +420,10 @@ export default class Card {
 			x: (this.domNumero.getBoundingClientRect().left - this.domCard.getBoundingClientRect().left) - (this.domCard.getBoundingClientRect().width - this.domNumero.getBoundingClientRect().width) / 2,
 			y: (-this.domNumero.getBoundingClientRect().top - -this.domCard.getBoundingClientRect().top) + (this.domCard.getBoundingClientRect().height - this.domNumero.getBoundingClientRect().height) / 2,
 			z: 5,
-			ease: 'Power3.easeOut'
+			ease: 'Power3.easeOut',
+			onComplete: () => {
+				this.scrollable = true
+			}
 		})
 
 		this.setSizes()
@@ -450,13 +468,24 @@ export default class Card {
 			width = this.domNumero.getBoundingClientRect().width
 			height = this.domNumero.getBoundingClientRect().height
 			gsap.to(this.card.numero.mesh.scale, 0, { x: width,y: height, z: 1 })
+
+
+			gsap.to(this.card.numero.mesh.position, 0, {
+				x: (this.domNumero.getBoundingClientRect().left - this.domCard.getBoundingClientRect().left) - (this.domCard.getBoundingClientRect().width - this.domNumero.getBoundingClientRect().width) / 2,
+				y: (-this.domNumero.getBoundingClientRect().top - -this.domCard.getBoundingClientRect().top) + (this.domCard.getBoundingClientRect().height - this.domNumero.getBoundingClientRect().height) / 2,
+				z: 5,
+				ease: 'Power3.easeOut'
+			})
 		} })
 
 		gsap.to(this.group.position, 1, {
 			x: this.domCard.getBoundingClientRect().left - Store.resolution.width / 2 + this.domCard.getBoundingClientRect().width / 2,
 			y: -this.domCard.getBoundingClientRect().top + Store.resolution.height / 2 - this.domCard.getBoundingClientRect().height / 2,
 			z: 0,
-			ease: 'Power3.easeInOut'
+			ease: 'Power3.easeInOut',
+			onComplete: () => {
+				this.scrollable = true
+			}
 		})
 
 		if (!this.visible) return
@@ -508,23 +537,26 @@ export default class Card {
 		if (this.zoomed) {
 			const offset = this.artwork.ext == 'glb' ? Math.PI * .5 : 0
 			if (this.artwork.initialized) {
-				this.artwork.artwork.mesh.rotation.y += (.04 * (tVec2d.x / 2 - this.artwork.artwork.mesh.rotation.y));
-				this.artwork.artwork.mesh.rotation.x += (.04 * (tVec2d.y / 2 - (offset + this.artwork.artwork.mesh.rotation.x)));
+				this.artwork.artwork.mesh.rotation.y += .75 * (.04 * (tVec2d.x / 2 - this.artwork.artwork.mesh.rotation.y));
+				this.artwork.artwork.mesh.rotation.x += .75 * (.04 * (tVec2d.y / 2 - (offset + this.artwork.artwork.mesh.rotation.x)));
 			}
 
-			tVec2d.set(
-				this.mouse.x * (Math.PI / 4),
-				-this.mouse.y * (Math.PI / 4)
-			)
+			if (Store.device === "Desktop") {
+				tVec2d.set(
+					this.mouse.x * (Math.PI / 4),
+					-this.mouse.y * (Math.PI / 4)
+				)
+			}
 
-			this.group.rotation.y += .2 * (.04 * (tVec2d.x / 2 - this.group.rotation.y));
-			this.group.rotation.x += .2 * (.04 * (tVec2d.y / 2 - this.group.rotation.x));
+			this.group.rotation.y += .5 * (.04 * (tVec2d.x / 2 - this.group.rotation.y));
+			this.group.rotation.x += .5 * (.04 * (tVec2d.y / 2 - this.group.rotation.x));
 		}
 
-		// this.group.rotation.y = (twoPI * (et *.0005)) % twoPI
+		if (this.scrollable) this.scroll()
 
 		this.card.background.material.uniforms.uTime.value = et
 		this.card.subject.material.uniforms.uTime.value = et
 		this.card.numero.material.uniforms.uTime.value = et
+
 	}
 }

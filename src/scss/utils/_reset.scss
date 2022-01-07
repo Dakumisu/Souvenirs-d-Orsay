@@ -11,7 +11,7 @@
 }
 
 html {
-	height: 100vh; // keyboard ios hack
+	// height: 100vh; // keyboard ios hack
 	background: colors(red);
 	font-family: sans-serif;
 	font-family: -apple-system, Avenir, Roboto, "Open Sans", "Helvetica Neue", sans-serif;
@@ -34,7 +34,6 @@ body {
 	min-height: 100vh;
 	text-rendering: optimizeSpeed;
 	line-height: 1.5;
-	background-color: #000;
 }
 
 body,

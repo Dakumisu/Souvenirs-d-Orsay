@@ -16,6 +16,8 @@ import Device from '@js/Tools/Device'
 import Mouse from '@js/Tools/Mouse'
 import Raycasters from '@js/Tools/Raycasters'
 
+let firstTime = false
+
 export default class Webgl {
 	static instance
 
@@ -71,15 +73,23 @@ export default class Webgl {
 			this.views.setNodes().then( () => {
 				this.views.ready()
 
-				setTimeout(() => {
-					this.world = new World()
-					const detailCollection = document.getElementById("detailCollection") // une collection: art nouveau par exemple
-					detailCollection.addEventListener("click", () => {
-						this.renderer.getArtworkRender()
-					})
-					this.initialized = true
-				}, 50);
+				this.initialized = true
 			})
+		})
+
+		this.views.on('goToDeck', () => {
+			console.log(('oe'));
+			if (!this.initialized) return
+			if (firstTime) return
+			this.world = new World()
+			if (!firstTime) this.renderer.getArtworkRender()
+			firstTime = true
+		})
+
+		this.views.on('goToCollections', () => {
+			if (!this.initialized) return
+			this.world.quitCard()
+			console.log('back');
 		})
 
 		this.cards.on('clickCard', (e) => {
@@ -94,7 +104,7 @@ export default class Webgl {
 
 		this.views.on('scroll', () => {
 			if (!this.initialized) return
-			this.world.scroll()
+			if (this.world) this.world.scroll()
 		})
 
 		this.views.on('changeView', () => {

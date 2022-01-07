@@ -59,8 +59,10 @@ export default class Cards extends EventEmitter {
 
 	clickOnCards(e) {
 		this.trigger('clickCard', [e.target.id])
+	}
 
-		// this.trigger('quitCard')
+	quitCard() {
+		this.trigger('quitCard')
 	}
 
 	event() {
@@ -68,6 +70,9 @@ export default class Cards extends EventEmitter {
 			Store.nodes.card.forEach(card => {
 				card.addEventListener('click', this.clickOnCards.bind(this))
 			})
+
+			// Store.nodes.ui.addEventListener('click', this.quitCard.bind(this))
 		}
+
 	}
 }

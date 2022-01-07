@@ -236,6 +236,8 @@ export default class Artwork {
 		const position = this.ext == 'glb' ? -.35 : 0
 		gsap.to(this.artwork.mesh.position, .75, { y: position, ease: 'Power3.easeOut' })
 		gsap.to(this.artwork.mesh.scale, .75, { x: scale, y: scale, z: scale, ease: 'Power3.easeOut' })
+		if (this.ext == 'glb') gsap.to(this.artwork.mesh.rotation, .75, { x: -Math.PI / 2, y: 0, z: -Math.PI / 1.5, ease: 'Power3.easeOut' })
+		else gsap.to(this.artwork.mesh.rotation, .75, { x: 0, y: 0, z: 0, ease: 'Power3.easeOut' })
 	}
 
 

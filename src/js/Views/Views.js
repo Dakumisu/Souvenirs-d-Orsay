@@ -1,5 +1,7 @@
 import EventEmitter from '@js/Tools/EventEmitter'
 import gsap from "gsap"
+import luge from '@waaark/luge'
+
 import { Store } from '@js/Tools/Store'
 import Cards from './Cards'
 
@@ -66,7 +68,7 @@ export default class Views extends EventEmitter {
 	}
 
 	onScroll() {
-		this.trigger('scroll')
+		// this.trigger('scroll')
 	}
 
 	event() {
@@ -75,6 +77,7 @@ export default class Views extends EventEmitter {
 		//landing
 		this.nodes.start_exp.addEventListener("click", () => {
 			this.nodes.landing.classList.add('hidden')
+			// document.body.requestFullscreen()
 		})
 
 		// see deck
@@ -82,6 +85,8 @@ export default class Views extends EventEmitter {
 			this.nodes.canvas.classList.remove("hidden")
 			this.nodes.fakeCards.classList.remove("hidden")
 			this.nodes.collections.classList.add("hidden")
+			luge.emitter.emit('update')
+			this.trigger('goToDeck')
 		})
 
 		//go back to collection list
@@ -89,6 +94,8 @@ export default class Views extends EventEmitter {
 			this.nodes.canvas.classList.add("hidden")
 			this.nodes.fakeCards.classList.add("hidden")
 			this.nodes.collections.classList.remove("hidden")
+			luge.emitter.emit('update')
+			this.trigger('goToCollections')
 		})
 	}
 }

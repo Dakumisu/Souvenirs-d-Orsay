@@ -19,16 +19,10 @@ uniform vec3 uColor;
 uniform vec3 uColor1;
 // uniform vec4 uResolution;
 uniform vec3 uResolution;
-uniform sampler2D uWoodTexture;
-uniform sampler2D uWood2Texture;
-uniform sampler2D uTreeTexture;
-uniform sampler2D uLeavesTexture;
-uniform sampler2D uDisplacementTexture;
-uniform sampler2D uDisplacement2Texture;
-uniform sampler2D uDisplacement3Texture;
 
 uniform sampler2D uWhiteGlowMC;
 uniform sampler2D uCardBackTexture;
+uniform sampler2D uMarbreTexture;
 
 varying vec2 vUv;
 varying vec3 vPos;
@@ -106,23 +100,16 @@ void main() {
 	finalStrokes *= uStrokeColor * (1. + whiteGlowMC.xyz);
 
 
-	// vec3 frontSide = mix(color, uStrokeColor * whiteGlowMC.xyz, vec3(strokes));
-	vec3 frontSide = color + finalStrokes;
+	vec3 frontSide = color;
+
+	vec3 marbre = texture2D(uMarbreTexture, vUv).xyz;
+
+	frontSide += .1 * (smoothstep(.5, 1., marbre) + (whiteGlowMC.xyz)) + finalStrokes;
 
 	// cover
 	vec2 uv = vUv * .6;
 	vec2 curlUv = vec2(snoise(uBackgroundOffset + uv + (uTime * .0001)) * (uv * 1.5));
 
-	vec3 displacementTexture = texture2D(uDisplacementTexture, uv).xyz;
-	vec3 displacement2Texture = texture2D(uDisplacement2Texture, uv).xyz;
-	vec3 displacement3Texture = texture2D(uDisplacement3Texture, uv + ((uv + .5) * curlUv)).xyz;
-	vec3 leavesTexture = texture2D(uLeavesTexture, uv + ((uv - .5) * curlUv)).xyz;
-
-	vec2 weirdNoiseUv = mix(leavesTexture.xy, displacement3Texture.xy, curlUv);
-
-	vec3 woodTexture = texture2D(uWoodTexture, mix(displacement2Texture.xy, displacement3Texture.xy, curlUv)).xyz;
-	vec3 wood2Texture = texture2D(uWood2Texture, mix(leavesTexture.xy, displacement3Texture.xy, curlUv)).xyz;
-	vec3 treeTexture = texture2D(uTreeTexture, weirdNoiseUv).xyz;
 
 	vec3 backSide = texture2D(uCardBackTexture, vUv).xyz;
 	vec3 cursedBackSide = texture2D(uCardBackTexture, curlUv).xyz;
@@ -132,8 +119,6 @@ void main() {
 	backSide = mix(backSide, cursedBackSide, motif);
 	backSide += strokes - (backSide * strokes);
 	backSide *= 1.5 * (mix(cursedBackSide, 1.5 + 3. * whiteGlowMC.xyz, motif));
-
-	vec3 finalTexture = mix(wood2Texture, treeTexture, cnoise(vec3(uv, uTime * .0001)));
 
 
 	if (gl_FrontFacing) {

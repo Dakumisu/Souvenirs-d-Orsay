@@ -32,12 +32,11 @@
 	<meta property="og:image" content="assets/icon/favicon.jpg"/>
 	<meta name="msapplication-TileImage" content="assets/icon/favicon.ico">
 	<meta name="msapplication-TileColor" content="#222222">
-	<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.9.1/CustomEase.min.js" defer></script>
 </head>
 
 <body>
-<div class="ui">
-	<section data-ref="landing" class="landing" id="sectionLanding">
+<div class="ui" data-lg-smooth>
+	<section data-ref="landing" class="landing" id="sectionLanding" data-lg-sticky>
 		<div class="landing_title">
 			<img src="../public/img/logo.svg" alt="logo">
 			<h1>Souvenirs d'Orsay</h1>
@@ -63,7 +62,7 @@
 					<p class="infos_subtitle">5 oeuvres à découvrir...</p>
 				</div>
 			</article>
-			<article class="detail">
+			<article class="disabled detail">
 				<img src="../public/img/impressionniste.png" alt="collection impressionniste">
 				<div class="firstLine"></div>
 				<div class="secondLine"></div>
@@ -72,7 +71,7 @@
 					<p class="infos_subtitle">10 oeuvres à découvrir...</p>
 				</div>
 			</article>
-			<article class="detail">
+			<article class="disabled detail">
 				<img src="../public/img/sculture.png" alt="collection sculpture">
 				<div class="firstLine"></div>
 				<div class="secondLine"></div>

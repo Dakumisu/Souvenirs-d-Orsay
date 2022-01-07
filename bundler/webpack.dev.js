@@ -22,7 +22,7 @@ module.exports = merge(
 			contentBase: './',
 			watchContentBase: true,
 			open: true,
-			https: false,
+			https: true,
 			useLocalIp: true,
 			disableHostCheck: true,
 			overlay: true,

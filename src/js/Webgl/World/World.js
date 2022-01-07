@@ -1,4 +1,5 @@
 import Webgl from '@js/Webgl/Webgl'
+import { BoxBufferGeometry, Mesh, MeshNormalMaterial } from 'three'
 
 import Cards from './Cards/Cards'
 
@@ -13,11 +14,7 @@ export default class World {
 	}
 
 	setComponent() {
-		const detailCollection = document.getElementById("detailCollection") // une collection: art nouveau par exemple
-		detailCollection.addEventListener("click", () => {
-			this.cards = new Cards()
-		})
-
+		this.cards = new Cards()
 
 		this.initialized = true
 	}
