@@ -214,6 +214,7 @@ canvas.sketch {
 }
 
 .backButton {
+	position: relative;
 	border-radius: 50%;
 	background: #ffffff;
 	box-shadow: 1px -1px 21px 1px rgba(0,0,0,0.26);
@@ -222,16 +223,13 @@ canvas.sketch {
 	display: flex;
 	justify-content: center;
 	align-items: center;
+	z-index: 3;
 
 	&_top {
 		position: fixed;
 		top: 20px;
 		left: 20px;
 		z-index: 5;
-	}
-
-	&_bottom {
-
 	}
 }
 
@@ -281,7 +279,7 @@ canvas.sketch {
 	position: fixed;
 	width: 100vw;
 	height: 100vh;
-	background: plum;
+	// background: plum;
 	top: 0;
 	left: 0;
 	display: flex;
@@ -307,4 +305,16 @@ canvas.sketch {
 		box-shadow: 0 0 50px #252525;
 		margin-left: 50px;
 	}
+
+	.scan_icon svg {
+		position: absolute;
+		top: 50%;
+		left: 50%;
+		transform: translate(-50%, -85%);
+	}
+}
+
+video {
+	height: 100vh;
+	pointer-events: none;
 }

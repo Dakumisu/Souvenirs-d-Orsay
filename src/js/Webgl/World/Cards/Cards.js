@@ -69,7 +69,11 @@ export default class Cards {
 
 	click(e) {
 		if (this.cards[e].visible) {
-			this.cards[e].zoom()
+			if (!this.cards[e].zoomed) this.cards[e].zoom()
+			else {
+				this.quitCard()
+				return
+			}
 			for (const card in this.cards) {
 				if (card != e) {
 					this.cards[card].unZoom()
@@ -81,6 +85,15 @@ export default class Cards {
 	quitCard() {
 		for (const card in this.cards) {
 			this.cards[card].default()
+		}
+	}
+
+	unlockCard() {
+		for (const card in this.cards) {
+			if (!this.cards[card].visible) {
+				this.cards[card].unlockCard()
+				return
+			}
 		}
 	}
 

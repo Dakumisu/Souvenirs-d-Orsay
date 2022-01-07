@@ -69,9 +69,9 @@ export default class Cards extends EventEmitter {
 		if (Store.nodes.card) {
 			Store.nodes.card.forEach(card => {
 				card.addEventListener('click', this.clickOnCards.bind(this))
+				// card.addEventListener('click', this.quitCard.bind(this))
 			})
 
-			// Store.nodes.ui.addEventListener('click', this.quitCard.bind(this))
 		}
 
 	}

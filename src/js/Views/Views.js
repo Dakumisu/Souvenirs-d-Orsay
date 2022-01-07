@@ -55,6 +55,7 @@ export default class Views extends EventEmitter {
 
 	ready() {
 		this.event()
+		this.camera()
 	}
 
 	changeView(view) {
@@ -71,6 +72,50 @@ export default class Views extends EventEmitter {
 		// this.trigger('scroll')
 	}
 
+	camera() {
+		const video = this.nodes.video
+
+		if(navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+			navigator.mediaDevices.getUserMedia({ video: { facingMode: { exact: "environment" } } }).then(function(stream) {
+				video.srcObject = stream
+				video.play()
+			});
+		}
+	}
+
+	goDeck(){
+		this.nodes.canvas.classList.remove("hidden")
+		this.nodes.fakeCards.classList.remove("hidden")
+		this.nodes.collections.classList.add("hidden")
+		this.nodes.scanButton.classList.remove("hidden")
+		this.nodes.backButton.classList.remove("hidden")
+
+		this.nodes.sectionQr.classList.add("hidden")
+
+		luge.emitter.emit('update')
+		this.trigger('goToDeck')
+	}
+
+	goCollections(){
+		this.nodes.canvas.classList.add("hidden")
+		this.nodes.fakeCards.classList.add("hidden")
+		this.nodes.collections.classList.remove("hidden")
+		this.nodes.scanButton.classList.add("hidden")
+		this.nodes.backButton.classList.add("hidden")
+
+		luge.emitter.emit('update')
+		this.trigger('goToCollections')
+	}
+
+	goScan(){
+		this.nodes.canvas.classList.add("hidden")
+		this.nodes.fakeCards.classList.add("hidden")
+		this.nodes.sectionQr.classList.remove("hidden")
+		this.nodes.scanButton.classList.add("hidden")
+		this.nodes.backButton.classList.add("hidden")
+		luge.emitter.emit('update')
+	}
+
 	event() {
 		window.addEventListener('scroll', this.onScroll.bind(this))
 
@@ -82,34 +127,30 @@ export default class Views extends EventEmitter {
 
 		// see deck
 		this.nodes.collection_an.addEventListener("click", () => {
-			this.nodes.canvas.classList.remove("hidden")
-			this.nodes.fakeCards.classList.remove("hidden")
-			this.nodes.collections.classList.add("hidden")
-			luge.emitter.emit('update')
-			this.trigger('goToDeck')
+			this.goDeck()
 		})
 
 		// go back to collection list
 		this.nodes.backButton.addEventListener("click", () => {
-			this.nodes.canvas.classList.add("hidden")
-			this.nodes.fakeCards.classList.add("hidden")
-			this.nodes.collections.classList.remove("hidden")
-			luge.emitter.emit('update')
-			this.trigger('goToCollections')
+			this.goCollections()
 		})
 
 		// show qr scanner
 		this.nodes.scanButton.addEventListener("click", () => {
-			this.nodes.canvas.classList.add("hidden")
-			this.nodes.fakeCards.classList.add("hidden")
-			this.nodes.sectionQr.classList.remove("hidden")
+			this.goScan()
 		})
 
 		// move out of scanner
 		this.nodes.backButtonScan.addEventListener("click", () => {
-			this.nodes.canvas.classList.remove("hidden")
-			this.nodes.fakeCards.classList.remove("hidden")
-			this.nodes.sectionQr.classList.add("hidden")
+			this.goDeck()
+		})
+
+		// scan
+		this.nodes.buttonScan.addEventListener("click", () => {
+			this.goDeck()
+			setTimeout(() => {
+				this.trigger('scan')
+			}, 500);
 		})
 	}
 }

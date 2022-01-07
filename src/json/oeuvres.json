@@ -2,17 +2,6 @@
   "art_nouveau": [
     {
       "collection": "Art Nouveau",
-      "name": "LA MAIN AUX ALGUES ET AUX COQUILLAGES",
-      "author": "Emile Gallé",
-      "year": "(1846-1904)",
-      "bio": "Modèle réalisée en 1904, Application à chaud, cristal (matière) gravé à la roue (verre), inclusion.",
-      "color": "#252525",
-      "model": "main",
-      "image": "",
-      "ext": "glb"
-    },
-    {
-      "collection": "Art Nouveau",
       "name": "PAVOT",
       "author": "René Lalique",
       "year": "(1860-1945)",
@@ -21,6 +10,17 @@
       "model": "",
       "image": "pavot",
       "ext": "png"
+    },
+    {
+      "collection": "Art Nouveau",
+      "name": "LA MAIN AUX ALGUES ET AUX COQUILLAGES",
+      "author": "Emile Gallé",
+      "year": "(1846-1904)",
+      "bio": "Modèle réalisée en 1904, Application à chaud, cristal (matière) gravé à la roue (verre), inclusion.",
+      "color": "#252525",
+      "model": "main",
+      "image": "",
+      "ext": "glb"
     },
     {
       "collection": "Art Nouveau",

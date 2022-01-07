@@ -92,6 +92,12 @@ export default class Webgl {
 			console.log('back');
 		})
 
+		this.views.on('scan', () => {
+			if (!this.initialized) return
+			console.log(this.world.cards);
+			this.world.cards.unlockCard()
+		})
+
 		this.cards.on('clickCard', (e) => {
 			if (!this.initialized) return
 			this.world.clickOnCard(e)

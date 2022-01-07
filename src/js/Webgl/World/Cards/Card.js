@@ -350,6 +350,11 @@ export default class Card {
 		this.setSizes()
 	}
 
+	unlockCard() {
+		this.visible = true
+		gsap.to(this.group.rotation, 1, { y: 0, ease: 'Power3.easeOut' })
+	}
+
 	zoom() {
 		if (!this.initialized) return
 		if (this.zoomed) return
@@ -537,8 +542,8 @@ export default class Card {
 		if (this.zoomed) {
 			const offset = this.artwork.ext == 'glb' ? Math.PI * .5 : 0
 			if (this.artwork.initialized) {
-				this.artwork.artwork.mesh.rotation.y += .75 * (.04 * (tVec2d.x / 2 - this.artwork.artwork.mesh.rotation.y));
-				this.artwork.artwork.mesh.rotation.x += .75 * (.04 * (tVec2d.y / 2 - (offset + this.artwork.artwork.mesh.rotation.x)));
+				this.artwork.artwork.mesh.rotation.y += .6 * (.055 * (tVec2d.x / 2 - this.artwork.artwork.mesh.rotation.y));
+				this.artwork.artwork.mesh.rotation.x += .6 * (.055 * (tVec2d.y / 2 - (offset + this.artwork.artwork.mesh.rotation.x)));
 			}
 
 			if (Store.device === "Desktop") {
@@ -548,8 +553,8 @@ export default class Card {
 				)
 			}
 
-			this.group.rotation.y += .5 * (.04 * (tVec2d.x / 2 - this.group.rotation.y));
-			this.group.rotation.x += .5 * (.04 * (tVec2d.y / 2 - this.group.rotation.x));
+			this.group.rotation.y += .25 * (.09 * (tVec2d.x / 2 - this.group.rotation.y));
+			this.group.rotation.x += .25 * (.09 * (tVec2d.y / 2 - this.group.rotation.x));
 		}
 
 		if (this.scrollable) this.scroll()
