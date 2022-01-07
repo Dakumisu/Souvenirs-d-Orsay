@@ -54,8 +54,7 @@ canvas.sketch {
 	display: flex;
 	flex-direction: column;
 	border-radius: 7px;
-	// box-shadow: 0px 0px 50px #252525;
-	box-shadow: 0px 0px 20px 10px rgba(0, 0, 0, 0.25);
+	box-shadow: 0 0 20px 10px rgba(0, 0, 0, 0.25);
 
 	@include phone-landscape-mobile {
 		width: calc(33% - 20px);
@@ -139,11 +138,19 @@ canvas.sketch {
 		padding-top: 20px;
 	}
 
+	//&_small {
+	//	padding: 30px 15px !important;
+	//}
+
 	&_title {
 		font-size: 36px;
 		font-weight: 600;
 		text-align: center;
-		padding: 43px 0 42px 0;
+		padding: 42px 0;
+
+		//&-small {
+		//	padding: 0 !important;
+		//}
 	}
 
 	&_wrapper {
@@ -210,15 +217,22 @@ canvas.sketch {
 	border-radius: 50%;
 	background: #ffffff;
 	box-shadow: 1px -1px 21px 1px rgba(0,0,0,0.26);
-	height: 39px;
-	width: 39px;
+	height: 45px;
+	width: 45px;
 	display: flex;
 	justify-content: center;
 	align-items: center;
-	position: fixed;
-	top: 20px;
-	left: 20px;
-	z-index: 5;
+
+	&_top {
+		position: fixed;
+		top: 20px;
+		left: 20px;
+		z-index: 5;
+	}
+
+	&_bottom {
+
+	}
 }
 
 .landing {
@@ -260,5 +274,37 @@ canvas.sketch {
 		left: 50%;
 		transform: translate(-50%);
 		display: flex;
+	}
+}
+
+.sectionQr {
+	position: fixed;
+	width: 100vw;
+	height: 100vh;
+	background: plum;
+	top: 0;
+	left: 0;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	flex-direction: column;
+
+	&_navigation {
+		display: flex;
+		align-items: center;
+		position: fixed;
+		bottom: 30px;
+		left: calc(50% - 40px);
+		transform: translate(-50%);
+	}
+
+	&_scan {
+		background: rgba(255, 255, 255, .5);
+		border: white 9px solid;
+		border-radius: 50%;
+		height: 100px;
+		width: 100px;
+		box-shadow: 0 0 50px #252525;
+		margin-left: 50px;
 	}
 }

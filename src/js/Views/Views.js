@@ -74,7 +74,7 @@ export default class Views extends EventEmitter {
 	event() {
 		window.addEventListener('scroll', this.onScroll.bind(this))
 
-		//landing
+		// landing
 		this.nodes.start_exp.addEventListener("click", () => {
 			this.nodes.landing.classList.add('hidden')
 			// document.body.requestFullscreen()
@@ -89,13 +89,27 @@ export default class Views extends EventEmitter {
 			this.trigger('goToDeck')
 		})
 
-		//go back to collection list
+		// go back to collection list
 		this.nodes.backButton.addEventListener("click", () => {
 			this.nodes.canvas.classList.add("hidden")
 			this.nodes.fakeCards.classList.add("hidden")
 			this.nodes.collections.classList.remove("hidden")
 			luge.emitter.emit('update')
 			this.trigger('goToCollections')
+		})
+
+		// show qr scanner
+		this.nodes.scanButton.addEventListener("click", () => {
+			this.nodes.canvas.classList.add("hidden")
+			this.nodes.fakeCards.classList.add("hidden")
+			this.nodes.sectionQr.classList.remove("hidden")
+		})
+
+		// move out of scanner
+		this.nodes.backButtonScan.addEventListener("click", () => {
+			this.nodes.canvas.classList.remove("hidden")
+			this.nodes.fakeCards.classList.remove("hidden")
+			this.nodes.sectionQr.classList.add("hidden")
 		})
 	}
 }
