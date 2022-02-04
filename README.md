@@ -17,6 +17,3 @@ npm run dev
 # Build for production in the build/ directory
 npm run build
 ```
-
-## About
-🚧 [WIP] 🚧
